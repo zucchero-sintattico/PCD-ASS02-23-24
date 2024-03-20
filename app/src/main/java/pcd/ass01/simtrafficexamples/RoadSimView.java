@@ -93,15 +93,22 @@ public class RoadSimView extends JFrame implements SimulationListener {
 					g2.fillRect((int)(s.getPos().x()-5), (int)(s.getPos().y()-5), 10, 10);
 				}
 			}
-			
-			g.setColor(new Color(0, 0, 0, 255));
+			int i = 0;
+			Color c1 = new Color(255,0,0);
+			Color c2 = new Color(0,255,0);
+			//g.setColor(new Color((int)(Math.random() * 256), (int)(Math.random() * 256), (int)(Math.random() * 256)));
 
 			if (cars != null) {
 				for (var c: cars) {
 					double pos = c.getPos();
 					Road r = c.getRoad();
 					V2d dir = V2d.makeV2d(r.getFrom(), r.getTo()).getNormalized().mul(pos);
-					g2.drawOval((int)(r.getFrom().x() + dir.x() - CAR_DRAW_SIZE/2), (int)(r.getFrom().y() + dir.y() - CAR_DRAW_SIZE/2), CAR_DRAW_SIZE , CAR_DRAW_SIZE);
+					g.setColor(c2);
+					if (i == 0) {
+						g.setColor(c1);
+						i++;
+					}
+					g2.fillOval((int)(r.getFrom().x() + dir.x() - CAR_DRAW_SIZE/2), (int)(r.getFrom().y() + dir.y() - CAR_DRAW_SIZE/2), CAR_DRAW_SIZE , CAR_DRAW_SIZE);
 				}
 			}
   	   }

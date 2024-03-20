@@ -2,6 +2,8 @@ package pcd.ass01.simengineseq;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 /**
  * Base class for defining concrete simulations
@@ -33,6 +35,11 @@ public abstract class AbstractSimulation {
 	private long startWallTime;
 	private long endWallTime;
 	private long averageTimePerStep;
+	private Random r = new Random();
+
+	private final List<Semaphore> sema = new ArrayList<Semaphore>();
+	private final List<Semaphore> semaA1 = new ArrayList<Semaphore>();
+
 
 
 	protected AbstractSimulation() {
@@ -58,12 +65,24 @@ public abstract class AbstractSimulation {
 
 		startWallTime = System.currentTimeMillis();
 
+		List<Thread> carsList = new ArrayList<Thread>();
+
 		/* initialize the env and the agents inside */
 		int t = t0;
 
 		env.init();
 		for (var a: agents) {
+			Semaphore s = new Semaphore(0);
+			Semaphore sA1 = new Semaphore(1);
+			sema.add(s);
+			semaA1.add(sA1);
+
+			a.setSema(s, sA1);
+
+
 			a.init(env);
+
+			Thread.ofVirtual().start(a);
 		}
 
 		this.notifyReset(t, agents, env);
@@ -78,9 +97,29 @@ public abstract class AbstractSimulation {
 			/* make a step */
 			
 			env.step(dt);
-			for (var agent: agents) {
-				agent.step(dt);
+
+
+
+			for (var s: sema) {
+				try {
+					s.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+
+			for (var s: semaA1) {
+				s.release();
+			}
+
+
+
+
+
+
+
+
+			
 			t += dt;
 			
 			notifyNewStep(t, agents, env);

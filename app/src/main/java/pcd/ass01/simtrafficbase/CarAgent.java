@@ -20,6 +20,8 @@ public abstract class CarAgent extends AbstractAgent {
 	/* percept and action retrieved and submitted at each step */
 	protected CarPercept currentPercept;
 	protected Optional<Action> selectedAction;
+
+	int dt = 1;
 	
 	
 	public CarAgent(String id, RoadsEnv env, Road road, 
@@ -39,12 +41,12 @@ public abstract class CarAgent extends AbstractAgent {
 	 * Basic behaviour of a car agent structured into a sense/decide/act structure 
 	 * 
 	 */
-	public void step(int dt) {
+	public void step() {
 
 		/* sense */
 
 		AbstractEnvironment env = this.getEnv();		
-		currentPercept = (CarPercept) env.getCurrentPercepts(getId());			
+		currentPercept = (CarPercept) env.getCurrentPercepts(getAgentId());			
 
 		/* decide */
 		
@@ -55,7 +57,7 @@ public abstract class CarAgent extends AbstractAgent {
 		/* act */
 		
 		if (selectedAction.isPresent()) {
-			env.doAction(getId(), selectedAction.get());
+			env.doAction(getAgentId(), selectedAction.get());
 		}
 	}
 	
@@ -72,7 +74,7 @@ public abstract class CarAgent extends AbstractAgent {
 	}
 	
 	protected void log(String msg) {
-		System.out.println("[CAR " + this.getId() + "] " + msg);
+		System.out.println("[CAR " + this.getAgentId() + "] " + msg);
 	}
 
 	
