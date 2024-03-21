@@ -1,5 +1,7 @@
 package pcd.ass01.simengineseq;
 
+import java.util.Optional;
+
 /**
  *   
  * Base class to define the environment of the simulation
@@ -47,5 +49,5 @@ public abstract class AbstractEnvironment {
 	 * @param agentId - identifier of the agent doing the action
 	 * @param act - the action
 	 */
-	public abstract void doAction(String agentId, Action act);
+	public abstract void doAction(String agentId, Optional<Action> act);
 }

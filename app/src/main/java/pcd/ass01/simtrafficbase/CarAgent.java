@@ -42,13 +42,11 @@ public abstract class CarAgent extends AbstractAgent {
 	 * Basic behaviour of a car agent structured into a sense/decide/act structure 
 	 * 
 	 */
-	public void step(Semaphore sema, Semaphore semaA1, Semaphore sema1, Semaphore semaA11) {
+	public void step(Semaphore sema, Semaphore sema1) {
 
 		/* sense */
 		try {
-
-			semaA1.acquire();
-//			System.out.println("semarealse");
+			sema1.acquire();
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
@@ -60,20 +58,14 @@ public abstract class CarAgent extends AbstractAgent {
 		selectedAction = Optional.empty();
 
 		decide(dt);
-		sema.release();
 
-		try {
-			semaA11.acquire();
-//			System.out.println("semarealse,semaA11aq");
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
 		/* act */
 		
-		if (selectedAction.isPresent()) {
-			env.doAction(getAgentId(), selectedAction.get());
-		}
-		sema1.release();
+//		if (selectedAction.isPresent()) {
+		env.doAction(getAgentId(), selectedAction);
+//		}
+		sema.release();
+
 	}
 	
 	/**

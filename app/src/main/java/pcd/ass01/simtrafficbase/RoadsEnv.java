@@ -24,7 +24,39 @@ public class RoadsEnv extends AbstractEnvironment {
 	/* cars situated in the environment */	
 	private HashMap<String, CarAgentInfo> registeredCars;
 
+//	private final List<Agent> agents;
+	private int nR;
+	private int nW;
+	boolean timeToWrite;
 
+	private synchronized void _senseEntrance(CarAgent agent) throws InterruptedException {
+		while(timeToWrite){
+			wait();
+		}
+	}
+	private synchronized void _senseExit(CarAgent agent) throws InterruptedException {
+		nR++;
+		if(nR == registeredCars.size()){
+			timeToWrite = true;
+			nR = 0;
+			notifyAll();
+		}
+	}
+
+	private synchronized void _actEntrance(CarAgent agent) throws InterruptedException {
+//		System.out.println("agent pppppppppppp");
+		while(!timeToWrite){
+			wait();
+		}
+	}
+	private synchronized void _actExit(CarAgent agent) throws InterruptedException {
+		nW++;
+		if(nW == registeredCars.size()){
+			timeToWrite = false;
+			nW = 0;
+			notifyAll();
+		}
+	}
 	public RoadsEnv() {
 		super("traffic-env");
 		registeredCars = new HashMap<>();	
@@ -63,14 +95,25 @@ public class RoadsEnv extends AbstractEnvironment {
 	}
 
 	@Override
-	public Percept getCurrentPercepts(String agentId) {
-		
+	public Percept getCurrentPercepts(String agentId)  {
+		try {
+			_senseEntrance(registeredCars.get(agentId).getCar());
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+//		System.out.println("agent " + agentId + " sensed++++++++++++++++++++++++++++++++++++++++++++++++");
+
 		CarAgentInfo carInfo = registeredCars.get(agentId);
 		double pos = carInfo.getPos();
 		Road road = carInfo.getRoad();
 		Optional<CarAgentInfo> nearestCar = getNearestCarInFront(road,pos, CAR_DETECTION_RANGE);
 		Optional<TrafficLightInfo> nearestSem = getNearestSemaphoreInFront(road,pos, SEM_DETECTION_RANGE);
-		
+//		System.out.println("agent " + agentId + " sensed++++++++++++++++++++");
+		try {
+			_senseExit(registeredCars.get(agentId).getCar());
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 		return new CarPercept(pos, nearestCar, nearestSem);
 	}
 
@@ -98,28 +141,45 @@ public class RoadsEnv extends AbstractEnvironment {
 	
 	
 	@Override
-	public void doAction(String agentId, Action act) {
-		switch (act) {
-		case MoveForward mv: {
-			CarAgentInfo info = registeredCars.get(agentId);
-			Road road = info.getRoad();
-			Optional<CarAgentInfo> nearestCar = getNearestCarInFront(road, info.getPos(), CAR_DETECTION_RANGE);
-			
+	public void doAction(String agentId, Optional<Action> actO) {
+//		System.out.println("agent " + agentId + " afsdfsdffdsd");
+		try {
+			_actEntrance(registeredCars.get(agentId).getCar());
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+//		System.out.println("agent " + agentId + " acted");
+		if(actO.isPresent()) {
+			Action act = actO.get();
+			switch (act) {
+				case MoveForward mv: {
+					CarAgentInfo info = registeredCars.get(agentId);
+					Road road = info.getRoad();
+					Optional<CarAgentInfo> nearestCar = getNearestCarInFront(road, info.getPos(), CAR_DETECTION_RANGE);
+
 			if (!nearestCar.isEmpty()) {
 				double dist = nearestCar.get().getPos() - info.getPos();
 				if (dist > mv.distance() + MIN_DIST_ALLOWED) {
 					info.updatePos(info.getPos() + mv.distance());
 				}
 			} else {
-				info.updatePos(info.getPos() + mv.distance());
+					info.updatePos(info.getPos() + mv.distance());
 			}
 
-			if (info.getPos() > road.getLen()) {
-				info.updatePos(0);
+					if (info.getPos() > road.getLen()) {
+						info.updatePos(0);
+					}
+					break;
+				}
+				default:
+					break;
 			}
-			break;
 		}
-		default: break;
+//		System.out.println("agent " + agentId + " acted+++++++++++++++++++++++");
+		try {
+			_actExit(registeredCars.get(agentId).getCar());
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	

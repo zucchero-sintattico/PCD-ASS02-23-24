@@ -39,7 +39,7 @@ public abstract class AbstractAgent extends Thread{
 	 * This method is called at each step of the simulation
 	 * 
 	 */
-	abstract public void step(Semaphore sema, Semaphore semaA1, Semaphore sema1, Semaphore semaA11);
+	abstract public void step(Semaphore sema, Semaphore sema1);
 	
 	
 	public String getAgentId() {
@@ -58,18 +58,14 @@ public abstract class AbstractAgent extends Thread{
 //            } catch (InterruptedException e) {
 //                throw new RuntimeException(e);
 //            }
-            step(sema, semaA1, sema1, semaA11);
+            step(sema,sema1);
 //			sema.release();
 		}
 	}
 
 
-
-
-	public void setSema(Semaphore s, Semaphore sA1, Semaphore s1, Semaphore sA11) {
+	public void setSema(Semaphore s, Semaphore sA1) {
 		this.sema = s;
-		this.semaA1 = sA1;
-		this.sema1 = s1;
-		this.semaA11 = sA11;
+		this.sema1 = sA1;
 	}
 }
