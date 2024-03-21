@@ -1,6 +1,7 @@
 package pcd.ass01.simtrafficbase;
 
 import java.util.Optional;
+import java.util.concurrent.Semaphore;
 
 import pcd.ass01.simengineseq.*;
 
@@ -41,24 +42,38 @@ public abstract class CarAgent extends AbstractAgent {
 	 * Basic behaviour of a car agent structured into a sense/decide/act structure 
 	 * 
 	 */
-	public void step() {
+	public void step(Semaphore sema, Semaphore semaA1, Semaphore sema1, Semaphore semaA11) {
 
 		/* sense */
+		try {
 
+			semaA1.acquire();
+//			System.out.println("semarealse");
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 		AbstractEnvironment env = this.getEnv();		
 		currentPercept = (CarPercept) env.getCurrentPercepts(getAgentId());			
 
 		/* decide */
 		
 		selectedAction = Optional.empty();
-		
+
 		decide(dt);
-		
+		sema.release();
+
+		try {
+			semaA11.acquire();
+//			System.out.println("semarealse,semaA11aq");
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 		/* act */
 		
 		if (selectedAction.isPresent()) {
 			env.doAction(getAgentId(), selectedAction.get());
 		}
+		sema1.release();
 	}
 	
 	/**

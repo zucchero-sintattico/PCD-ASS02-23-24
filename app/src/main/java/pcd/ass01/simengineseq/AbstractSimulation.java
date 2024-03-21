@@ -39,6 +39,8 @@ public abstract class AbstractSimulation {
 
 	private final List<Semaphore> sema = new ArrayList<Semaphore>();
 	private final List<Semaphore> semaA1 = new ArrayList<Semaphore>();
+	private final List<Semaphore> sema1 = new ArrayList<Semaphore>();
+	private final List<Semaphore> semaA11 = new ArrayList<Semaphore>();
 
 
 
@@ -74,10 +76,14 @@ public abstract class AbstractSimulation {
 		for (var a: agents) {
 			Semaphore s = new Semaphore(0);
 			Semaphore sA1 = new Semaphore(1);
+			Semaphore s1 = new Semaphore(0);
+			Semaphore sA11 = new Semaphore(0);
 			sema.add(s);
 			semaA1.add(sA1);
+			sema1.add(s1);
+			semaA11.add(sA11);
 
-			a.setSema(s, sA1);
+			a.setSema(s, sA1, s1, sA11);
 
 
 			a.init(env);
@@ -103,14 +109,25 @@ public abstract class AbstractSimulation {
 			for (var s: sema) {
 				try {
 					s.acquire();
+
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-
-			for (var s: semaA1) {
+//			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+			for (var s: semaA11) {
 				s.release();
 			}
+
+			for (var s: sema1) {
+				try {
+					s.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+//			System.out.println("BBBBBBBBBBBBBBBBBBBBB");
+
 
 
 
@@ -127,8 +144,11 @@ public abstract class AbstractSimulation {
 			nSteps++;			
 			timePerStep += System.currentTimeMillis() - currentWallTime;
 			
-			if (toBeInSyncWithWallTime) {
-				syncWithWallTime();
+//			if (toBeInSyncWithWallTime) {
+//				syncWithWallTime();
+//			}
+			for (var s: semaA1) {
+				s.release();
 			}
 		}	
 		
