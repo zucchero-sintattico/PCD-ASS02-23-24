@@ -37,9 +37,8 @@ public abstract class AbstractSimulation {
 	private long averageTimePerStep;
 	private Random r = new Random();
 
-	private final List<Semaphore> sema = new ArrayList<Semaphore>();
-	private final List<Semaphore> semaA1 = new ArrayList<Semaphore>();
-
+	private final List<Semaphore> sema = new ArrayList<>();
+	private final List<Semaphore> semaA1 = new ArrayList<>();
 
 
 
@@ -67,6 +66,7 @@ public abstract class AbstractSimulation {
 		startWallTime = System.currentTimeMillis();
 
 		List<Thread> carsList = new ArrayList<Thread>();
+
 
 		/* initialize the env and the agents inside */
 		int t = t0;
@@ -108,27 +108,6 @@ public abstract class AbstractSimulation {
 					e.printStackTrace();
 				}
 			}
-//			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-//			for (var s: semaA11) {
-//				s.release();
-//			}
-//
-//			for (var s: sema1) {
-//				try {
-//					s.acquire();
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//			System.out.println("BBBBBBBBBBBBBBBBBBBBB");
-
-
-
-
-
-
-
-
 
 			
 			t += dt;
