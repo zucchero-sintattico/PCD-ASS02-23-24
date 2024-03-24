@@ -11,7 +11,14 @@ public class RunTrafficSimulationMassiveTest {
 		simulation.setup();
 		
 		log("Running the simulation: " + numCars + " cars, for " + nSteps + " steps ...");
-		
+
+		RoadSimStatistics stat = new RoadSimStatistics();
+
+
+
+		simulation.addSimulationListener(stat);
+
+
 		simulation.run(nSteps);
 
 		long d = simulation.getSimulationDuration();

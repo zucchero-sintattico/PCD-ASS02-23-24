@@ -1,5 +1,7 @@
 package pcd.ass01.simengineseq;
 
+import model.MasterProducer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -72,6 +74,9 @@ public abstract class AbstractSimulation {
 		int t = t0;
 
 		env.init();
+
+
+
 		for (var a: agents) {
 			Semaphore s = new Semaphore(0);
 			Semaphore sA1 = new Semaphore(1);
@@ -81,9 +86,9 @@ public abstract class AbstractSimulation {
 
 			a.setSema(s,sA1);
 			a.init(env);
-
-			Thread.ofVirtual().start(a);
 		}
+
+		new MasterProducer(2000, agents);
 
 		this.notifyReset(t, agents, env);
 		
@@ -109,6 +114,10 @@ public abstract class AbstractSimulation {
 				}
 			}
 
+			for (var a: agents) {
+				a.doAction();
+			}
+
 			
 			t += dt;
 			
@@ -117,9 +126,9 @@ public abstract class AbstractSimulation {
 			nSteps++;			
 			timePerStep += System.currentTimeMillis() - currentWallTime;
 			
-//			if (toBeInSyncWithWallTime) {
-//				syncWithWallTime();
-//			}
+			if (toBeInSyncWithWallTime) {
+				syncWithWallTime();
+			}
 			for (var s: semaA1) {
 				s.release();
 			}
