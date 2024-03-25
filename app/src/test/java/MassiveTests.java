@@ -27,7 +27,7 @@ public class MassiveTests {
         simulation.setup();
         RoadSimStatistics stat = new RoadSimStatistics();
         simulation.addSimulationListener(stat);
-        simulation.run(nSteps);
+        simulation.run(nSteps, 20);
 
 
         // /app/log.txt must be the same of resources/log.txt

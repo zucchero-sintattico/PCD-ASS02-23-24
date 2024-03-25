@@ -43,8 +43,7 @@ public abstract class AbstractSimulation {
 	private final List<Semaphore> semaA1 = new ArrayList<>();
 
 
-
-	protected AbstractSimulation() {
+    protected AbstractSimulation() {
 		agents = new ArrayList<AbstractAgent>();
 		listeners = new ArrayList<SimulationListener>();
 		toBeInSyncWithWallTime = false;
@@ -63,14 +62,14 @@ public abstract class AbstractSimulation {
 	 * 
 	 * @param numSteps
 	 */
-	public void run(int numSteps) {		
+	public void run(int numSteps, int numOfThread) {
 
 		startWallTime = System.currentTimeMillis();
 
 		List<Thread> carsList = new ArrayList<Thread>();
 
 
-		/* initialize the env and the agents inside */
+        /* initialize the env and the agents inside */
 		int t = t0;
 
 		env.init();
@@ -88,7 +87,8 @@ public abstract class AbstractSimulation {
 			a.init(env);
 		}
 
-		new MasterProducer(2000, agents, numSteps);
+
+		new MasterProducer(numOfThread, agents, numSteps);
 
 		this.notifyReset(t, agents, env);
 		
@@ -97,7 +97,7 @@ public abstract class AbstractSimulation {
 		
 		while (nSteps < numSteps) {
 
-			currentWallTime = System.nanoTime();
+			currentWallTime = System.currentTimeMillis();
 		
 			/* make a step */
 			
@@ -124,7 +124,7 @@ public abstract class AbstractSimulation {
 			notifyNewStep(t, agents, env);
 
 			nSteps++;			
-			timePerStep += System.nanoTime() - currentWallTime;
+			timePerStep += System.currentTimeMillis() - currentWallTime;
 			
 			if (toBeInSyncWithWallTime) {
 				syncWithWallTime();
@@ -134,17 +134,17 @@ public abstract class AbstractSimulation {
 			}
 		}	
 		
-		endWallTime = System.nanoTime();
+		endWallTime = System.currentTimeMillis();
 		this.averageTimePerStep = timePerStep / numSteps;
 		
 	}
 	
 	public long getSimulationDuration() {
-		return (endWallTime - startWallTime) / 1000000L;
+		return (endWallTime - startWallTime);
 	}
 	
 	public long getAverageTimePerCycle() {
-		return (averageTimePerStep / 10000000L);
+		return (averageTimePerStep);
 	}
 	
 	/* methods for configuring the simulation */
