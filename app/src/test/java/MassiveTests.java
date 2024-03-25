@@ -32,7 +32,7 @@ public class MassiveTests {
 
         // /app/log.txt must be the same of resources/log.txt
         boolean areFilesEqual = FileComparator.compareFiles("/app/log.txt", "/app/src/test/java/resources/log.txt");
-        assertTrue(areFilesEqual, "The files /app/log.txt and resources/log.txt are not the same");
+        assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
 
 
 
