@@ -88,7 +88,7 @@ public abstract class AbstractSimulation {
 			a.init(env);
 		}
 
-		new MasterProducer(2000, agents);
+		new MasterProducer(18, agents);
 
 		this.notifyReset(t, agents, env);
 		
@@ -103,7 +103,7 @@ public abstract class AbstractSimulation {
 			
 			env.step(dt);
 
-
+			System.out.println("Step: " + nSteps);
 
 			for (var s: sema) {
 				try {

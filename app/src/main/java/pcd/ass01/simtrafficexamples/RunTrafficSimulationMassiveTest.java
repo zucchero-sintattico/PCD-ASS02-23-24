@@ -1,10 +1,12 @@
 package pcd.ass01.simtrafficexamples;
 
+import java.io.FileWriter;
+
 public class RunTrafficSimulationMassiveTest {
 
 	public static void main(String[] args) {		
 
-		int numCars = 5000;
+		int numCars =5000;
 		int nSteps = 100;
 		
 		var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars);
@@ -27,5 +29,6 @@ public class RunTrafficSimulationMassiveTest {
 	
 	private static void log(String msg) {
 		System.out.println("[ SIMULATION ] " + msg);
+
 	}
 }
