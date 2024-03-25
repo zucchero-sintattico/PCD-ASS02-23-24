@@ -88,7 +88,7 @@ public abstract class AbstractSimulation {
 			a.init(env);
 		}
 
-		new MasterProducer(18, agents);
+		new MasterProducer(8, agents);
 
 		this.notifyReset(t, agents, env);
 		
@@ -97,7 +97,7 @@ public abstract class AbstractSimulation {
 		
 		while (nSteps < numSteps) {
 
-			currentWallTime = System.currentTimeMillis();
+			currentWallTime = System.nanoTime();
 		
 			/* make a step */
 			
@@ -124,7 +124,7 @@ public abstract class AbstractSimulation {
 			notifyNewStep(t, agents, env);
 
 			nSteps++;			
-			timePerStep += System.currentTimeMillis() - currentWallTime;
+			timePerStep += System.nanoTime() - currentWallTime;
 			
 			if (toBeInSyncWithWallTime) {
 				syncWithWallTime();
@@ -134,17 +134,17 @@ public abstract class AbstractSimulation {
 			}
 		}	
 		
-		endWallTime = System.currentTimeMillis();
+		endWallTime = System.nanoTime();
 		this.averageTimePerStep = timePerStep / numSteps;
 		
 	}
 	
 	public long getSimulationDuration() {
-		return endWallTime - startWallTime;
+		return (endWallTime - startWallTime) / 1000000L;
 	}
 	
 	public long getAverageTimePerCycle() {
-		return averageTimePerStep;
+		return (averageTimePerStep / 10000000L);
 	}
 	
 	/* methods for configuring the simulation */
