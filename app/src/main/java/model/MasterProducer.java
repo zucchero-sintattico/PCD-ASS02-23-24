@@ -10,14 +10,17 @@ public class MasterProducer {
 
     int numOfThread;
 
+    int numOfStep;
+
     List<Runnable> listOFAgent;
 
     List<Integer> splitIndex = new ArrayList<>();
 
 
-    public MasterProducer(int numOfThread, List<AbstractAgent> listOFAgent){
+    public MasterProducer(int numOfThread, List<AbstractAgent> listOFAgent, int numOfStep){
         this.numOfThread = numOfThread;
         this.listOFAgent = new ArrayList<>(listOFAgent);
+        this.numOfStep = numOfStep;
 
 
         int size = listOFAgent.size();
@@ -30,8 +33,8 @@ public class MasterProducer {
             int start = i == 0 ? 0 : splitIndex.get(i-1);
             int end = splitIndex.get(i);
             List<Runnable> subList = this.listOFAgent.subList(start, end);
-            new Thread(()-> {
-                while (true) {
+            new Thread(() -> {
+                for (int j = 0; j < numOfStep; j++) {
                     for (Runnable agent : subList) {
                         agent.run();
                     }

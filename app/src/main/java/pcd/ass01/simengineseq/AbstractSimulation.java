@@ -88,7 +88,7 @@ public abstract class AbstractSimulation {
 			a.init(env);
 		}
 
-		new MasterProducer(8, agents);
+		new MasterProducer(2000, agents, numSteps);
 
 		this.notifyReset(t, agents, env);
 		
