@@ -44,7 +44,6 @@ public class RoadsEnv extends AbstractEnvironment {
 	}
 
 	private synchronized void _actEntrance(CarAgent agent) throws InterruptedException {
-//		System.out.println("agent pppppppppppp");
 		while(!timeToWrite){
 			wait();
 		}

@@ -1,2 +1,7 @@
-package model;public class Barrier {
+package model;
+
+public interface Barrier {
+
+    void hitAndWaitAll() throws InterruptedException;
+
 }

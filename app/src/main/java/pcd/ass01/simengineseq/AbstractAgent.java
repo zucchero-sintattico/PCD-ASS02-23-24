@@ -7,9 +7,9 @@ import java.util.concurrent.Semaphore;
  * Base  class for defining types of agents taking part to the simulation
  * 
  */
-public abstract class AbstractAgent implements Runnable {
+public abstract  class  AbstractAgent implements Runnable {
 	
-	private String myId;
+	private final String myId;
 	private AbstractEnvironment env;
 	private Semaphore sema;
 	private Semaphore sema1;
@@ -20,7 +20,7 @@ public abstract class AbstractAgent implements Runnable {
 	 * 
 	 * @param id
 	 */
-	protected AbstractAgent(String id) {
+	protected  AbstractAgent(String id) {
 		this.myId = id;
 	}
 	
@@ -29,7 +29,7 @@ public abstract class AbstractAgent implements Runnable {
 	 * 
 	 * @param env
 	 */
-	public void init(AbstractEnvironment env) {
+	public  synchronized void init(AbstractEnvironment env) {
 		this.env = env;
 	}
 	
@@ -49,11 +49,11 @@ public abstract class AbstractAgent implements Runnable {
 
 	
 	
-	public String getAgentId() {
+	public synchronized String getAgentId() {
 		return myId;
 	}
 	
-	protected AbstractEnvironment getEnv() {
+	protected synchronized AbstractEnvironment getEnv() {
 		return this.env;
 	}
 
@@ -63,7 +63,7 @@ public abstract class AbstractAgent implements Runnable {
 	}
 
 
-	public void setSema(Semaphore s, Semaphore sA1) {
+	public synchronized void setSema(Semaphore s, Semaphore sA1) {
 		this.sema = s;
 		this.sema1 = sA1;
 	}
