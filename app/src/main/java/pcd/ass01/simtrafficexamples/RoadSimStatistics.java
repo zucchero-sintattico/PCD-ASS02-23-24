@@ -1,5 +1,6 @@
 package pcd.ass01.simtrafficexamples;
 
+import java.io.FileWriter;
 import java.util.List;
 
 import pcd.ass01.simengineseq.AbstractAgent;
@@ -68,6 +69,17 @@ public class RoadSimStatistics implements SimulationListener {
 	
 	private void log(String msg) {
 		System.out.println("[STAT] " + msg);
+		//save to file
+		//delete file if exists
+
+
+		try {
+			FileWriter fw = new FileWriter("log.txt", true);
+			fw.write(msg + "\n");
+			fw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

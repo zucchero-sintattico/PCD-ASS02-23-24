@@ -7,15 +7,13 @@ import java.util.concurrent.Semaphore;
  * Base  class for defining types of agents taking part to the simulation
  * 
  */
-public abstract class AbstractAgent extends Thread{
+public abstract class AbstractAgent implements Runnable {
 	
 	private String myId;
 	private AbstractEnvironment env;
-
 	private Semaphore sema;
-	private Semaphore semaA1;
 	private Semaphore sema1;
-	private Semaphore semaA11;
+
 
 	/**
 	 * Each agent has an identifier
@@ -39,7 +37,16 @@ public abstract class AbstractAgent extends Thread{
 	 * This method is called at each step of the simulation
 	 * 
 	 */
-	abstract public void step(Semaphore sema, Semaphore sema1);
+
+	public abstract void sensAndDecide(Semaphore sema, Semaphore sema1);
+
+	/**
+	 *
+	 * @return the identifier of the agent
+	 */
+
+	public abstract void doAction();
+
 	
 	
 	public String getAgentId() {
@@ -52,15 +59,7 @@ public abstract class AbstractAgent extends Thread{
 
 	@Override
 	public void run() {
-		while (true) {
-//            try {
-//                semaA1.acquire();
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-            step(sema,sema1);
-//			sema.release();
-		}
+		sensAndDecide(sema, sema1);
 	}
 
 

@@ -1,5 +1,7 @@
 package pcd.ass01.simengineseq;
 
+import model.MasterProducer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,13 +39,11 @@ public abstract class AbstractSimulation {
 	private long averageTimePerStep;
 	private Random r = new Random();
 
-	private final List<Semaphore> sema = new ArrayList<Semaphore>();
-	private final List<Semaphore> semaA1 = new ArrayList<Semaphore>();
+	private final List<Semaphore> sema = new ArrayList<>();
+	private final List<Semaphore> semaA1 = new ArrayList<>();
 
 
-
-
-	protected AbstractSimulation() {
+    protected AbstractSimulation() {
 		agents = new ArrayList<AbstractAgent>();
 		listeners = new ArrayList<SimulationListener>();
 		toBeInSyncWithWallTime = false;
@@ -62,16 +62,20 @@ public abstract class AbstractSimulation {
 	 * 
 	 * @param numSteps
 	 */
-	public void run(int numSteps) {		
+	public void run(int numSteps, int numOfThread) {
 
 		startWallTime = System.currentTimeMillis();
 
 		List<Thread> carsList = new ArrayList<Thread>();
 
-		/* initialize the env and the agents inside */
+
+        /* initialize the env and the agents inside */
 		int t = t0;
 
 		env.init();
+
+
+
 		for (var a: agents) {
 			Semaphore s = new Semaphore(0);
 			Semaphore sA1 = new Semaphore(1);
@@ -81,9 +85,10 @@ public abstract class AbstractSimulation {
 
 			a.setSema(s,sA1);
 			a.init(env);
-
-			Thread.ofVirtual().start(a);
 		}
+
+
+		new MasterProducer(numOfThread, agents, numSteps);
 
 		this.notifyReset(t, agents, env);
 		
@@ -98,7 +103,7 @@ public abstract class AbstractSimulation {
 			
 			env.step(dt);
 
-
+			System.out.println("Step: " + nSteps);
 
 			for (var s: sema) {
 				try {
@@ -108,27 +113,10 @@ public abstract class AbstractSimulation {
 					e.printStackTrace();
 				}
 			}
-//			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-//			for (var s: semaA11) {
-//				s.release();
-//			}
-//
-//			for (var s: sema1) {
-//				try {
-//					s.acquire();
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//			System.out.println("BBBBBBBBBBBBBBBBBBBBB");
 
-
-
-
-
-
-
-
+			for (var a: agents) {
+				a.doAction();
+			}
 
 			
 			t += dt;
@@ -152,11 +140,11 @@ public abstract class AbstractSimulation {
 	}
 	
 	public long getSimulationDuration() {
-		return endWallTime - startWallTime;
+		return (endWallTime - startWallTime);
 	}
 	
 	public long getAverageTimePerCycle() {
-		return averageTimePerStep;
+		return (averageTimePerStep);
 	}
 	
 	/* methods for configuring the simulation */
