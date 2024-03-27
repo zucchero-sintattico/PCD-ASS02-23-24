@@ -13,9 +13,8 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
-public class StatisticalView{
+public class StatisticalView extends JFrame{
     private final static int DEFAULT_SIZE = 500;
-    private final JFrame frame;
     private final JLabel labelNumberOfSteps;
     private final JTextField fieldNumberOfSteps;
     private final JLabel labelConsoleLog;
@@ -28,11 +27,11 @@ public class StatisticalView{
     public StatisticalView(){
 
         //Create frame
-        this.frame = new JFrame();
-        this.frame.setLayout(new GridLayout(6, 0, 16, 10));
-        this.frame.setTitle("StatisticalView");
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setSize(DEFAULT_SIZE, DEFAULT_SIZE);
+        super();
+        this.setLayout(new GridLayout(6, 0, 16, 10));
+        this.setTitle("StatisticalView");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(DEFAULT_SIZE, DEFAULT_SIZE);
 
         //Create components
         this.labelNumberOfSteps = new JLabel("Number of steps");
@@ -46,24 +45,25 @@ public class StatisticalView{
         this.panel = new JPanel(new GridLayout(1, 1, 30, 30));
 
         //Add components on panel
-        this.frame.add(this.labelNumberOfSteps);
-        this.frame.add(this.fieldNumberOfSteps);
-        this.frame.add(this.labelConsoleLog);
-        this.frame.add(this.scroll);
+        this.add(this.labelNumberOfSteps);
+        this.add(this.fieldNumberOfSteps);
+        this.add(this.labelConsoleLog);
+        this.add(this.scroll);
         this.panel.add(this.buttonStart);
         this.panel.add(this.buttonStop);
-        this.frame.add(this.panel);
+        this.add(this.panel);
 
         //Add properties
         this.areaConsoleLog.setMargin(new Insets(10, 10, 10, 10));
+        this.fieldNumberOfSteps.setMargin(new Insets(10, 10, 10, 10));
 
         //Add container on frame
-        this.frame.setLocationRelativeTo(null);
-        this.frame.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
 
     }
 
     public void display(){
-        SwingUtilities.invokeLater(() -> this.frame.setVisible(true));
+        SwingUtilities.invokeLater(() -> this.setVisible(true));
     }
 }
