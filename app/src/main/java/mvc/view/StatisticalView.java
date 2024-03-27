@@ -13,10 +13,13 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
+
 public class StatisticalView extends JFrame{
     private final static int DEFAULT_SIZE = 500;
     private final JLabel labelNumberOfSteps;
     private final JTextField fieldNumberOfSteps;
+    private final JLabel labelNumberOfThreads;
+    private final JTextField fieldNumberOfThreads;
     private final JLabel labelConsoleLog;
     private final JTextArea areaConsoleLog;
     private final JButton buttonStart;
@@ -28,14 +31,16 @@ public class StatisticalView extends JFrame{
 
         //Create frame
         super();
-        this.setLayout(new GridLayout(6, 0, 16, 10));
+        this.setLayout(new GridLayout(8, 0, 16, 10));
         this.setTitle("StatisticalView");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(DEFAULT_SIZE, DEFAULT_SIZE);
 
         //Create components
         this.labelNumberOfSteps = new JLabel("Number of steps");
-        this.fieldNumberOfSteps = new JTextField("Insert number of steps...", 1);
+        this.fieldNumberOfSteps = new JTextField("200", 1);
+        this.labelNumberOfThreads = new JLabel("Number of threads");
+        this.fieldNumberOfThreads = new JTextField("18", 1);
         this.labelConsoleLog = new JLabel("Console log");
         this.areaConsoleLog = new JTextArea("Console log");
         this.buttonStart = new JButton("Start simulation");
@@ -47,6 +52,8 @@ public class StatisticalView extends JFrame{
         //Add components on panel
         this.add(this.labelNumberOfSteps);
         this.add(this.fieldNumberOfSteps);
+        this.add(this.labelNumberOfThreads);
+        this.add(this.fieldNumberOfThreads);
         this.add(this.labelConsoleLog);
         this.add(this.scroll);
         this.panel.add(this.buttonStart);
@@ -65,5 +72,17 @@ public class StatisticalView extends JFrame{
 
     public void display(){
         SwingUtilities.invokeLater(() -> this.setVisible(true));
+    }
+
+    public void updateView(String message){
+        this.areaConsoleLog.append(message + "\n");
+    }
+
+    public int getNumberOfSteps(){
+        return Integer.valueOf(this.fieldNumberOfSteps.getText());
+    }
+
+    public int getNumberOfThreads(){
+        return Integer.valueOf(this.fieldNumberOfThreads.getText());
     }
 }

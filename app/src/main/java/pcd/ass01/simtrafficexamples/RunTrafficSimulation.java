@@ -20,7 +20,7 @@ public class RunTrafficSimulation {
 		view.display();
 		
 		simulation.addSimulationListener(stat);
-		simulation.addSimulationListener(view);		
+		simulation.addSimulationListener(view);
 		simulation.run(1000, 20);
 	}
 }
