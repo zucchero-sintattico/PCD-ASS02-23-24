@@ -1,7 +1,6 @@
 package model;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 public class Environment {
 
