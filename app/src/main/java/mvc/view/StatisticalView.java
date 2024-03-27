@@ -62,6 +62,7 @@ public class StatisticalView extends JFrame{
 
         //Add properties
         this.areaConsoleLog.setMargin(new Insets(10, 10, 10, 10));
+        this.areaConsoleLog.setEditable(false);
         this.fieldNumberOfSteps.setMargin(new Insets(10, 10, 10, 10));
 
         //Add container on frame
@@ -84,5 +85,13 @@ public class StatisticalView extends JFrame{
 
     public int getNumberOfThreads(){
         return Integer.valueOf(this.fieldNumberOfThreads.getText());
+    }
+
+    public JButton getStartButton(){
+        return this.buttonStart;
+    }
+
+    public JButton getStopButton(){
+        return this.buttonStop;
     }
 }
