@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 
 
 public class StatisticalView extends JFrame{
-    private final static int DEFAULT_SIZE = 500;
+    private final static int DEFAULT_SIZE = 1000;
     private final JLabel labelNumberOfSteps;
     private final JTextField fieldNumberOfSteps;
     private final JLabel labelNumberOfThreads;
@@ -77,6 +77,7 @@ public class StatisticalView extends JFrame{
 
     public void updateView(String message){
         this.areaConsoleLog.append(message + "\n");
+        this.areaConsoleLog.setCaretPosition(this.areaConsoleLog.getDocument().getLength());
     }
 
     public int getNumberOfSteps(){
@@ -93,5 +94,10 @@ public class StatisticalView extends JFrame{
 
     public JButton getStopButton(){
         return this.buttonStop;
+    }
+
+    
+    public void clearTextArea(){
+        this.areaConsoleLog.setText("");
     }
 }

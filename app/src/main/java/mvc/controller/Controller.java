@@ -4,6 +4,7 @@ import pcd.ass01.simengineseq.AbstractAgent;
 import pcd.ass01.simengineseq.AbstractEnvironment;
 import pcd.ass01.simengineseq.AbstractSimulation;
 import pcd.ass01.simengineseq.SimulationListener;
+import pcd.ass01.simtrafficbase.CarAgent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,10 @@ public class Controller implements ActionListener, SimulationListener{
     private final StatisticalView view;
     private final AbstractSimulation simulation;
     private boolean isSimulationStarted;
+	private double averageSpeed;
+	private double minSpeed;
+	private double maxSpeed;
+    private int step;
 
     public Controller(StatisticalView view, AbstractSimulation simulation){
         this.view = view;
@@ -29,6 +34,9 @@ public class Controller implements ActionListener, SimulationListener{
 
         //Setup simulation
         this.simulation.addSimulationListener(this);
+
+        this.averageSpeed = 0;
+        this.step = 0;
     }
 
     @Override
@@ -38,17 +46,38 @@ public class Controller implements ActionListener, SimulationListener{
 
     @Override
     public void notifyStepDone(int t, List<AbstractAgent> agents, AbstractEnvironment env) {
-        this.view.updateView("[Simulation]: Prova");
+        double avSpeed = 0;
+		
+		maxSpeed = -1;
+		minSpeed = Double.MAX_VALUE;
+		for (var agent: agents) {
+			CarAgent car = (CarAgent) agent;
+			double currSpeed = car.getCurrentSpeed();
+			avSpeed += currSpeed;			
+			if (currSpeed > maxSpeed) {
+				maxSpeed = currSpeed;
+			} else if (currSpeed < minSpeed) {
+				minSpeed = currSpeed;
+			}
+		}
+		
+		if (agents.size() > 0) {
+			avSpeed /= agents.size();
+		}
+        this.step++;
+        this.view.updateView("[STAT]: average speed: " + avSpeed);
+        this.view.updateView("[STAT]: step: " + step);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == this.view.getStartButton()){
-            SwingUtilities.invokeLater(() -> {
-                this.simulation.run(this.view.getNumberOfSteps(), this.view.getNumberOfThreads());
+            new Thread(() -> {
                 this.isSimulationStarted = true;
                 this.toggleButton();
-            });
+                this.view.clearTextArea();
+                this.simulation.run(this.view.getNumberOfSteps(), this.view.getNumberOfThreads());
+            }).start();
         }
         if(e.getSource() == this.view.getStopButton()){
             this.isSimulationStarted = false;
