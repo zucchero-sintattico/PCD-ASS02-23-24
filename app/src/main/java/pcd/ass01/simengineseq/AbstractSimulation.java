@@ -138,9 +138,9 @@ public abstract class AbstractSimulation {
 			nSteps++;			
 			timePerStep += System.currentTimeMillis() - currentWallTime;
 			
-//			if (toBeInSyncWithWallTime) {
-//				syncWithWallTime();
-//			}
+			if (toBeInSyncWithWallTime) {
+				syncWithWallTime();
+			}
 			for (var s: semaA1) {
 				s.release();
 			}
