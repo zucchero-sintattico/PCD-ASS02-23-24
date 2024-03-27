@@ -1,6 +1,7 @@
 package pcd.ass01.simengineseq;
 
-import model.MasterProducer;
+import model.Barrier;
+import model.MasterWorkerHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,13 @@ public abstract class AbstractSimulation {
 	private long endWallTime;
 	private long averageTimePerStep;
 	private Random r = new Random();
+
+	private Barrier barrier = new Barrier() {
+		@Override
+		public void hitAndWaitAll() throws InterruptedException {
+			//todo
+		}
+	};
 
 	private final List<Semaphore> sema = new ArrayList<>();
 	private final List<Semaphore> semaA1 = new ArrayList<>();
@@ -88,7 +96,7 @@ public abstract class AbstractSimulation {
 		}
 
 
-		new MasterProducer(numOfThread, agents, numSteps);
+		new MasterWorkerHandler(numOfThread, agents, numSteps, barrier);
 
 		this.notifyReset(t, agents, env);
 		

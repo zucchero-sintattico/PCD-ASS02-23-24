@@ -6,25 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MasterProducer {
+public class MasterWorkerHandler {
 
-    int numOfThread;
-
-    int numOfStep;
-
-    List<Runnable> listOFAgent;
-
-    List<Integer> splitIndex = new ArrayList<>();
+    private List<Runnable> listOFAgent;
 
 
-    public MasterProducer(int numOfThread, List<AbstractAgent> listOFAgent, int numOfStep){
-        this.numOfThread = numOfThread;
+
+
+    public MasterWorkerHandler(int numOfThread, List<AbstractAgent> listOFAgent, int numOfStep, Barrier barrier){
+
         this.listOFAgent = new ArrayList<>(listOFAgent);
-        this.numOfStep = numOfStep;
-
 
         int size = listOFAgent.size();
         int split = size/numOfThread;
+        List<Integer> splitIndex = new ArrayList<>();
         for(int i = 1; i < numOfThread + 1 ; i++){
             splitIndex.add(i*split + size%numOfThread);
         }
@@ -33,13 +28,7 @@ public class MasterProducer {
             int start = i == 0 ? 0 : splitIndex.get(i-1);
             int end = splitIndex.get(i);
             List<Runnable> subList = this.listOFAgent.subList(start, end);
-            new Thread(() -> {
-                for (int j = 0; j < numOfStep; j++) {
-                    for (Runnable agent : subList) {
-                        agent.run();
-                    }
-                }
-            }).start();
+            new SimulationWorker(subList,numOfStep,barrier).start();
 
         }
 
