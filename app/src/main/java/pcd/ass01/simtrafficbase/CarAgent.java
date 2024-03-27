@@ -42,14 +42,10 @@ public abstract class CarAgent extends AbstractAgent {
 	 * Basic behaviour of a car agent structured into a sense/decide/act structure 
 	 * 
 	 */
-	public void sensAndDecide(Semaphore sema, Semaphore sema1) {
+	public void sensAndDecide() {
 
 		/* sense */
-		try {
-			sema1.acquire();
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
+
 		AbstractEnvironment env = this.getEnv();		
 		currentPercept = (CarPercept) env.getCurrentPercepts(getAgentId());			
 
@@ -59,7 +55,7 @@ public abstract class CarAgent extends AbstractAgent {
 
 		decide(dt);
 
-		sema.release();
+
 
 	}
 

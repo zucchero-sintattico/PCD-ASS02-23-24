@@ -22,4 +22,10 @@ public class BarrierImpl implements Barrier{
             }
         }
     }
+
+    @Override
+    public void reset() {
+        canPass = false;
+        arrived = 0;
+    }
 }

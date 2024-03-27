@@ -1,6 +1,7 @@
 package pcd.ass01.simengineseq;
 
 import model.Barrier;
+import model.BarrierImpl;
 import model.MasterWorkerHandler;
 
 import java.util.ArrayList;
@@ -40,18 +41,9 @@ public abstract class AbstractSimulation {
 	private long averageTimePerStep;
 	private Random r = new Random();
 
-	private Barrier barrier = new Barrier() {
-		@Override
-		public void hitAndWaitAll() throws InterruptedException {
-			//todo
-		}
-	};
+	private Barrier barrier;
 
-	private final List<Semaphore> sema = new ArrayList<>();
-	private final List<Semaphore> semaA1 = new ArrayList<>();
-
-
-    protected AbstractSimulation() {
+	protected AbstractSimulation() {
 		agents = new ArrayList<AbstractAgent>();
 		listeners = new ArrayList<SimulationListener>();
 		toBeInSyncWithWallTime = false;
@@ -71,7 +63,7 @@ public abstract class AbstractSimulation {
 	 * @param numSteps
 	 */
 	public void run(int numSteps, int numOfThread) {
-
+		barrier = new BarrierImpl(numOfThread+1);
 		startWallTime = System.currentTimeMillis();
 
 		List<Thread> carsList = new ArrayList<Thread>();
@@ -81,17 +73,7 @@ public abstract class AbstractSimulation {
 		int t = t0;
 
 		env.init();
-
-
-
 		for (var a: agents) {
-			Semaphore s = new Semaphore(0);
-			Semaphore sA1 = new Semaphore(1);
-
-			sema.add(s);
-			semaA1.add(sA1);
-
-			a.setSema(s,sA1);
 			a.init(env);
 		}
 
@@ -113,13 +95,10 @@ public abstract class AbstractSimulation {
 
 			System.out.println("Step: " + nSteps);
 
-			for (var s: sema) {
-				try {
-					s.acquire();
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			try {
+				barrier.hitAndWaitAll();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
 			}
 
 			for (var a: agents) {
@@ -137,9 +116,8 @@ public abstract class AbstractSimulation {
 			if (toBeInSyncWithWallTime) {
 				syncWithWallTime();
 			}
-			for (var s: semaA1) {
-				s.release();
-			}
+			barrier.reset();
+
 		}	
 		
 		endWallTime = System.currentTimeMillis();

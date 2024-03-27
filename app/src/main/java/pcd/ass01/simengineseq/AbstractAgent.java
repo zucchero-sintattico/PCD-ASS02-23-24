@@ -11,8 +11,7 @@ public abstract  class  AbstractAgent implements Runnable {
 	
 	private final String myId;
 	private AbstractEnvironment env;
-	private Semaphore sema;
-	private Semaphore sema1;
+
 
 
 	/**
@@ -29,7 +28,7 @@ public abstract  class  AbstractAgent implements Runnable {
 	 * 
 	 * @param env
 	 */
-	public  synchronized void init(AbstractEnvironment env) {
+	public  void init(AbstractEnvironment env) {
 		this.env = env;
 	}
 	
@@ -38,7 +37,7 @@ public abstract  class  AbstractAgent implements Runnable {
 	 * 
 	 */
 
-	public abstract void sensAndDecide(Semaphore sema, Semaphore sema1);
+	public abstract void sensAndDecide();
 
 	/**
 	 *
@@ -49,22 +48,19 @@ public abstract  class  AbstractAgent implements Runnable {
 
 	
 	
-	public synchronized String getAgentId() {
+	public  String getAgentId() {
 		return myId;
 	}
 	
-	protected synchronized AbstractEnvironment getEnv() {
+	protected  AbstractEnvironment getEnv() {
 		return this.env;
 	}
 
 	@Override
 	public void run() {
-		sensAndDecide(sema, sema1);
+		sensAndDecide();
 	}
 
 
-	public synchronized void setSema(Semaphore s, Semaphore sA1) {
-		this.sema = s;
-		this.sema1 = sA1;
-	}
+
 }
