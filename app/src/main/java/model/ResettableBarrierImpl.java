@@ -34,6 +34,7 @@ public class ResettableBarrierImpl implements ResettableBarrier {
             resettable = true;
 //                System.out.println("resettable");
             exited = 0;
+            reset();
         }
 
 

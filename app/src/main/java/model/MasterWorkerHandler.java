@@ -13,7 +13,7 @@ public class MasterWorkerHandler {
 
 
 
-    public MasterWorkerHandler(int numOfThread, List<AbstractAgent> listOFAgent, int numOfStep, ResettableBarrier barrier){
+    public MasterWorkerHandler(int numOfThread, List<AbstractAgent> listOFAgent, int numOfStep, ResettableBarrier barrier, ResettableBarrier barrier2){
 
         this.listOFAgent = new ArrayList<>(listOFAgent);
 
@@ -28,7 +28,7 @@ public class MasterWorkerHandler {
             int start = i == 0 ? 0 : splitIndex.get(i-1);
             int end = splitIndex.get(i);
             List<Runnable> subList = this.listOFAgent.subList(start, end);
-            new SimulationWorker(subList,numOfStep,barrier).start();
+            new SimulationWorker(subList,numOfStep,barrier, barrier2).start();
 
         }
 

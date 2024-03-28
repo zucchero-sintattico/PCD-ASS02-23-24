@@ -39,7 +39,7 @@ public abstract class AbstractSimulation {
 	private long averageTimePerStep;
 	private Random r = new Random();
 
-	private ResettableBarrier barrier;
+	private ResettableBarrier barrier1, barrier2;
 
 	protected AbstractSimulation() {
 		agents = new ArrayList<AbstractAgent>();
@@ -61,7 +61,8 @@ public abstract class AbstractSimulation {
 	 * @param numSteps
 	 */
 	public void run(int numSteps, int numOfThread) {
-		barrier = new ResettableBarrierImpl(numOfThread);
+		barrier1 = new ResettableBarrierImpl(numOfThread+1);
+		barrier2 = new ResettableBarrierImpl(numOfThread+1);
 		startWallTime = System.currentTimeMillis();
 
 		List<Thread> carsList = new ArrayList<Thread>();
@@ -76,7 +77,7 @@ public abstract class AbstractSimulation {
 		}
 
 
-		new MasterWorkerHandler(numOfThread, agents, numSteps, barrier);
+		new MasterWorkerHandler(numOfThread, agents, numSteps, barrier1, barrier2);
 
 		this.notifyReset(t, agents, env);
 		
@@ -93,12 +94,12 @@ public abstract class AbstractSimulation {
 
 			System.out.println("Step: " + nSteps);
 
-//			try {
-//				barrier.hitAndWaitAll();
-//			} catch (InterruptedException e) {
-//				throw new RuntimeException(e);
-//			}
-			while(!barrier.isResettable()){}
+			try {
+				barrier1.hitAndWaitAll();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+//			while(!barrier.isResettable()){}
 			for (var a: agents) {
 				a.doAction();
 			}
@@ -114,7 +115,12 @@ public abstract class AbstractSimulation {
 			if (toBeInSyncWithWallTime) {
 				syncWithWallTime();
 			}
-			barrier.reset();
+			try {
+				barrier2.hitAndWaitAll();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+//			barrier.reset();
 
 		}	
 		
