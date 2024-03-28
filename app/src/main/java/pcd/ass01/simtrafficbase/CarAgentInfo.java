@@ -1,6 +1,6 @@
 package pcd.ass01.simtrafficbase;
 
-public  class CarAgentInfo {
+public class CarAgentInfo {
 
 	private CarAgent car;
 	private double pos;

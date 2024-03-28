@@ -28,7 +28,7 @@ public abstract  class  AbstractAgent implements Runnable {
 	 * 
 	 * @param env
 	 */
-	public  void init(AbstractEnvironment env) {
+	public void init(AbstractEnvironment env) {
 		this.env = env;
 	}
 	
