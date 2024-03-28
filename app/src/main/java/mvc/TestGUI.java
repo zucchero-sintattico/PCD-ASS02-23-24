@@ -2,14 +2,14 @@ package mvc;
 
 import mvc.controller.Controller;
 import mvc.view.StatisticalView;
-import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadTwoCars;
+import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 
 public class TestGUI {
     public static void main(String[] args) {
-        TrafficSimulationSingleRoadTwoCars simulation = new TrafficSimulationSingleRoadTwoCars();
-        simulation.setup();
+        //var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(500);
+        //simulation.setup();
         StatisticalView view = new StatisticalView();
-        Controller controller = new Controller(view, simulation);
+        Controller controller = new Controller(view);
         controller.displayView();
     }
 }
