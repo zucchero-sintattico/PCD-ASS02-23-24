@@ -1,6 +1,10 @@
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pcd.ass01.simtrafficexamples.RoadSimStatistics;
 import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+
+import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -18,10 +22,20 @@ public class MassiveTests {
     // 		RunTrafficSimulationMassiveTest.main(null);
     // 	}
     // }
+
+    @BeforeEach
+    public void setup() {
+        File file = new File("log.txt");
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
     @Test
     public void testMassive() {
         int numCars =5000;
         int nSteps = 100;
+
 
         var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars);
         simulation.setup();
@@ -31,7 +45,7 @@ public class MassiveTests {
 
 
         // /app/log.txt must be the same of resources/log.txt
-        boolean areFilesEqual = FileComparator.compareFiles("/app/log.txt", "/app/src/test/java/resources/log.txt");
+        boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/log.txt");
         assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
 
 
