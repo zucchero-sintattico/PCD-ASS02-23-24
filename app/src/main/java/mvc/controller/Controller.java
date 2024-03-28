@@ -6,33 +6,35 @@ import pcd.ass01.simengineseq.AbstractSimulation;
 import pcd.ass01.simengineseq.SimulationListener;
 import pcd.ass01.simtrafficbase.CarAgent;
 import pcd.ass01.simtrafficexamples.RunTrafficSimulation;
-import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
-import pcd.ass01.simtrafficexamples.TrafficSimulationWithCrossRoads;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 
+import model.SimulationType;
 import mvc.view.StatisticalView;
 
-public class Controller implements ActionListener, SimulationListener{
+public class Controller implements ActionListener, SimulationListener, ItemListener{
 
     private final StatisticalView view;
     private AbstractSimulation simulation;
     private boolean isSimulationStarted;
+    private boolean isStopped;
 	private double minSpeed;
 	private double maxSpeed;
 
     public Controller(StatisticalView view){
         this.view = view;
         this.isSimulationStarted = false;
+        this.isStopped = false;
         
         //Attach the listener for the button
         this.view.getStartButton().addActionListener(this);
         this.view.getStopButton().addActionListener(this);
 
-        //Listener
-        //this.simulation.addSimulationListener(this);
+        this.populateComboBox();
     }
 
     @Override
@@ -76,23 +78,30 @@ public class Controller implements ActionListener, SimulationListener{
 
     private void stopSimulation() {
         this.simulation.pause();
-        this.isSimulationStarted = false;
+        this.isStopped = true;
         this.toggleButton();
     }
 
     private void startSimulation() {
-        new Thread(() -> {
-            this.isSimulationStarted = true;
-            this.toggleButton();
-            this.view.clearTextArea();
-            //Setup simulation
-            this.simulation = RunTrafficSimulation.trafficSimulation();
-            this.simulation.addSimulationListener(this);
-            this.simulation.setup();
-            this.simulation.run(this.view.getNumberOfSteps(), this.view.getNumberOfThreads());
-            this.isSimulationStarted = false;
-            this.toggleButton();
-        }).start();
+        if(this.isStopped){
+            System.out.println("Restart");
+            this.simulation.play();
+        }else{
+            new Thread(() -> {
+                this.isSimulationStarted = true;
+                this.toggleButton();
+                this.view.clearTextArea();
+                //Setup simulation
+                this.simulation = RunTrafficSimulation.trafficSimulation();
+                this.simulation.addSimulationListener(this);
+                this.simulation.setup();
+                this.simulation.run(this.view.getNumberOfSteps(), this.view.getNumberOfThreads());
+                this.isSimulationStarted = false;
+                this.isStopped = false;
+                this.toggleButton();
+            }).start();            
+        }
+
 
     }
 
@@ -102,11 +111,25 @@ public class Controller implements ActionListener, SimulationListener{
 
 
     private void toggleButton(){
-        if(this.isSimulationStarted){
-            this.view.getStartButton().setEnabled(false);
+        if(this.isStopped){
+            this.view.getStartButton().setText("Restart simulation");
         }else{
-            this.view.getStartButton().setEnabled(true);
+            this.view.getStartButton().setText("Start simulation");
         }
     }
     
+    private void populateComboBox(){
+        var box = this.view.getBox();
+        box.addItemListener(this);
+        box.addItem(SimulationType.SINGLE_ROAD_TWO_CAR);
+        box.addItem(SimulationType.SINGLE_ROAD_SEVERAL_CARS);
+        box.addItem(SimulationType.SINGLE_ROAD_WITH_TRAFFIC_TWO_CAR);
+        box.addItem(SimulationType.CROSS_ROADS);
+        box.addItem(SimulationType.MASSIVE_SIMULATION);
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        this.simulation = ((SimulationType)e.getItem()).geSimulation();
+    }
 }

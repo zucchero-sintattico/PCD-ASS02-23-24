@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,6 +13,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+
+import model.SimulationType;
 
 
 public class StatisticalView extends JFrame{
@@ -25,13 +28,15 @@ public class StatisticalView extends JFrame{
     private final JButton buttonStart;
     private final JButton buttonStop;
     private final JPanel panel;
+    private final JLabel labelBox;
+    private final JComboBox<SimulationType> comboBox;
     private final JScrollPane scroll;
 
     public StatisticalView(){
 
         //Create frame
         super();
-        this.setLayout(new GridLayout(8, 0, 16, 10));
+        this.setLayout(new GridLayout(10, 0, 16, 10));
         this.setTitle("StatisticalView");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(DEFAULT_SIZE, DEFAULT_SIZE);
@@ -48,12 +53,16 @@ public class StatisticalView extends JFrame{
         this.scroll = new JScrollPane(this.areaConsoleLog);
         this.scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         this.panel = new JPanel(new GridLayout(1, 1, 30, 30));
+        this.labelBox = new JLabel("Choise simulation");
+        this.comboBox = new JComboBox();
 
         //Add components on panel
         this.add(this.labelNumberOfSteps);
         this.add(this.fieldNumberOfSteps);
         this.add(this.labelNumberOfThreads);
         this.add(this.fieldNumberOfThreads);
+        this.add(this.labelBox);
+        this.add(this.comboBox);
         this.add(this.labelConsoleLog);
         this.add(this.scroll);
         this.panel.add(this.buttonStart);
@@ -64,11 +73,16 @@ public class StatisticalView extends JFrame{
         this.areaConsoleLog.setMargin(new Insets(10, 10, 10, 10));
         this.areaConsoleLog.setEditable(false);
         this.fieldNumberOfSteps.setMargin(new Insets(10, 10, 10, 10));
+        this.fieldNumberOfThreads.setText(String.valueOf(getMaxAvaibleProcessor()));
 
         //Add container on frame
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
+    }
+
+    private int getMaxAvaibleProcessor() {
+        return Runtime.getRuntime().availableProcessors();
     }
 
     public void display(){
@@ -94,6 +108,10 @@ public class StatisticalView extends JFrame{
 
     public JButton getStopButton(){
         return this.buttonStop;
+    }
+
+    public JComboBox<SimulationType> getBox(){
+        return this.comboBox;
     }
 
     

@@ -2,7 +2,6 @@ package mvc;
 
 import mvc.controller.Controller;
 import mvc.view.StatisticalView;
-import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 
 public class TestGUI {
     public static void main(String[] args) {
