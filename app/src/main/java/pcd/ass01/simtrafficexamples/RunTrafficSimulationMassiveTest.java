@@ -7,11 +7,11 @@ public class RunTrafficSimulationMassiveTest {
 
 	public static void main(String[] args) {		
 
-		int numCars =15000;
+		int numCars =5000;
 		int nSteps = 100;
 
-//		List<Integer> numOfThreads = List.of(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024);
-		List<Integer> numOfThreads = List.of(64);
+		List<Integer> numOfThreads = List.of(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024);
+		//List<Integer> numOfThreads = List.of(64);
 
 		numOfThreads.forEach(numOfThread -> {
 			System.out.println("Thread: " + numOfThread);
