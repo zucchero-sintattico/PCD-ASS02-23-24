@@ -13,7 +13,7 @@ public class MasterWorkerHandler {
 
 
 
-    public MasterWorkerHandler(int numOfThread, List<AbstractAgent> listOFAgent, int numOfStep, Barrier barrier){
+    public MasterWorkerHandler(int numOfThread, List<AbstractAgent> listOFAgent, int numOfStep, ResettableBarrier barrier){
 
         this.listOFAgent = new ArrayList<>(listOFAgent);
 

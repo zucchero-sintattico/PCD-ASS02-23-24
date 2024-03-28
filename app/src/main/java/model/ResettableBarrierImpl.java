@@ -51,7 +51,6 @@ public class ResettableBarrierImpl implements ResettableBarrier {
 
     @Override
     public synchronized boolean isResettable(){
-
         return resettable;
     }
 }

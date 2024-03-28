@@ -1,8 +1,6 @@
 package pcd.ass01.simengineseq;
 
-import model.Barrier;
-import model.BarrierImpl;
-import model.MasterWorkerHandler;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,7 @@ public abstract class AbstractSimulation {
 	private long averageTimePerStep;
 	private Random r = new Random();
 
-	private Barrier barrier;
+	private ResettableBarrier barrier;
 
 	protected AbstractSimulation() {
 		agents = new ArrayList<AbstractAgent>();
@@ -63,7 +61,7 @@ public abstract class AbstractSimulation {
 	 * @param numSteps
 	 */
 	public void run(int numSteps, int numOfThread) {
-		barrier = new BarrierImpl(numOfThread+1);
+		barrier = new ResettableBarrierImpl(numOfThread);
 		startWallTime = System.currentTimeMillis();
 
 		List<Thread> carsList = new ArrayList<Thread>();
@@ -95,12 +93,12 @@ public abstract class AbstractSimulation {
 
 			System.out.println("Step: " + nSteps);
 
-			try {
-				barrier.hitAndWaitAll();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
-
+//			try {
+//				barrier.hitAndWaitAll();
+//			} catch (InterruptedException e) {
+//				throw new RuntimeException(e);
+//			}
+			while(!barrier.isResettable()){}
 			for (var a: agents) {
 				a.doAction();
 			}
