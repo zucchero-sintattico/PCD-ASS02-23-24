@@ -16,7 +16,7 @@ import java.util.List;
 import model.SimulationType;
 import mvc.view.StatisticalView;
 
-public class Controller implements ActionListener, SimulationListener, ItemListener{
+public class Controller implements ActionListener, SimulationListener{
 
     private final StatisticalView view;
     private AbstractSimulation simulation;
@@ -83,7 +83,7 @@ public class Controller implements ActionListener, SimulationListener, ItemListe
     }
 
     private void startSimulation() {
-        if(this.isStopped){
+        if(this.isStopped && this.isSimulationStarted){
             System.out.println("Restart");
             this.simulation.play();
         }else{
@@ -92,17 +92,24 @@ public class Controller implements ActionListener, SimulationListener, ItemListe
                 this.toggleButton();
                 this.view.clearTextArea();
                 //Setup simulation
-                this.simulation = RunTrafficSimulation.trafficSimulation();
+                SimulationType simulationType = ((SimulationType)this.view.getBox().getSelectedItem());
+                this.simulation = ((SimulationType)this.view.getBox().getSelectedItem()).getSimulation(simulationType);
                 this.simulation.addSimulationListener(this);
                 this.simulation.setup();
                 this.simulation.run(this.view.getNumberOfSteps(), this.view.getNumberOfThreads());
-                this.isSimulationStarted = false;
-                this.isStopped = false;
-                this.toggleButton();
+                //Notify finish
+                this.view.updateView("[SIMULATION]: " + simulationType.toString() + " FINISH");
+                resetGui();
             }).start();            
         }
 
 
+    }
+
+    private void resetGui() {
+        this.isSimulationStarted = false;
+        this.isStopped = false;
+        this.toggleButton();
     }
 
     public void displayView(){
@@ -111,7 +118,7 @@ public class Controller implements ActionListener, SimulationListener, ItemListe
 
 
     private void toggleButton(){
-        if(this.isStopped){
+        if(this.isSimulationStarted){
             this.view.getStartButton().setText("Restart simulation");
         }else{
             this.view.getStartButton().setText("Start simulation");
@@ -120,7 +127,6 @@ public class Controller implements ActionListener, SimulationListener, ItemListe
     
     private void populateComboBox(){
         var box = this.view.getBox();
-        box.addItemListener(this);
         box.addItem(SimulationType.SINGLE_ROAD_TWO_CAR);
         box.addItem(SimulationType.SINGLE_ROAD_SEVERAL_CARS);
         box.addItem(SimulationType.SINGLE_ROAD_WITH_TRAFFIC_TWO_CAR);
@@ -128,8 +134,4 @@ public class Controller implements ActionListener, SimulationListener, ItemListe
         box.addItem(SimulationType.MASSIVE_SIMULATION);
     }
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        this.simulation = ((SimulationType)e.getItem()).geSimulation();
-    }
 }

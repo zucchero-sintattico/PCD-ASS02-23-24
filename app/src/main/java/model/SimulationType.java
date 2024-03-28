@@ -8,25 +8,23 @@ import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadWithTrafficLightT
 import pcd.ass01.simtrafficexamples.TrafficSimulationWithCrossRoads;
 
 public enum SimulationType {
-    SINGLE_ROAD_TWO_CAR("SingleRoadTwoCars", new TrafficSimulationSingleRoadTwoCars()), 
-    SINGLE_ROAD_SEVERAL_CARS("SingleRoadSeveralCars", new TrafficSimulationSingleRoadSeveralCars()), 
-    SINGLE_ROAD_WITH_TRAFFIC_TWO_CAR("SingleRoadWithTrafficLightTwoCars" ,new TrafficSimulationSingleRoadWithTrafficLightTwoCars()), 
-    CROSS_ROADS("WithCrossRoads", new TrafficSimulationWithCrossRoads()), 
-    MASSIVE_SIMULATION("SingleRoadMassiveNumberOfCars", new TrafficSimulationSingleRoadMassiveNumberOfCars(500));
-
-    private String simulationName;
-    private AbstractSimulation simulation;
-
-    private SimulationType(String name, AbstractSimulation simulation){
-        this.simulationName = name;
-        this.simulation = simulation;
-    }
-
-    public String getSimulationName(){
-        return this.simulationName;
-    }
+    SINGLE_ROAD_TWO_CAR, 
+    SINGLE_ROAD_SEVERAL_CARS, 
+    SINGLE_ROAD_WITH_TRAFFIC_TWO_CAR, 
+    CROSS_ROADS, 
+    MASSIVE_SIMULATION;
     
-    public AbstractSimulation geSimulation(){
-        return this.simulation;
+    public AbstractSimulation getSimulation(SimulationType type){
+        if(type.equals(SINGLE_ROAD_TWO_CAR)){
+            return new TrafficSimulationSingleRoadTwoCars();
+        }else if(type.equals(SINGLE_ROAD_SEVERAL_CARS)){
+            return new TrafficSimulationSingleRoadSeveralCars();
+        }else if(type.equals(SINGLE_ROAD_WITH_TRAFFIC_TWO_CAR)){
+            return new TrafficSimulationSingleRoadWithTrafficLightTwoCars();
+        }else if(type.equals(CROSS_ROADS)){
+            return new TrafficSimulationWithCrossRoads();
+        }else{
+            return new TrafficSimulationSingleRoadMassiveNumberOfCars(500);
+        }
     }
 }
