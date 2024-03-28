@@ -1,6 +1,6 @@
 package pcd.ass01ridesign.monitor.agent;
 
-import pcd.ass01.simtrafficbase.CarAgentInfo;
+
 import pcd.ass01ridesign.monitor.agent.action.MoveForward;
 import pcd.ass01ridesign.monitor.agent.state.BaseCarAgentState;
 import pcd.ass01ridesign.monitor.environment.Environment;

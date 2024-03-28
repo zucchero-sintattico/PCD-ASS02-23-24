@@ -1,8 +1,10 @@
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pcd.ass01.simtrafficexamples.RoadSimStatistics;
-import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import pcd.ass01ridesign.RoadSimStatistics;
+import pcd.ass01ridesign.TrafficSimulationSingleRoadMassiveNumberOfCars;
+//import pcd.ass01.simtrafficexamples.RoadSimStatistics;
+//import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 
 import java.io.File;
 

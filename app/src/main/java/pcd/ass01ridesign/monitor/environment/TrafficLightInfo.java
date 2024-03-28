@@ -6,6 +6,7 @@ public class TrafficLightInfo {
     private final TrafficLight sem;
     private final Road road;
     private final double roadPos;
+
     public TrafficLightInfo(TrafficLight sem, Road road, double roadPos) {
         this.sem = sem;
         this.road = road;
@@ -23,4 +24,6 @@ public class TrafficLightInfo {
     public double getRoadPos() {
         return roadPos;
     }
+
+
 }
