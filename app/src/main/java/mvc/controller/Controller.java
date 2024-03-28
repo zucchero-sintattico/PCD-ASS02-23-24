@@ -39,7 +39,7 @@ public class Controller implements ActionListener, SimulationListener{
 
     @Override
     public void notifyInit(int t, List<AbstractAgent> agents, AbstractEnvironment env) {
-        this.view.updateView("[Simulation]: Start simulation");
+        this.view.updateView("[Simulation]: START simulation");
     }
 
     @Override
