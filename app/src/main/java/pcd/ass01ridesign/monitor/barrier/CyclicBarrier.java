@@ -34,12 +34,15 @@ public class CyclicBarrier implements Barrier {
 
     private void breakBarrier() {
         broken = true;
-        participants = 0;
-        notifyAll();
+        this.setupAndNotify();
     }
 
     private synchronized void reset() {
         broken = false;
+        this.setupAndNotify();
+    }
+
+    private void setupAndNotify() {
         participants = 0;
         notifyAll();
     }
