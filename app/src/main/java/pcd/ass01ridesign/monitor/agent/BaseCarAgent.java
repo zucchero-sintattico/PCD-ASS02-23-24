@@ -16,6 +16,10 @@ public class BaseCarAgent extends AbstractCarAgent {
         super(agentID, environment, road, initialPosition, acceleration, deceleration, maxSpeed, stepSize);
     }
 
+    public BaseCarAgent(String agentID, Environment environment, Road road, double initialPosition, int seed) {
+        super(agentID, environment, road, initialPosition,  seed);
+    }
+
     @Override
     protected void decide() {
 

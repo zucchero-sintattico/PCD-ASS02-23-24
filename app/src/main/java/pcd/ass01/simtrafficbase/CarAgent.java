@@ -1,6 +1,7 @@
 package pcd.ass01.simtrafficbase;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 import pcd.ass01.simengineseq.*;
@@ -22,6 +23,8 @@ public abstract class CarAgent extends AbstractAgent {
 	protected CarPercept currentPercept;
 	protected Optional<Action> selectedAction;
 
+
+
 	int dt = 1;
 	
 	
@@ -35,6 +38,16 @@ public abstract class CarAgent extends AbstractAgent {
 		this.deceleration = dec;
 		this.maxSpeed = vmax;
 		env.registerNewCar(this, road, initialPos);
+	}
+
+	public  CarAgent(String id, RoadsEnv env, Road road, int seed){
+		super(id);
+		Random gen = new Random(seed);
+		this.acceleration = 1 + gen.nextDouble(0,1);
+		this.deceleration = 0.3 + gen.nextDouble(0,1);
+		this.maxSpeed = 4 + gen.nextDouble(1,10);
+		env.registerNewCar(this, road, gen.nextInt(0, 1000));
+
 	}
 
 	/**

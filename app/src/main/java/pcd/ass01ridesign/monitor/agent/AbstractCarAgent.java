@@ -8,6 +8,8 @@ import pcd.ass01ridesign.monitor.agent.task.SerialTask;
 import pcd.ass01ridesign.monitor.environment.Environment;
 import pcd.ass01ridesign.monitor.environment.Road;
 
+import java.util.Random;
+
 public abstract class AbstractCarAgent implements CarAgent {
 
     private final String agentID;
@@ -37,6 +39,17 @@ public abstract class AbstractCarAgent implements CarAgent {
         this.environment = environment;
         this.stepSize = stepSize;
         this.environment.registerNewCar(this, road, initialPosition);
+    }
+
+    public AbstractCarAgent(String agentID, Environment environment, Road road, double initialPosition, int seed) {
+        this.agentID = agentID;
+        this.environment = environment;
+        Random gen = new Random(seed);
+        this.environment.registerNewCar(this, road, initialPosition);
+        this.acceleration = 1 + gen.nextDouble(0,1);
+        this.deceleration = 0.3 + gen.nextDouble(0,1);
+        this.maxSpeed = 4 + gen.nextDouble(1,10);
+        this.stepSize = 1;
     }
 
     protected abstract void decide();

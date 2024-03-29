@@ -35,6 +35,12 @@ public class CarAgentExtended extends CarAgent {
 		super(id, env, road, initialPos, acc, dec, vmax);
 		state = CarAgentState.STOPPED;
 	}
+
+	public CarAgentExtended(String id, RoadsEnv env, Road road,
+			int seed) {
+		super(id, env, road, seed);
+		state = CarAgentState.STOPPED;
+	}
 	
 	
 	@Override

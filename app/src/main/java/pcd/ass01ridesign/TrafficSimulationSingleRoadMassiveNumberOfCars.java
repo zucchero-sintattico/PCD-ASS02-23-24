@@ -9,13 +9,23 @@ import pcd.ass01ridesign.monitor.environment.Road;
 import pcd.ass01ridesign.monitor.environment.RoadsEnvironment;
 import pcd.ass01ridesign.passiveComponent.utils.Point2D;
 
+import java.util.Optional;
+import java.util.Random;
+
 public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimulation {
 
 	private int numCars;
+	private Optional<Integer> seed = Optional.empty();
 	
 	public TrafficSimulationSingleRoadMassiveNumberOfCars(int numCars) {
 		super();
 		this.numCars = numCars;
+	}
+
+	public TrafficSimulationSingleRoadMassiveNumberOfCars(int numCars, int seed) {
+		super();
+		this.numCars = numCars;
+		this.seed = Optional.of(seed);
 	}
 	
 	public void setup() {
@@ -31,9 +41,9 @@ public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimu
 			
 			String carId = "car-" + i;
 			double initialPos = i*10;			
-			double carAcceleration = 1; //  + gen.nextDouble()/2;
-			double carDeceleration = 0.3; //  + gen.nextDouble()/2;
-			double carMaxSpeed = 7; // 4 + gen.nextDouble();
+			double carAcceleration = 1;
+			double carDeceleration = 0.3;
+			double carMaxSpeed = 7;
 						
 			AbstractCarAgent car = new BaseCarAgent(carId, env,
 									road,
@@ -41,6 +51,11 @@ public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimu
 									carAcceleration, 
 									carDeceleration,
 									carMaxSpeed,1);
+
+			if (seed.isPresent()) {
+				car = new BaseCarAgent(carId, env, road, initialPos, seed.get());
+			}
+
 			this.addAgent(car);
 			
 			

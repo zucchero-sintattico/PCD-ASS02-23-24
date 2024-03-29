@@ -33,6 +33,7 @@ public class MassiveTests {
         }
     }
 
+
     @Test
     public void testMassive() {
         int numCars =5000;
@@ -43,7 +44,7 @@ public class MassiveTests {
         simulation.setup();
         RoadSimStatistics stat = new RoadSimStatistics();
         simulation.addSimulationListener(stat);
-        simulation.run(nSteps, 200);
+        simulation.run(nSteps, 32);
 
 
 
@@ -51,9 +52,24 @@ public class MassiveTests {
         boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/log.txt");
         assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
 
+    }
+
+    @Test
+    public void testRandMassive() {
+        int numCars =5000;
+        int nSteps = 100;
 
 
+        var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars, 1234);
+        simulation.setup();
+        RoadSimStatistics stat = new RoadSimStatistics();
+        simulation.addSimulationListener(stat);
+        simulation.run(nSteps, 200);
 
+
+        // /app/log.txt must be the same of resources/log.txt
+        boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/rand_log.txt");
+        assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
 
     }
 }
