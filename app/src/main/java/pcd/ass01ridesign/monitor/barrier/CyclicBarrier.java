@@ -7,9 +7,18 @@ public class CyclicBarrier implements Barrier {
     private final int numberOfParticipants;
     private int participants = 0;
     private boolean broken;
+    private Runnable preprocessing = () -> {};
+    private Runnable postprocessing = () -> {};
 
     public CyclicBarrier(int numberOfParticipants) {
         this.numberOfParticipants = numberOfParticipants;
+    }
+
+    public CyclicBarrier(int numberOfParticipants, Runnable preprocessing, Runnable postprocessing) {
+        this.numberOfParticipants = numberOfParticipants;
+        this.preprocessing = preprocessing;
+        this.postprocessing = postprocessing;
+        this.preprocessing.run();
     }
 
     @Override
@@ -34,11 +43,13 @@ public class CyclicBarrier implements Barrier {
 
     private void breakBarrier() {
         broken = true;
+        postprocessing.run();
         this.setupAndNotify();
     }
 
-    private synchronized void reset() {
+    private void reset() {
         broken = false;
+        preprocessing.run();
         this.setupAndNotify();
     }
 

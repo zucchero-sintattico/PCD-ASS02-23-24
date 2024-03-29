@@ -2,12 +2,16 @@ package pcd.ass01ridesign;
 
 
 
+import pcd.ass01ridesign.activeComponent.SimulationRunner;
+import pcd.ass01ridesign.simulation.listeners.RoadSimStatistics;
+import pcd.ass01ridesign.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+
 import java.io.FileWriter;
 import java.util.List;
 
 public class RunTrafficSimulationMassiveTest {
 
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 
 		int numCars =5000;
 		int nSteps = 100;
@@ -18,7 +22,7 @@ public class RunTrafficSimulationMassiveTest {
 		numOfThreads.forEach(numOfThread -> {
 			System.out.println("Thread: " + numOfThread);
 			var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars);
-			simulation.setup();
+			simulation.setup(nSteps, numOfThread);
 
 			log("Running the simulation: " + numCars + " cars, for " + nSteps + " steps ...");
 
@@ -26,7 +30,13 @@ public class RunTrafficSimulationMassiveTest {
 
 			simulation.addSimulationListener(stat);
 
-			simulation.run(nSteps, numOfThread);
+			Thread t = new SimulationRunner(simulation);
+			t.start();
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 
 			long d = simulation.getSimulationDuration();
 			log("Completed in " + d + " ms - average time per step: " + simulation.getAverageTimePerCycle() + " ms");

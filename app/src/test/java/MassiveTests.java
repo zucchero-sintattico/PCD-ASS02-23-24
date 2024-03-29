@@ -1,8 +1,8 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pcd.ass01ridesign.RoadSimStatistics;
-import pcd.ass01ridesign.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import pcd.ass01ridesign.activeComponent.SimulationRunner;
+import pcd.ass01ridesign.simulation.listeners.RoadSimStatistics;
+import pcd.ass01ridesign.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 //import pcd.ass01.simtrafficexamples.RoadSimStatistics;
 //import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 
@@ -29,23 +29,24 @@ public class MassiveTests {
     public void setup() {
         File file = new File("log.txt");
         if (file.exists()) {
-            System.out.println(file.delete());
+            file.delete();
         }
     }
 
 
     @Test
-    public void testMassive() {
+    public void testMassive() throws InterruptedException {
         int numCars =5000;
         int nSteps = 100;
 
 
         var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars);
-        simulation.setup();
+        simulation.setup(nSteps,32);
         RoadSimStatistics stat = new RoadSimStatistics();
         simulation.addSimulationListener(stat);
-        simulation.run(nSteps, 32);
-
+        Thread t = new SimulationRunner(simulation);
+        t.start();
+        t.join();
 
 
         // /app/log.txt must be the same of resources/log.txt
@@ -55,16 +56,19 @@ public class MassiveTests {
     }
 
     @Test
-    public void testRandMassive() {
+    public void testRandMassive() throws InterruptedException {
         int numCars =5000;
         int nSteps = 100;
 
 
         var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars, 1234);
-        simulation.setup();
+        simulation.setup(nSteps,200);
         RoadSimStatistics stat = new RoadSimStatistics();
         simulation.addSimulationListener(stat);
-        simulation.run(nSteps, 200);
+//        simulation.run(nSteps, 200);
+        Thread t = new SimulationRunner(simulation);
+        t.start();
+        t.join();
 
 
         // /app/log.txt must be the same of resources/log.txt
