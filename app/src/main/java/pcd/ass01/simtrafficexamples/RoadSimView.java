@@ -36,7 +36,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 		cp.add(BorderLayout.CENTER,panel);
 		setContentPane(cp);		
 		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			
 	}
 	
@@ -121,5 +121,10 @@ public class RoadSimView extends JFrame implements SimulationListener {
 		   this.sems = sems;
 		   repaint();
 	   }
+	}
+
+
+	@Override
+	public void notifySimulationEnded() {
 	}
 }

@@ -82,4 +82,9 @@ public class RoadSimStatistics implements SimulationListener {
 		}
 	}
 
+	@Override
+	public void notifySimulationEnded() {
+		
+	}
+
 }

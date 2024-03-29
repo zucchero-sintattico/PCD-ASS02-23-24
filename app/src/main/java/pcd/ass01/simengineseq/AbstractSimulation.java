@@ -130,9 +130,13 @@ public abstract class AbstractSimulation {
 					s.release();
 				}
 			}
-
 			endWallTime = System.currentTimeMillis();
 			this.averageTimePerStep = timePerStep / numSteps;
+		}
+
+		// End simulation
+		for (var l : listeners) {
+			l.notifySimulationEnded();
 		}
 	}
 

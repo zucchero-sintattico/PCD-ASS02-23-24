@@ -24,4 +24,21 @@ public class RunTrafficSimulation {
 		//simulation.run(1000, 20);
 		return simulation;
 	}
+
+	public static void main(String[] args) {
+		
+		//var simulation = new TrafficSimulationSingleRoadTwoCars();
+		//var simulation = new TrafficSimulationSingleRoadSeveralCars();
+		var simulation = new TrafficSimulationSingleRoadWithTrafficLightTwoCars();
+		//var simulation = new TrafficSimulationWithCrossRoads();
+		simulation.setup();
+		
+		RoadSimStatistics stat = new RoadSimStatistics();
+		RoadSimView view = new RoadSimView();
+		view.display();
+		
+		simulation.addSimulationListener(stat);
+		simulation.addSimulationListener(view);
+		simulation.run(1000, 20);
+	}
 }
