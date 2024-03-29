@@ -48,8 +48,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 
 	@Override
 	public void notifyInit(int t, List<AbstractAgent> agents, AbstractEnvironment env) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

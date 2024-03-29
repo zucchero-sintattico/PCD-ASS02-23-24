@@ -137,7 +137,7 @@ public abstract class AbstractSimulation implements Simulation{
         } catch (Exception ex) {}
     }
 
-    //todo refactor
+    //todo refactor when merge
     private void notifyReset(int t0, List<AbstractCarAgent> agents, Environment env) {
         for (var l: listeners) {
             l.notifyInit(t0, agents, env);

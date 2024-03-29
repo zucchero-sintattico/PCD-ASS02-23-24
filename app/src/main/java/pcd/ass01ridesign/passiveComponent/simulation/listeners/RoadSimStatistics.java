@@ -25,7 +25,6 @@ public class RoadSimStatistics implements SimulationListener {
 	
 	@Override
 	public void notifyInit(int t, List<AbstractCarAgent> agents, Environment env) {
-		// TODO Auto-generated method stub
 		// log("reset: " + t);
 		averageSpeed = 0;
 	}

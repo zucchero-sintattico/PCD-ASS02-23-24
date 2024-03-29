@@ -80,14 +80,13 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation{
             this.numStepDone++;
             this.currentWallTime = System.currentTimeMillis();
 
-            //todo fix
-//            environment.step();
+
             try {
                 this.barrier.hitAndWaitAll();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-//            extracted();
+
 
         }
         if(this.numStepDone == this.numSteps) {

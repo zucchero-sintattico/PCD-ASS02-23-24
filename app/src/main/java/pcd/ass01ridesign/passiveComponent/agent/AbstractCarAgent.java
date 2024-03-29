@@ -73,7 +73,6 @@ public abstract class AbstractCarAgent implements Agent, Car{
         }
     }
 
-    //TODO parallel action needs a dt for decide, now is passed in constructor
     @Override
     public ParallelTask getParallelAction() {
         return this::senseAndDecide;

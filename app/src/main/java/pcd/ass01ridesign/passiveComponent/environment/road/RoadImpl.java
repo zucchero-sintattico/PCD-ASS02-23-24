@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoadImpl implements Road {
-    //todo
+    //todo refactor
 
 
     private double len;
