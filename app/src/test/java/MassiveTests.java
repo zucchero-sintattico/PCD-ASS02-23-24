@@ -29,7 +29,7 @@ public class MassiveTests {
     public void setup() {
         File file = new File("log.txt");
         if (file.exists()) {
-            file.delete();
+            System.out.println(file.delete());
         }
     }
 
