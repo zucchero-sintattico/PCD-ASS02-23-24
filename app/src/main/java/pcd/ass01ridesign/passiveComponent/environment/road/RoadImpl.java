@@ -2,7 +2,7 @@ package pcd.ass01ridesign.passiveComponent.environment.road;
 
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLight;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLightInfo;
-import pcd.ass01ridesign.passiveComponent.utils.Point2D;
+import pcd.ass01ridesign.utils.Point2D;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,7 @@ import pcd.ass01ridesign.passiveComponent.agent.perception.Perception;
 import pcd.ass01ridesign.passiveComponent.environment.road.Road;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLight;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLightState;
-import pcd.ass01ridesign.passiveComponent.utils.Point2D;
+import pcd.ass01ridesign.utils.Point2D;
 import pcd.ass01ridesign.simulation.SimulationComponent;
 
 public interface Environment extends SimulationComponent {

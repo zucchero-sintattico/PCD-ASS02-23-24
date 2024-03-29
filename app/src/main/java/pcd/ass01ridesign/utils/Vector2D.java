@@ -1,7 +1,4 @@
-package pcd.ass01ridesign.passiveComponent.utils;
-
-import pcd.ass01.simtrafficbase.P2d;
-import pcd.ass01.simtrafficbase.V2d;
+package pcd.ass01ridesign.utils;
 
 public class Vector2D {
     private final double x;

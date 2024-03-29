@@ -12,7 +12,7 @@ import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLight;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLightImpl;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLightInfo;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLightState;
-import pcd.ass01ridesign.passiveComponent.utils.Point2D;
+import pcd.ass01ridesign.utils.Point2D;
 import pcd.ass01ridesign.simulation.SimulationComponent;
 
 import java.util.ArrayList;

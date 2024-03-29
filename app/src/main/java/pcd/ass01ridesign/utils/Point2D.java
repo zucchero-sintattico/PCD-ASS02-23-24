@@ -1,4 +1,4 @@
-package pcd.ass01ridesign.passiveComponent.utils;
+package pcd.ass01ridesign.utils;
 
 public class Point2D {
     private final double x;

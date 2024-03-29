@@ -7,7 +7,7 @@ import pcd.ass01ridesign.passiveComponent.environment.Environment;
 import pcd.ass01ridesign.passiveComponent.environment.road.Road;
 import pcd.ass01ridesign.passiveComponent.environment.RoadsEnvironment;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLight;
-import pcd.ass01ridesign.passiveComponent.utils.Vector2D;
+import pcd.ass01ridesign.utils.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
