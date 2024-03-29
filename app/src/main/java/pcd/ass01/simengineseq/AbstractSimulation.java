@@ -1,6 +1,7 @@
 package pcd.ass01.simengineseq;
 
 import model.MasterProducer;
+import pcd.ass01.simtrafficbase.CarAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,9 @@ public abstract class AbstractSimulation {
 	private long endWallTime;
 	private long averageTimePerStep;
 	private Random r = new Random();
+
+	private double maxSpeed;
+    private double minSpeed;
 
 	private final List<Semaphore> sema = new ArrayList<>();
 	private final List<Semaphore> semaA1 = new ArrayList<>();
@@ -120,6 +124,27 @@ public abstract class AbstractSimulation {
 
 				notifyNewStep(t, agents, env);
 
+				double avSpeed = 0;
+
+				maxSpeed = -1;
+				minSpeed = Double.MAX_VALUE;
+				for (var agent : agents) {
+					CarAgent car = (CarAgent) agent;
+					double currSpeed = car.getCurrentSpeed();
+					avSpeed += currSpeed;
+					if (currSpeed > maxSpeed) {
+						maxSpeed = currSpeed;
+					} else if (currSpeed < minSpeed) {
+						minSpeed = currSpeed;
+					}
+				}
+
+				if (agents.size() > 0) {
+					avSpeed /= agents.size();
+				}
+
+				notifyNewStat(t, avSpeed);
+				
 				nSteps++;
 				timePerStep += System.currentTimeMillis() - currentWallTime;
 
@@ -185,6 +210,12 @@ public abstract class AbstractSimulation {
 	private void notifyReset(int t0, List<AbstractAgent> agents, AbstractEnvironment env) {
 		for (var l : listeners) {
 			l.notifyInit(t0, agents, env);
+		}
+	}
+
+	private void notifyNewStat(int step, double averageSpeed) {
+		for (var l : listeners) {
+			l.notifyStat(step, averageSpeed);
 		}
 	}
 

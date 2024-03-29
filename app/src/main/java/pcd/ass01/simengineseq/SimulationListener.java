@@ -21,5 +21,7 @@ public interface SimulationListener {
 	 */
 	void notifyStepDone(int t, List<AbstractAgent> agents, AbstractEnvironment env);
 
+	void notifyStat(int steps, double averageSpeed);
+
 	void notifySimulationEnded();
 }

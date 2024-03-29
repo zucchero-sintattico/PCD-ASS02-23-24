@@ -43,8 +43,6 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     private JComboBox<SimulationType> comboBox;
     private JCheckBox checkBox;
     private JScrollPane scroll;
-    private double maxSpeed;
-    private double minSpeed;
     private Controller controller;
 
     public StatisticalView(){
@@ -164,27 +162,9 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
 
     @Override
     public void notifyStepDone(int t, List<AbstractAgent> agents, AbstractEnvironment env) {
-        double avSpeed = 0;
-		
-		maxSpeed = -1;
-		minSpeed = Double.MAX_VALUE;
-		for (var agent: agents) {
-			CarAgent car = (CarAgent) agent;
-			double currSpeed = car.getCurrentSpeed();
-			avSpeed += currSpeed;			
-			if (currSpeed > maxSpeed) {
-				maxSpeed = currSpeed;
-			} else if (currSpeed < minSpeed) {
-				minSpeed = currSpeed;
-			}
-		}
-		
-		if (agents.size() > 0) {
-			avSpeed /= agents.size();
-		}
-        this.updateView("[STAT]: average speed: " + avSpeed);
-        this.updateView("[STAT]: step: " + t);
+        
     }
+    
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -220,4 +200,10 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.updateView("[SIMULATION]: " + this.controller.getSimulationType() + " FINISH");
         this.updateView("[SIMULATION] Time: " + this.controller.getSimulationDuration() + " ms");
 	}
+
+    @Override
+    public void notifyStat(int steps, double averageSpeed) {
+        this.updateView("[STAT]: average speed: " + averageSpeed);
+        this.updateView("[STAT]: step: " + steps);
+    }
 }

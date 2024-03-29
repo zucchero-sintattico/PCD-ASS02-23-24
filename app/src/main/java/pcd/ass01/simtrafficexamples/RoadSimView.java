@@ -127,4 +127,9 @@ public class RoadSimView extends JFrame implements SimulationListener {
 	@Override
 	public void notifySimulationEnded() {
 	}
+
+	@Override
+	public void notifyStat(int steps, double averageSpeed) {
+		
+	}
 }

@@ -87,4 +87,9 @@ public class RoadSimStatistics implements SimulationListener {
 		
 	}
 
+	@Override
+	public void notifyStat(int steps, double averageSpeed) {
+		
+	}
+
 }
