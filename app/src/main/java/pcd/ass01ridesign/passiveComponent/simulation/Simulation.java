@@ -1,7 +1,7 @@
-package pcd.ass01ridesign.simulation;
+package pcd.ass01ridesign.passiveComponent.simulation;
 
 import pcd.ass01ridesign.monitor.state.SimulationState;
-import pcd.ass01ridesign.simulation.listeners.SimulationListener;
+import pcd.ass01ridesign.passiveComponent.simulation.listeners.SimulationListener;
 
 public interface Simulation {
 

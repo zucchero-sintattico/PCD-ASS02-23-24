@@ -7,7 +7,6 @@ import pcd.ass01ridesign.passiveComponent.agent.task.ParallelTask;
 import pcd.ass01ridesign.passiveComponent.agent.task.SerialTask;
 import pcd.ass01ridesign.passiveComponent.environment.Environment;
 import pcd.ass01ridesign.passiveComponent.environment.road.Road;
-import pcd.ass01ridesign.simulation.SimulationComponent;
 
 import java.util.Random;
 

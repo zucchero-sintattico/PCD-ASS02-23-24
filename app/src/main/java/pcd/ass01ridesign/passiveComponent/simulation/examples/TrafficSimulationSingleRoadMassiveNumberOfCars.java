@@ -1,4 +1,4 @@
-package pcd.ass01ridesign.simulation.examples;
+package pcd.ass01ridesign.passiveComponent.simulation.examples;
 
 
 import pcd.ass01ridesign.passiveComponent.agent.AbstractCarAgent;
@@ -6,8 +6,8 @@ import pcd.ass01ridesign.passiveComponent.agent.agentImpl.base.BaseCarAgent;
 import pcd.ass01ridesign.passiveComponent.environment.Environment;
 import pcd.ass01ridesign.passiveComponent.environment.road.Road;
 import pcd.ass01ridesign.passiveComponent.environment.RoadsEnvironment;
+import pcd.ass01ridesign.passiveComponent.simulation.AbstractSimulationSingleBarrier;
 import pcd.ass01ridesign.utils.Point2D;
-import pcd.ass01ridesign.simulation.AbstractSimulationSingleBarrier;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package pcd.ass01ridesign.simulation;
+package pcd.ass01ridesign.passiveComponent.simulation;
 
 public interface SimulationComponent {
 

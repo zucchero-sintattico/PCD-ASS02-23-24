@@ -1,15 +1,21 @@
-package pcd.ass01ridesign.simulation;
+package pcd.ass01ridesign.passiveComponent.simulation;
 
-import pcd.ass01ridesign.activeComponent.SimulationWorkerSingleBarrier;
-import pcd.ass01ridesign.monitor.barrier.CyclicBarrier;
+import pcd.ass01ridesign.activeComponent.SimulationWorker;
 import pcd.ass01ridesign.passiveComponent.agent.task.ParallelTask;
+import pcd.ass01ridesign.monitor.barrier.CyclicBarrier;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MasterWorkerHandlerSingleBarrier {
 
-    public MasterWorkerHandlerSingleBarrier(int numOfThread, List<ParallelTask> listOFAgent, int numOfStep, CyclicBarrier barrier){
+public class MasterWorkerHandler {
+
+//    private List<Runnable> listOFAgent;
+
+
+
+
+    public MasterWorkerHandler(int numOfThread, List<ParallelTask> listOFAgent, int numOfStep, CyclicBarrier barrier, CyclicBarrier barrier2){
 
 //        this.listOFAgent = new ArrayList<>(listOFAgent);
 
@@ -24,12 +30,17 @@ public class MasterWorkerHandlerSingleBarrier {
             int start = i == 0 ? 0 : splitIndex.get(i-1);
             int end = splitIndex.get(i);
             List<ParallelTask> subList = listOFAgent.subList(start, end);
-            new SimulationWorkerSingleBarrier(subList,numOfStep,barrier).start();
+            new SimulationWorker(subList,numOfStep,barrier, barrier2).start();
 
         }
 
 
     }
+
+
+
+
+
 
 
 }

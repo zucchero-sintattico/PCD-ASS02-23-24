@@ -1,8 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pcd.ass01ridesign.activeComponent.SimulationRunner;
-import pcd.ass01ridesign.simulation.listeners.RoadSimStatistics;
-import pcd.ass01ridesign.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import pcd.ass01ridesign.passiveComponent.simulation.listeners.RoadSimStatistics;
+import pcd.ass01ridesign.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 //import pcd.ass01.simtrafficexamples.RoadSimStatistics;
 //import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 

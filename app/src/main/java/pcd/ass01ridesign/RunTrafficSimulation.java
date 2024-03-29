@@ -2,9 +2,9 @@ package pcd.ass01ridesign;
 
 
 import pcd.ass01ridesign.activeComponent.SimulationRunner;
-import pcd.ass01ridesign.simulation.listeners.RoadSimStatistics;
-import pcd.ass01ridesign.simulation.listeners.RoadSimView;
-import pcd.ass01ridesign.simulation.examples.TrafficSimulationWithCrossRoads;
+import pcd.ass01ridesign.passiveComponent.simulation.listeners.RoadSimStatistics;
+import pcd.ass01ridesign.passiveComponent.simulation.listeners.RoadSimView;
+import pcd.ass01ridesign.passiveComponent.simulation.examples.TrafficSimulationWithCrossRoads;
 
 /**
  * 

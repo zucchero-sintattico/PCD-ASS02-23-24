@@ -1,7 +1,7 @@
 package pcd.ass01ridesign.activeComponent;
 
 import pcd.ass01ridesign.monitor.state.SimulationState;
-import pcd.ass01ridesign.simulation.Simulation;
+import pcd.ass01ridesign.passiveComponent.simulation.Simulation;
 
 public class SimulationRunner extends Thread {
 

@@ -3,8 +3,8 @@ package pcd.ass01ridesign;
 
 
 import pcd.ass01ridesign.activeComponent.SimulationRunner;
-import pcd.ass01ridesign.simulation.listeners.RoadSimStatistics;
-import pcd.ass01ridesign.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import pcd.ass01ridesign.passiveComponent.simulation.listeners.RoadSimStatistics;
+import pcd.ass01ridesign.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 
 import java.io.FileWriter;
 import java.util.List;

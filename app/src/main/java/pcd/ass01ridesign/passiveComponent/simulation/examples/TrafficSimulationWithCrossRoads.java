@@ -1,4 +1,4 @@
-package pcd.ass01ridesign.simulation.examples;
+package pcd.ass01ridesign.passiveComponent.simulation.examples;
 
 
 
@@ -11,7 +11,7 @@ import pcd.ass01ridesign.passiveComponent.environment.road.Road;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLight;
 import pcd.ass01ridesign.passiveComponent.environment.trafficLight.TrafficLightState;
 import pcd.ass01ridesign.utils.Point2D;
-import pcd.ass01ridesign.simulation.AbstractSimulation;
+import pcd.ass01ridesign.passiveComponent.simulation.AbstractSimulation;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,10 @@
-package pcd.ass01ridesign.simulation;
+package pcd.ass01ridesign.passiveComponent.simulation;
 
 import pcd.ass01ridesign.monitor.barrier.CyclicBarrier;
 import pcd.ass01ridesign.monitor.state.SimulationState;
 import pcd.ass01ridesign.passiveComponent.agent.AbstractCarAgent;
 import pcd.ass01ridesign.passiveComponent.environment.Environment;
-import pcd.ass01ridesign.simulation.listeners.SimulationListener;
+import pcd.ass01ridesign.passiveComponent.simulation.listeners.SimulationListener;
 
 import java.util.ArrayList;
 import java.util.List;
