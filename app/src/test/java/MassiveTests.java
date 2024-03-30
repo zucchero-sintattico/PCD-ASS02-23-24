@@ -1,10 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pcd.ass01ridesign.activeComponent.SimulationRunner;
-import pcd.ass01ridesign.passiveComponent.simulation.listeners.RoadSimStatistics;
-import pcd.ass01ridesign.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
-//import pcd.ass01.simtrafficexamples.RoadSimStatistics;
-//import pcd.ass01.simtrafficexamples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import pcd.ass01.activeComponent.SimulationRunner;
+import pcd.ass01.passiveComponent.simulation.listeners.RoadSimStatistics;
+import pcd.ass01.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 
 import java.io.File;
 
@@ -12,18 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class MassiveTests {
-    // Compare this snippet from app/src/test/java/MassiveTests.java:
-    // package pcd.ass01.simtrafficexamples;
-    //
-    // import org.junit.jupiter.api.Test;
-    //
-    // public class MassiveTests {
-    //
-    // 	@Test
-    // 	public void testMassive() {
-    // 		RunTrafficSimulationMassiveTest.main(null);
-    // 	}
-    // }
+
+    
 
     @BeforeEach
     public void setup() {
