@@ -13,14 +13,13 @@ import pcd.ass01.passiveComponent.environment.trafficLight.TrafficLightImpl;
 import pcd.ass01.passiveComponent.environment.trafficLight.TrafficLightInfo;
 import pcd.ass01.passiveComponent.environment.trafficLight.TrafficLightState;
 import pcd.ass01.utils.Point2D;
-import pcd.ass01.passiveComponent.simulation.SimulationComponent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class RoadsEnvironment implements Environment, SimulationComponent {
+public class RoadsEnvironment implements Environment{
     private static final int MIN_DIST_ALLOWED = 5;
     private static final int CAR_DETECTION_RANGE = 30;
     private static final int SEM_DETECTION_RANGE = 30;

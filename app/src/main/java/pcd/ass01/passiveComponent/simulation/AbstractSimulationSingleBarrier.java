@@ -9,7 +9,7 @@ import pcd.ass01.passiveComponent.simulation.listeners.SimulationListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractSimulationSingleBarrier implements Simulation{
+public abstract class AbstractSimulationSingleBarrier implements Simulation {
 
     private final SimulationState state;
     protected List<AbstractCarAgent> agents;
@@ -35,7 +35,7 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation{
     private long averageTimePerStep;
     private long endWallTime;
 
-    public AbstractSimulationSingleBarrier(){
+    public AbstractSimulationSingleBarrier() {
         this.state = new SimulationState();
     }
 
@@ -50,8 +50,9 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation{
     private void setupSimulation(int numSteps, int numOfThread) {
         this.numSteps = numSteps;
         this.startWallTime = System.currentTimeMillis();
-        this.barrier = new CyclicBarrier(numOfThread + 1, ()->environment.step(), ()->extracted());
-        new MasterWorkerHandlerSingleBarrier(numOfThread, agents.stream().map(AbstractCarAgent::getParallelAction).toList(), numSteps, barrier);
+        this.barrier = new CyclicBarrier(numOfThread + 1, () -> environment.step(), () -> extracted());
+        new MasterWorkerHandlerSingleBarrier(numOfThread,
+                agents.stream().map(AbstractCarAgent::getParallelAction).toList(), numSteps, barrier);
         this.notifyReset(this.t0, this.agents, this.environment);
     }
 
@@ -59,14 +60,17 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation{
         environment = createEnvironment();
         environment.setup(dt);
         agents = createAgents();
-        for (var agent: agents) {
+        for (var agent : agents) {
             agent.setup(dt);
         }
     }
 
     protected abstract List<AbstractCarAgent> createAgents();
+
     protected abstract Environment createEnvironment();
+
     protected abstract int setDelta();
+
     protected abstract int setInitialCondition();
 
     @Override
@@ -76,10 +80,9 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation{
 
     @Override
     public void doStep() {
-        if(this.numStepDone < this.numSteps) {
+        if (this.numStepDone < this.numSteps) {
             this.numStepDone++;
             this.currentWallTime = System.currentTimeMillis();
-
 
             try {
                 this.barrier.hitAndWaitAll();
@@ -87,9 +90,8 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation{
                 throw new RuntimeException(e);
             }
 
-
         }
-        if(this.numStepDone == this.numSteps) {
+        if (this.numStepDone == this.numSteps) {
             this.endWallTime = System.currentTimeMillis();
             this.averageTimePerStep = cumulativeTimePerStep / numSteps;
             this.state.stopSimulation();
@@ -97,12 +99,12 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation{
     }
 
     private void extracted() {
-        for (var tasks: agents.stream().map(AbstractCarAgent::getSerialAction).toList()) {
+        for (var tasks : agents.stream().map(AbstractCarAgent::getSerialAction).toList()) {
             tasks.run();
         }
         this.t += this.dt;
         this.notifyNewStep(this.t, this.agents, this.environment);
-        cumulativeTimePerStep+= System.currentTimeMillis() - this.currentWallTime;
+        cumulativeTimePerStep += System.currentTimeMillis() - this.currentWallTime;
         if (this.toBeInSyncWithWallTime) {
             this.syncWithWallTime();
         }
@@ -132,23 +134,24 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation{
             if (wallTimeDT < delay) {
                 Thread.sleep(delay - wallTimeDT);
             }
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
     }
 
-    //todo refactor
+    // todo refactor
     private void notifyReset(int t0, List<AbstractCarAgent> agents, Environment env) {
-        for (var l: listeners) {
+        for (var l : listeners) {
             l.notifyInit(t0, agents, env);
         }
     }
 
     @Override
-    public SimulationState getState(){
+    public SimulationState getState() {
         return this.state;
     }
 
     private void notifyNewStep(int t, List<AbstractCarAgent> agents, Environment env) {
-        for (var l: listeners) {
+        for (var l : listeners) {
             l.notifyStepDone(t, agents, env);
         }
     }

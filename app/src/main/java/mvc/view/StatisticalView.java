@@ -1,5 +1,6 @@
 package mvc.view;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -65,7 +66,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     }
 
     private void setFrameProperties() {
-        this.setLayout(new GridLayout(11, 0, 16, 10));
+        this.setLayout(new GridLayout(11, 0, 16, 8));
         this.setTitle("StatisticalView");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(DEFAULT_SIZE, DEFAULT_SIZE);
