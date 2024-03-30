@@ -9,7 +9,7 @@ public class RunTrafficSimulationMassiveTest {
 
 	public static void main(String[] args) {
 
-		int numCars =5000;
+		int numCars = 10000;
 		int nSteps = 100;
 
 		List<Integer> numOfThreads = List.of(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024);

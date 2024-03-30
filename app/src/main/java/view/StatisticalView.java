@@ -2,13 +2,17 @@ package view;
 
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.GridBagConstraints;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.util.List;
 
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -39,11 +43,12 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     private JButton buttonStart;
     private JButton buttonReset;
     private JButton buttonStop;
-    private JPanel panel;
     private JLabel labelBox;
     private JComboBox<SimulationType> comboBox;
     private JCheckBox checkBox;
     private JScrollPane scroll;
+    private JPanel inputContainer;
+    private JPanel buttonContainer;
     private Controller controller;
     private boolean isStartedSimulation;
 
@@ -65,11 +70,13 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         // Add properties
         editAllComponentsProperties();
 
+        this.pack();
+
     }
 
     private void setFrameProperties() {
-        this.setLayout(new GridLayout(11, 0, 16, 8));
-        this.setTitle("StatisticalView");
+        this.setLayout(new GridBagLayout());
+        this.setTitle("Car simulator");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         this.setLocationRelativeTo(null);
@@ -79,27 +86,77 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     private void editAllComponentsProperties() {
         this.areaConsoleLog.setMargin(new Insets(10, 10, 10, 10));
         this.areaConsoleLog.setEditable(false);
-        this.fieldNumberOfSteps.setMargin(new Insets(10, 10, 10, 10));
         this.populateComboBox();
         this.buttonStart.addActionListener(this);
         this.buttonStop.addActionListener(this);
         this.buttonReset.addActionListener(this);
+        this.labelNumberOfSteps.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.labelNumberOfThreads.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.labelConsoleLog.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.labelBox.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.fieldNumberOfSteps.setFont(new Font(getName(), Font.PLAIN, 14));
+        this.fieldNumberOfThreads.setFont(new Font(getName(), Font.PLAIN, 14));
+        this.checkBox.setFont(new Font(getName(), Font.PLAIN, 14));
+        this.buttonStart.setFont(new Font(getName(), Font.PLAIN, 14));
+        this.buttonStop.setFont(new Font(getName(), Font.PLAIN, 14));
+        this.buttonReset.setFont(new Font(getName(), Font.PLAIN, 14));
+        this.areaConsoleLog.setFont(new Font(getName(), Font.PLAIN, 14));
     }
 
     private void addAllComponentsIntoFrame() {
-        this.add(this.labelNumberOfSteps);
-        this.add(this.fieldNumberOfSteps);
-        this.add(this.labelNumberOfThreads);
-        this.add(this.fieldNumberOfThreads);
-        this.add(this.labelBox);
-        this.add(this.comboBox);
-        this.add(this.checkBox);
-        this.add(this.labelConsoleLog);
-        this.add(this.scroll);
-        this.panel.add(this.buttonStart);
-        this.panel.add(this.buttonStop);
-        this.panel.add(this.buttonReset);
-        this.add(this.panel);
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(30, 16, 0, 16);
+        constraints.anchor = GridBagConstraints.LINE_START;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        this.add(this.inputContainer, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        constraints.insets = new Insets(16, 16, 0, 16);
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.fill = GridBagConstraints.NONE;
+
+        this.add(this.labelBox, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        constraints.ipadx = 500;
+        constraints.fill = GridBagConstraints.NONE;
+
+        this.add(this.comboBox, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        constraints.ipadx = 0;
+        constraints.fill = GridBagConstraints.NONE;
+
+        this.add(this.checkBox, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 7;
+        constraints.ipadx = 0;
+        constraints.fill = GridBagConstraints.NONE;
+
+        this.add(this.labelConsoleLog, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 8;
+        constraints.ipady = 200;
+        constraints.ipadx = 500;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+
+        this.add(this.scroll, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 9;
+        constraints.ipady = 10;
+        constraints.ipadx = 10;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+
+        this.add(this.buttonContainer, constraints);
     }
 
     private void setViewComponents() {
@@ -114,10 +171,18 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.buttonStop = new JButton("Stop simulation");
         this.scroll = new JScrollPane(this.areaConsoleLog);
         this.scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        this.panel = new JPanel(new GridLayout(1, 1, 30, 30));
         this.labelBox = new JLabel("Choise simulation");
         this.comboBox = new JComboBox<SimulationType>();
         this.checkBox = new JCheckBox("Display simulation view");
+        this.inputContainer = new JPanel(new GridLayout(2, 2, 10, 10));
+        this.inputContainer.add(this.labelNumberOfSteps);
+        this.inputContainer.add(this.labelNumberOfThreads);
+        this.inputContainer.add(this.fieldNumberOfSteps);
+        this.inputContainer.add(this.fieldNumberOfThreads);
+        this.buttonContainer = new JPanel(new FlowLayout());
+        this.buttonContainer.add(this.buttonStart);
+        this.buttonContainer.add(this.buttonStop);
+        this.buttonContainer.add(this.buttonReset);
     }
 
     public void display() {
