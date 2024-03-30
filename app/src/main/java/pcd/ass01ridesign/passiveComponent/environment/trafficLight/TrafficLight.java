@@ -1,5 +1,6 @@
 package pcd.ass01ridesign.passiveComponent.environment.trafficLight;
 
+import pcd.ass01ridesign.passiveComponent.simulation.SimulationComponent;
 import pcd.ass01ridesign.utils.Point2D;
 
 public interface TrafficLight {
