@@ -274,7 +274,6 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.buttonReset.setEnabled(false);
         this.buttonStart.setText("Restart Simulation");
         this.isStartedSimulation = true;
-        this.clearTextArea();
     }
 
     @Override
