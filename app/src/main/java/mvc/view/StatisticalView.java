@@ -18,16 +18,14 @@ import javax.swing.JCheckBox;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
-import model.SimulationType;
 import mvc.controller.Controller;
 import mvc.controller.ControllerImpl;
-import pcd.ass01.simengineseq.AbstractAgent;
-import pcd.ass01.simengineseq.AbstractEnvironment;
-import pcd.ass01.simengineseq.SimulationListener;
-import pcd.ass01.simtrafficbase.CarAgent;
+import pcd.ass01.passiveComponent.agent.AbstractCarAgent;
+import pcd.ass01.passiveComponent.environment.Environment;
+import pcd.ass01.passiveComponent.simulation.SimulationType;
+import pcd.ass01.passiveComponent.simulation.listeners.SimulationListener;
 
-
-public class StatisticalView extends JFrame implements ActionListener, SimulationListener{
+public class StatisticalView extends JFrame implements ActionListener, SimulationListener {
     private final static int DEFAULT_SIZE = 1000;
     private JLabel labelNumberOfSteps;
     private JTextField fieldNumberOfSteps;
@@ -44,23 +42,24 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     private JCheckBox checkBox;
     private JScrollPane scroll;
     private Controller controller;
+    private boolean isStartedSimulation;
 
-    public StatisticalView(){
+    public StatisticalView() {
 
-        //Create frame
+        // Create frame
         super();
         setFrameProperties();
 
-        //Set controller
+        // Set controller
         this.controller = new ControllerImpl();
 
-        //Create components
+        // Create components
         setViewComponents();
 
-        //Add components on panel
+        // Add components on panel
         addAllComponentsIntoFrame();
 
-        //Add properties
+        // Add properties
         editAllComponentsProperties();
 
     }
@@ -118,28 +117,28 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.checkBox = new JCheckBox("Display simulation view");
     }
 
-    public void display(){
+    public void display() {
         SwingUtilities.invokeLater(() -> this.setVisible(true));
     }
 
-    public void updateView(String message){
+    public void updateView(String message) {
         this.areaConsoleLog.append(message + "\n");
         this.areaConsoleLog.setCaretPosition(this.areaConsoleLog.getDocument().getLength());
     }
 
-    public int getNumberOfSteps(){
+    public int getNumberOfSteps() {
         return Integer.valueOf(this.fieldNumberOfSteps.getText());
     }
 
-    public int getNumberOfThreads(){
+    public int getNumberOfThreads() {
         return Integer.valueOf(this.fieldNumberOfThreads.getText());
     }
 
-    public void clearTextArea(){
+    public void clearTextArea() {
         this.areaConsoleLog.setText("");
     }
 
-    public void populateComboBox(){
+    public void populateComboBox() {
         this.comboBox.addItem(SimulationType.SINGLE_ROAD_TWO_CAR);
         this.comboBox.addItem(SimulationType.SINGLE_ROAD_SEVERAL_CARS);
         this.comboBox.addItem(SimulationType.SINGLE_ROAD_WITH_TRAFFIC_TWO_CAR);
@@ -147,42 +146,51 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.comboBox.addItem(SimulationType.MASSIVE_SIMULATION);
     }
 
-    public SimulationType getSimulationType(){
+    public SimulationType getSimulationType() {
         return (SimulationType) this.comboBox.getSelectedItem();
     }
-    
-    public boolean getShowViewFlag(){
+
+    public boolean getShowViewFlag() {
         return this.checkBox.isSelected();
     }
 
     @Override
-    public void notifyInit(int t, List<AbstractAgent> agents, AbstractEnvironment env) {
+    public void notifyInit(int t, List<AbstractCarAgent> agents, Environment env) {
         this.updateView("[Simulation]: START simulation");
     }
 
     @Override
-    public void notifyStepDone(int t, List<AbstractAgent> agents, AbstractEnvironment env) {
-        
+    public void notifyStepDone(int t, List<AbstractCarAgent> agents, Environment env) {
+        this.updateView("[STAT] Steps: " + t);
     }
-    
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == this.buttonStart){
+        if (e.getSource() == this.buttonStart) {
+            if (!this.isStartedSimulation) {
+                SwingUtilities.invokeLater(() -> {
+                    updateViewWhenSimulationStart();
+                    this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps(), this.getNumberOfThreads());
+                    if(this.getShowViewFlag()){
+                        this.controller.showView();
+                    }
+                    this.controller.attachListener(this);
+                    this.controller.startSimulation();
+                });
+            } else {
+                SwingUtilities.invokeLater(() -> {
+                    updateViewWhenSimulationStart();
+                    this.controller.startSimulation();
+                });
+            }
+        } else if (e.getSource() == this.buttonReset) {
             SwingUtilities.invokeLater(() -> {
-                this.buttonStart.setEnabled(false);
-                this.buttonStop.setEnabled(true);
-                this.buttonReset.setEnabled(false);
                 this.clearTextArea();
-                this.controller.updateType(this.getSimulationType());
-                this.controller.attachListener(this);
-                this.controller.startSimulation(this.getShowViewFlag(), this.getNumberOfSteps(), this.getNumberOfThreads());
+                this.areaConsoleLog.setText("Console log");
+                this.resetView();
+                this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps(), this.getNumberOfThreads());
             });
-        }else if(e.getSource() == this.buttonReset){
-            SwingUtilities.invokeLater(() -> {
-                this.controller.resetSimulation();
-            });
-        }else{
+        } else {
             SwingUtilities.invokeLater(() -> {
                 this.buttonStart.setEnabled(true);
                 this.buttonStop.setEnabled(false);
@@ -192,18 +200,31 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         }
     }
 
-	@Override
-	public void notifySimulationEnded() {
+    private void updateViewWhenSimulationStart() {
+        this.buttonStart.setEnabled(false);
+        this.buttonStop.setEnabled(true);
+        this.buttonReset.setEnabled(false);
+        this.buttonStart.setText("Restart Simulation");
+        this.isStartedSimulation = true;
+        this.clearTextArea();
+    }
+
+    @Override
+    public void notifySimulationEnded() {
+        resetView();
+        this.updateView("[SIMULATION] Time: " + this.controller.getSimulationDuration() + " ms");
+    }
+
+    private void resetView() {
         this.buttonStart.setEnabled(true);
         this.buttonStop.setEnabled(false);
         this.buttonReset.setEnabled(true);
-        this.updateView("[SIMULATION]: " + this.controller.getSimulationType() + " FINISH");
-        this.updateView("[SIMULATION] Time: " + this.controller.getSimulationDuration() + " ms");
-	}
+        this.buttonStart.setText("Start simulation");
+        this.isStartedSimulation = false;
+    }
 
     @Override
-    public void notifyStat(int steps, double averageSpeed) {
+    public void notifyStat(double averageSpeed) {
         this.updateView("[STAT]: average speed: " + averageSpeed);
-        this.updateView("[STAT]: step: " + steps);
     }
 }

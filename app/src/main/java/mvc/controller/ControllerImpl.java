@@ -1,115 +1,41 @@
 package mvc.controller;
 
-import pcd.ass01.simengineseq.AbstractSimulation;
-import pcd.ass01.simengineseq.SimulationListener;
-import pcd.ass01.simtrafficexamples.RoadSimView;
+import pcd.ass01.activeComponent.SimulationRunner;
+import pcd.ass01.monitor.state.SimulationState;
+import pcd.ass01.passiveComponent.simulation.AbstractSimulation;
+import pcd.ass01.passiveComponent.simulation.SimulationType;
+import pcd.ass01.passiveComponent.simulation.listeners.RoadSimView;
+import pcd.ass01.passiveComponent.simulation.listeners.SimulationListener;
 
-import model.SimulationType;
+public class ControllerImpl implements Controller {
 
-public class ControllerImpl implements Controller{
-
-    //private final StatisticalView view;
     private AbstractSimulation simulation;
-    private SimulationType lastType;
+    private SimulationState simulationState;
+    private RoadSimView simulationView;
+    private boolean showView;
 
-    public ControllerImpl(){
-        updateType(SimulationType.SINGLE_ROAD_TWO_CAR);
+    public ControllerImpl() {
+        this.showView = false;
     }
-
-    @Override
-    public void updateType(SimulationType type) {
-        this.lastType = type;
-        this.simulation = SimulationType.SINGLE_ROAD_TWO_CAR.getSimulation(lastType);
-    }
-
-    /*
-    @Override
-    public void notifyInit(int t, List<AbstractAgent> agents, AbstractEnvironment env) {
-        //this.view.updateView("[Simulation]: START simulation");
-    }
-     */
-
-     /* 
-    @Override
-    public void notifyStepDone(int t, List<AbstractAgent> agents, AbstractEnvironment env) {
-        double avSpeed = 0;
-		
-		maxSpeed = -1;
-		minSpeed = Double.MAX_VALUE;
-		for (var agent: agents) {
-			CarAgent car = (CarAgent) agent;
-			double currSpeed = car.getCurrentSpeed();
-			avSpeed += currSpeed;			
-			if (currSpeed > maxSpeed) {
-				maxSpeed = currSpeed;
-			} else if (currSpeed < minSpeed) {
-				minSpeed = currSpeed;
-			}
-		}
-		
-		if (agents.size() > 0) {
-			avSpeed /= agents.size();
-		}
-        //this.view.updateView("[STAT]: average speed: " + avSpeed);
-        //this.view.updateView("[STAT]: step: " + t);
-    }
-    */
 
     @Override
     public void stopSimulation() {
-        this.simulation.pause();
-        //this.isStopped = true;
-        //this.toggleButton();
+        this.simulationState.stopSimulation();
     }
 
     @Override
-    public void startSimulation(boolean showView, int numberOfSteps, int numberOfThread) {
-        /*
-        if(this.isStopped && this.isSimulationStarted){
-            System.out.println("Restart");
-            this.simulation.play();
-        }else{
-            new Thread(() -> {
-                //this.isSimulationStarted = true;
-                //this.toggleButton();
-                //this.view.clearTextArea();
-                //Setup simulation
-                //SimulationType simulationType = ((SimulationType)this.view.getBox().getSelectedItem());
-                //this.simulation = ((SimulationType)this.view.getBox().getSelectedItem()).getSimulation(simulationType);
-                //this.simulation.addSimulationListener(this);
-                this.simulation.setup();
-                //Display view
-                //this.isDisplaySimulationView = this.view.getCheckBox().isSelected();
-                if(this.isDisplaySimulationView){
-                    RoadSimView simulationView = new RoadSimView();
-		            simulationView.display();
-                    this.simulation.addSimulationListener(simulationView);
-                }
-                //this.simulation.run(this.view.getNumberOfSteps(), this.view.getNumberOfThreads());
-                //Notify finish
-                //this.view.updateView("[SIMULATION]: " + simulationType.toString() + " FINISH");
-               // this.view.updateView("[SIMULATION] Time: " + this.simulation.getSimulationDuration() + " ms");
-                //resetGui();
-            }).start(); 
-                     
+    public void startSimulation() {
+        new SimulationRunner(this.simulation).start();
+    }
+
+    @Override
+    public void setupSimulation(SimulationType type, int numberOfSteps, int numberOfThread) {
+        if(this.simulationView != null){
+            this.simulationView.dispose();
         }
-         */  
-
-        /* Refactor */
-        new Thread(() -> {
-            this.simulation.setup();
-            if(showView){
-                RoadSimView simulationView = new RoadSimView();
-                simulationView.display();
-                this.simulation.addSimulationListener(simulationView);
-            }
-            this.simulation.run(numberOfSteps, numberOfThread);
-        }).start();
-    }
-
-    @Override
-    public void resetSimulation() {
-        this.updateType(lastType);
+        this.simulation = type.getSimulation(type);
+        this.simulationState = this.simulation.getState();
+        this.simulation.setup(numberOfSteps, numberOfThread);
     }
 
     @Override
@@ -123,13 +49,15 @@ public class ControllerImpl implements Controller{
     }
 
     @Override
-    public SimulationType getSimulationType() {
-        return this.lastType;
+    public long getSimulationDuration() {
+        return this.simulation.getSimulationDuration();
     }
 
     @Override
-    public long getSimulationDuration() {
-        return this.simulation.getSimulationDuration();
+    public void showView() {
+        this.simulationView = new RoadSimView();
+        this.simulationView.display();
+        this.simulation.addSimulationListener(simulationView);
     }
 
 }

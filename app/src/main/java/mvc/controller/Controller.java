@@ -1,21 +1,19 @@
 package mvc.controller;
 
-import model.SimulationType;
-import pcd.ass01.simengineseq.SimulationListener;
+import pcd.ass01.passiveComponent.simulation.SimulationType;
+import pcd.ass01.passiveComponent.simulation.listeners.SimulationListener;
 
 public interface Controller {
     
-    void startSimulation(boolean showView, int numberOfSteps, int numberOfThread);
+    void startSimulation();
 
     void stopSimulation();
 
-    void resetSimulation();
+    void setupSimulation(SimulationType type, int numberOfSteps, int numberOfThread);
 
-    void updateType(SimulationType type);
+    void showView();
 
     void attachListener(SimulationListener listener);
-
-    SimulationType getSimulationType();
 
     int getAvaiableProcessor();
 
