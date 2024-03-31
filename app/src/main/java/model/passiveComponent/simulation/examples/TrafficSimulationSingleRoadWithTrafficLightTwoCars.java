@@ -6,6 +6,7 @@ import model.passiveComponent.environment.Environment;
 import model.passiveComponent.environment.RoadsEnvironment;
 import model.passiveComponent.environment.road.Road;
 import model.passiveComponent.environment.trafficLight.TrafficLight;
+import model.passiveComponent.environment.trafficLight.TrafficLightImpl;
 import model.passiveComponent.environment.trafficLight.TrafficLightState;
 import model.passiveComponent.simulation.AbstractSimulation;
 import utils.Point2D;
@@ -28,8 +29,9 @@ public class TrafficSimulationSingleRoadWithTrafficLightTwoCars extends Abstract
 	protected List<AbstractCarAgent> createAgents() {
 		Road r = environment.createRoad(new Point2D(0,300), new Point2D(1500,300));
 		List<AbstractCarAgent> agents = new ArrayList<>();
-		TrafficLight tl = environment.createTrafficLight(new Point2D(740,300), TrafficLightState.GREEN, 75, 25, 100);
-		r.addTrafficLight(tl, 740);
+		TrafficLight tl = environment.createTrafficLight(new Point2D(740,300), TrafficLightState.GREEN, 75, 25, 100,r,740);
+//		environment.registerNewTrafficLight(tl);
+//		r.addTrafficLight(tl, 740);
 
 		AbstractCarAgent car1 = new ExtendedCarAgent("car-1", environment, r, 0, 0.1, 0.3, 6);
 		agents.add(car1);

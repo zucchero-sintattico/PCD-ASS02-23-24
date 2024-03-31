@@ -9,7 +9,6 @@ public interface TrafficLight {
 
     void step(int simulationStep);
 
-    void init();
 
     boolean isRed();
 
@@ -17,11 +16,9 @@ public interface TrafficLight {
 
     Point2D getPos();
 
-    void setRoad(Road r);
 
-    Road getRoad();
 
-    void setPos(double roadPos);
+
 
     double getRoadPos();
 }

@@ -38,9 +38,7 @@ public class RoadImpl implements Road {
     }
 
     @Override
-    public void addTrafficLight(TrafficLight sem, double pos) {
-        sem.setRoad(this);
-        sem.setPos(pos);
+    public void addTrafficLight(TrafficLight sem) {
         trafficLights.add(sem);
     }
 

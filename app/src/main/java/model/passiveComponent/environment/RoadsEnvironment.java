@@ -45,19 +45,34 @@ public class RoadsEnvironment implements Environment{
     }
 
 
+
+//    @Override
+//    public AbstractCarAgent createBaseAgent(Point2D p0, Point2D p1) {
+//        Road r = new RoadImpl(p0, p1);
+//        this.roads.add(r);
+//        return r;
+//    }
+//
+//    @Override
+//    public AbstractCarAgent createExtendedAgent(Point2D p0, Point2D p1) {
+//        Road r = new RoadImpl(p0, p1);
+//        this.roads.add(r);
+//        return r;
+//    }
+
+    @Override
+    public TrafficLight createTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, Road r, double roadPos) {
+        TrafficLight t = new TrafficLightImpl(pos, initialState, greenDuration, yellowDuration, redDuration, roadPos);
+        this.trafficLights.add(t);
+        r.addTrafficLight(t);
+        return t;
+    }
+
     @Override
     public Road createRoad(Point2D p0, Point2D p1) {
         Road r = new RoadImpl(p0, p1);
         this.roads.add(r);
         return r;
-    }
-
-    @Override
-    public TrafficLight createTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration) {
-        TrafficLight tl = new TrafficLightImpl(pos, initialState, greenDuration, yellowDuration, redDuration);
-        this.trafficLights.add(tl);
-        tl.init();
-        return tl;
     }
 
     @Override

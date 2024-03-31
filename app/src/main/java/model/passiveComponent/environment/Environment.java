@@ -15,9 +15,10 @@ public interface Environment extends SimulationComponent {
     //todo missing id
     void registerNewCar(AbstractCarAgent abstractCarAgent);
 
-    Road createRoad(Point2D p0, Point2D p1);
 
-    TrafficLight createTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration);
+    TrafficLight createTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, Road r, double roadPos);
+
+    Road createRoad(Point2D p0, Point2D p1);
 
     Perception getCurrentPercept(String agentID);
 

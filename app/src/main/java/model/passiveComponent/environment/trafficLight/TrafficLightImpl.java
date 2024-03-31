@@ -8,17 +8,21 @@ public class TrafficLightImpl implements TrafficLight {
     private int currentTimeInState;
     private int redDuration, greenDuration, yellowDuration;
     private Point2D pos;
-    private Road road;
     private double roadPos;
 
-    public TrafficLightImpl(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration) {
+
+
+    public TrafficLightImpl(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration,  double roadPos) {
         this.redDuration = redDuration;
         this.greenDuration = greenDuration;
         this.yellowDuration = yellowDuration;
         this.pos = pos;
         this.initialState = initialState;
-    }
+        this.state = initialState;
+        this.currentTimeInState = 0;
+        this.roadPos = roadPos;
 
+    }
 
 
     @Override
@@ -50,11 +54,7 @@ public class TrafficLightImpl implements TrafficLight {
         }
     }
 
-    @Override
-    public void init() {
-        state = initialState;
-        currentTimeInState = 0;
-    }
+
 
     @Override
     public boolean isGreen() {
@@ -73,20 +73,11 @@ public class TrafficLightImpl implements TrafficLight {
         return pos;
     }
 
-    @Override
-    public void setRoad(Road r) {
-        road = r;
-    }
 
-    @Override
-    public Road getRoad() {
-        return road;
-    }
 
-    @Override
-    public void setPos(double roadPos) {
-        this.roadPos = roadPos;
-    }
+
+
+
 
     @Override
     public double getRoadPos() {

@@ -13,7 +13,7 @@ public interface Road {
 
     Point2D getTo();
 
-    void addTrafficLight(TrafficLight sem, double pos);
+    void addTrafficLight(TrafficLight sem);
 
     List<TrafficLight> getTrafficLights();
 
