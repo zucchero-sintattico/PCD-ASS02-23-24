@@ -1,7 +1,6 @@
 package model.passiveComponent.environment.road;
 
 import model.passiveComponent.environment.trafficLight.TrafficLight;
-import model.passiveComponent.environment.trafficLight.TrafficLightInfo;
 import utils.Point2D;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class RoadImpl implements Road {
     private double len;
     private Point2D from;
     private Point2D to;
-    private List<TrafficLightInfo> trafficLights;
+    private List<TrafficLight> trafficLights;
 
     public RoadImpl(Point2D p0, Point2D p1) {
         this.from = p0;
@@ -40,11 +39,13 @@ public class RoadImpl implements Road {
 
     @Override
     public void addTrafficLight(TrafficLight sem, double pos) {
-        trafficLights.add(new TrafficLightInfo(sem, this, pos));
+        sem.setRoad(this);
+        sem.setPos(pos);
+        trafficLights.add(sem);
     }
 
     @Override
-    public List<TrafficLightInfo> getTrafficLights(){
+    public List<TrafficLight> getTrafficLights(){
         return trafficLights;
     }
 }

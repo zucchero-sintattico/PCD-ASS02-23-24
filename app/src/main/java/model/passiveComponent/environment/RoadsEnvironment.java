@@ -10,7 +10,6 @@ import model.passiveComponent.environment.road.Road;
 import model.passiveComponent.environment.road.RoadImpl;
 import model.passiveComponent.environment.trafficLight.TrafficLight;
 import model.passiveComponent.environment.trafficLight.TrafficLightImpl;
-import model.passiveComponent.environment.trafficLight.TrafficLightInfo;
 import model.passiveComponent.environment.trafficLight.TrafficLightState;
 import utils.Point2D;
 
@@ -67,7 +66,7 @@ public class RoadsEnvironment implements Environment{
         double pos = carInfo.getPosition();
         Road road = carInfo.getRoad();
         Optional<AbstractCarAgent> nearestCar = getNearestCarInFront(road, pos, CAR_DETECTION_RANGE);
-        Optional<TrafficLightInfo> nearestSem = getNearestSemaphoreInFront(road, pos, SEM_DETECTION_RANGE);
+        Optional<TrafficLight> nearestSem = getNearestSemaphoreInFront(road, pos, SEM_DETECTION_RANGE);
         return new CarPerception(pos, nearestCar.orElse(null), nearestSem.orElse(null));
     }
 
@@ -85,7 +84,7 @@ public class RoadsEnvironment implements Environment{
                         .min((c1, c2) -> (int) Math.round(c1.getPosition() - c2.getPosition()));
     }
 
-    private Optional<TrafficLightInfo> getNearestSemaphoreInFront(Road road, double carPos, double range) {
+    private Optional<TrafficLight> getNearestSemaphoreInFront(Road road, double carPos, double range) {
         return
                 road.getTrafficLights()
                         .stream()

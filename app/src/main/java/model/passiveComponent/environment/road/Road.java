@@ -3,7 +3,6 @@ package model.passiveComponent.environment.road;
 
 
 import model.passiveComponent.environment.trafficLight.TrafficLight;
-import model.passiveComponent.environment.trafficLight.TrafficLightInfo;
 import utils.Point2D;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public interface Road {
 
     void addTrafficLight(TrafficLight sem, double pos);
 
-    List<TrafficLightInfo> getTrafficLights();
+    List<TrafficLight> getTrafficLights();
 
     double getLen();
 }

@@ -1,5 +1,6 @@
 package model.passiveComponent.environment.trafficLight;
 
+import model.passiveComponent.environment.road.Road;
 import utils.Point2D;
 
 public class TrafficLightImpl implements TrafficLight {
@@ -7,6 +8,8 @@ public class TrafficLightImpl implements TrafficLight {
     private int currentTimeInState;
     private int redDuration, greenDuration, yellowDuration;
     private Point2D pos;
+    private Road road;
+    private double roadPos;
 
     public TrafficLightImpl(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration) {
         this.redDuration = redDuration;
@@ -68,5 +71,25 @@ public class TrafficLightImpl implements TrafficLight {
     @Override
     public Point2D getPos() {
         return pos;
+    }
+
+    @Override
+    public void setRoad(Road r) {
+        road = r;
+    }
+
+    @Override
+    public Road getRoad() {
+        return road;
+    }
+
+    @Override
+    public void setPos(double roadPos) {
+        this.roadPos = roadPos;
+    }
+
+    @Override
+    public double getRoadPos() {
+        return roadPos;
     }
 }

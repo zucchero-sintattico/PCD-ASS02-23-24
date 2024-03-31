@@ -1,5 +1,6 @@
 package model.passiveComponent.environment.trafficLight;
 
+import model.passiveComponent.environment.road.Road;
 import utils.Point2D;
 
 public interface TrafficLight {
@@ -15,4 +16,12 @@ public interface TrafficLight {
     boolean isYellow();
 
     Point2D getPos();
+
+    void setRoad(Road r);
+
+    Road getRoad();
+
+    void setPos(double roadPos);
+
+    double getRoadPos();
 }

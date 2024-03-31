@@ -5,7 +5,7 @@ import model.passiveComponent.agent.AbstractCarAgent;
 import model.passiveComponent.agent.action.MoveForward;
 import model.passiveComponent.environment.Environment;
 import model.passiveComponent.environment.road.Road;
-import model.passiveComponent.environment.trafficLight.TrafficLightInfo;
+import model.passiveComponent.environment.trafficLight.TrafficLight;
 
 import java.util.Optional;
 
@@ -95,8 +95,8 @@ public class ExtendedCarAgent extends AbstractCarAgent {
     }
 
     private boolean detectedRedOrOrgangeSemNear() {
-        Optional<TrafficLightInfo> sem = currentPerception.getNearestSem();
-        if (sem.isEmpty() || sem.get().getSem().isGreen()) {
+        Optional<TrafficLight> sem = currentPerception.getNearestSem();
+        if (sem.isEmpty() || sem.get().isGreen()) {
             return false;
         } else {
             double dist = sem.get().getRoadPos() - currentPerception.getRoadPos();
@@ -106,8 +106,8 @@ public class ExtendedCarAgent extends AbstractCarAgent {
 
 
     private boolean detectedGreenSem() {
-        Optional<TrafficLightInfo> sem = currentPerception.getNearestSem();
-        return (sem.isPresent() && sem.get().getSem().isGreen());
+        Optional<TrafficLight> sem = currentPerception.getNearestSem();
+        return (sem.isPresent() && sem.get().isGreen());
     }
 
     private boolean carFarEnough() {
