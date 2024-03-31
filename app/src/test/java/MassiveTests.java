@@ -1,5 +1,6 @@
 import model.activeComponent.SimulationRunner;
 import model.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import model.passiveComponent.simulation.examples.TrafficSimulationWithCrossRoads;
 import model.passiveComponent.simulation.listeners.RoadSimStatistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,26 @@ public class MassiveTests {
 		t.join();
 
 		// /app/log.txt must be the same of resources/log.txt
-		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/log.txt");
+		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/log_massive_improved.txt");
+		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
+
+	}
+
+	@Test
+	public void testTrafficLights() throws InterruptedException {
+
+		int nSteps = 500;
+
+		var simulation = new TrafficSimulationWithCrossRoads();
+		simulation.setup(nSteps, 32);
+		RoadSimStatistics stat = new RoadSimStatistics();
+		simulation.addSimulationListener(stat);
+		Thread t = new SimulationRunner(simulation);
+		t.start();
+		t.join();
+
+		// /app/log.txt must be the same of resources/log.txt
+		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/log_with_trafficLights_improved.txt");
 		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
 
 	}
