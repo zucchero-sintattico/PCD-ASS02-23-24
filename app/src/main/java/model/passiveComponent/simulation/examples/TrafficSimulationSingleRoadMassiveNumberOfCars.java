@@ -6,14 +6,14 @@ import model.passiveComponent.agent.agentImpl.base.BaseCarAgent;
 import model.passiveComponent.environment.Environment;
 import model.passiveComponent.environment.road.Road;
 import model.passiveComponent.environment.RoadsEnvironment;
-import model.passiveComponent.simulation.AbstractSimulationSingleBarrier;
+import model.passiveComponent.simulation.AbstractSimulation;
 import utils.Point2D;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimulationSingleBarrier {
+public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimulation {
 
 	private int numCars;
 	private Optional<Integer> seed = Optional.empty();
