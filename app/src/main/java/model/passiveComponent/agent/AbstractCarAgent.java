@@ -60,7 +60,7 @@ public abstract class AbstractCarAgent implements Car, Agent {
 	private void senseAndDecide() {
 		this.sense();
 		this.selectedAction = null;
-		System.out.println("aID "+getAgentID()+" reset "+(this.selectedAction != null));
+//		System.out.println("aID "+getAgentID()+" reset "+(this.selectedAction != null));
 		this.decide();
 	}
 
@@ -70,7 +70,7 @@ public abstract class AbstractCarAgent implements Car, Agent {
 
 	private void doAction() {
 		if (this.selectedAction != null) {
-			System.out.println("aID "+getAgentID()+" doAction");
+//			System.out.println("aID "+getAgentID()+" doAction");
 			this.environment.doAction(this.getAgentID(), selectedAction);
 		}
 	}

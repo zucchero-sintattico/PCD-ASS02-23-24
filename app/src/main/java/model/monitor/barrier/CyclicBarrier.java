@@ -47,7 +47,7 @@ public class CyclicBarrier implements Barrier {
 		broken = true;
 		postprocessing.run();
 		preprocessing.run();
-		System.out.println("runPostProcessing----------------------");
+//		System.out.println("runPostProcessing----------------------");
 		this.setupAndNotify();
 	}
 

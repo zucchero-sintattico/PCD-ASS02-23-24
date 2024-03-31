@@ -104,24 +104,24 @@ public class RoadsEnvironment implements Environment {
 				AbstractCarAgent info = registeredCars.get(agentID);
 				Road road = info.getRoad();
 				Optional<AbstractCarAgent> nearestCar = getNearestCarInFront(road, info.getPosition());
-				System.out.println("aID "+agentID+" action ");
+//				System.out.println("aID "+agentID+" action ");
 				if (nearestCar.isPresent()) {
-					System.out.println("aID "+agentID+" action if1");
+//					System.out.println("aID "+agentID+" action if1");
 					double dist = nearestCar.get().getPosition() - info.getPosition();
 					if (dist > mv.getDistance() + MIN_DIST_ALLOWED) {
-						System.out.println("aID "+agentID+" action if2");
+//						System.out.println("aID "+agentID+" action if2");
 						info.updatePosition(info.getPosition() + mv.getDistance());
 					}
 				} else {
-					System.out.println("aID "+agentID+" action else1");
+//					System.out.println("aID "+agentID+" action else1");
 					info.updatePosition(info.getPosition() + mv.getDistance());
 				}
 
 				if (info.getPosition() > road.getLength()) {
-					System.out.println("aID "+agentID+" action reset");
+//					System.out.println("aID "+agentID+" action reset");
 					info.updatePosition(0);
 				}
-				System.out.println("aID "+agentID+" action done");
+//				System.out.println("aID "+agentID+" action done");
 
 			}
 			default -> {

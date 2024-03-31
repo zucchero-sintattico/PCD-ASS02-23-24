@@ -52,7 +52,7 @@ public class TrafficLightImpl implements TrafficLight {
 
 
 		}
-		System.out.println(state);
+//		System.out.println(state);
 	}
 
 	@Override
