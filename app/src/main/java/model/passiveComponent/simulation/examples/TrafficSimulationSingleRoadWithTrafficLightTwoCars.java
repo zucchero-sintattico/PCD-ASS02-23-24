@@ -5,8 +5,6 @@ import model.passiveComponent.agent.agentImpl.extended.ExtendedCarAgent;
 import model.passiveComponent.environment.Environment;
 import model.passiveComponent.environment.RoadsEnvironment;
 import model.passiveComponent.environment.road.Road;
-import model.passiveComponent.environment.trafficLight.TrafficLight;
-import model.passiveComponent.environment.trafficLight.TrafficLightImpl;
 import model.passiveComponent.environment.trafficLight.TrafficLightState;
 import model.passiveComponent.simulation.AbstractSimulation;
 import utils.Point2D;
@@ -15,23 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * Traffic Simulation about 2 cars moving on a single road, with one semaphore
- * 
  */
 public class TrafficSimulationSingleRoadWithTrafficLightTwoCars extends AbstractSimulation {
 
-//	public TrafficSimulationSingleRoadWithTrafficLightTwoCars() {
-//		super();
-//	}
-
 	@Override
 	protected List<AbstractCarAgent> createAgents() {
-		Road r = environment.createRoad(new Point2D(0,300), new Point2D(1500,300));
+		Road r = environment.createRoad(new Point2D(0, 300), new Point2D(1500, 300));
 		List<AbstractCarAgent> agents = new ArrayList<>();
-		r.addTrafficLight(new Point2D(740,300), TrafficLightState.GREEN, 75, 25, 100,740);
-//		environment.registerNewTrafficLight(tl);
-//		r.addTrafficLight(tl, 740);
+		r.addTrafficLight(new Point2D(740, 300), TrafficLightState.GREEN, 75, 25, 100, 740);
 
 		AbstractCarAgent car1 = new ExtendedCarAgent("car-1", environment, r, 0, 0.1, 0.3, 6);
 		agents.add(car1);
@@ -58,5 +48,4 @@ public class TrafficSimulationSingleRoadWithTrafficLightTwoCars extends Abstract
 	}
 
 
-	
 }

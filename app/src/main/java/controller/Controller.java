@@ -4,18 +4,19 @@ import model.passiveComponent.simulation.SimulationType;
 import model.passiveComponent.simulation.listeners.SimulationListener;
 
 public interface Controller {
-    
-    void startSimulation();
 
-    void stopSimulation();
+	void startSimulation();
 
-    void setupSimulation(SimulationType type, int numberOfSteps, int numberOfThread);
+	void stopSimulation();
 
-    void showView();
+	void setupSimulation(SimulationType type, int numberOfSteps, int numberOfThread);
 
-    void attachListener(SimulationListener listener);
+	void showView();
 
-    int getAvaiableProcessor();
+	void attachListener(SimulationListener listener);
 
-    long getSimulationDuration();
+	int getAvailableProcessor();
+
+	long getSimulationDuration();
+
 }

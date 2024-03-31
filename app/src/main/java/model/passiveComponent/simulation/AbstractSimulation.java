@@ -11,149 +11,145 @@ import java.util.List;
 
 public abstract class AbstractSimulation implements Simulation {
 
-    private final SimulationState state;
-    protected List<AbstractCarAgent> agents;
-    private final List<SimulationListener> listeners = new ArrayList<>();
-    private boolean toBeInSyncWithWallTime;
-    protected Environment environment;
+	private final SimulationState state;
+	protected List<AbstractCarAgent> agents;
+	private final List<SimulationListener> listeners = new ArrayList<>();
+	private boolean toBeInSyncWithWallTime;
+	protected Environment environment;
+	/* logical time step */
+	private int dt;
+	/* initial logical time */
+	private int t0;
+	private int t;
+	private long currentWallTime;
+	private long cumulativeTimePerStep;
+	private int nStepsPerSec;
+	private int numSteps;
+	private int numStepDone;
+	private CyclicBarrier barrier;
+	private long startWallTime;
+	private long averageTimePerStep;
+	private long endWallTime;
 
-    /* logical time step */
-    private int dt;
+	public AbstractSimulation() {
+		this.state = new SimulationState();
+	}
 
-    /* initial logical time */
-    private int t0;
-    private int t;
-    private long currentWallTime;
-    private long cumulativeTimePerStep;
-    private int nStepsPerSec;
+	@Override
+	public void setup(int numSteps, int numOfThread) {
+		this.dt = this.setDelta();
+		this.t = this.t0 = this.setInitialCondition();
+		this.setupComponents();
+		this.setupSimulation(numSteps, numOfThread);
+	}
 
-    private int numSteps;
-    private int numStepDone;
+	private void setupSimulation(int numSteps, int numOfThread) {
+		this.numSteps = numSteps;
+		this.startWallTime = System.currentTimeMillis();
+		this.barrier = new CyclicBarrier(numOfThread + 1, () -> environment.step(), () -> extracted());
+		new MasterWorkerHandler(numOfThread,
+				agents, numSteps, barrier);
+		this.notifyReset(this.t0, this.agents, this.environment);
+	}
 
-    private CyclicBarrier barrier;
-    private long startWallTime;
-    private long averageTimePerStep;
-    private long endWallTime;
+	private void setupComponents() {
+		environment = createEnvironment();
+		environment.setup(dt);
+		agents = createAgents();
+		for (var agent : agents) {
+			agent.setup(dt);
+		}
+	}
 
-    public AbstractSimulation() {
-        this.state = new SimulationState();
-    }
+	protected abstract List<AbstractCarAgent> createAgents();
 
-    @Override
-    public void setup(int numSteps, int numOfThread) {
-        this.dt = this.setDelta();
-        this.t = this.t0 = this.setInitialCondition();
-        this.setupComponents();
-        this.setupSimulation(numSteps, numOfThread);
-    }
+	protected abstract Environment createEnvironment();
 
-    private void setupSimulation(int numSteps, int numOfThread) {
-        this.numSteps = numSteps;
-        this.startWallTime = System.currentTimeMillis();
-        this.barrier = new CyclicBarrier(numOfThread + 1, () -> environment.step(), () -> extracted());
-        new MasterWorkerHandler(numOfThread,
-                agents, numSteps, barrier);
-        this.notifyReset(this.t0, this.agents, this.environment);
-    }
+	protected abstract int setDelta();
 
-    private void setupComponents() {
-        environment = createEnvironment();
-        environment.setup(dt);
-        agents = createAgents();
-        for (var agent : agents) {
-            agent.setup(dt);
-        }
-    }
+	protected abstract int setInitialCondition();
 
-    protected abstract List<AbstractCarAgent> createAgents();
+	@Override
+	public void addSimulationListener(SimulationListener listener) {
+		this.listeners.add(listener);
+	}
 
-    protected abstract Environment createEnvironment();
+	@Override
+	public void doStep() {
+		if (this.numStepDone < this.numSteps) {
 
-    protected abstract int setDelta();
+			try {
+				this.barrier.hitAndWaitAll();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 
-    protected abstract int setInitialCondition();
+		}
+		if (this.numStepDone == this.numSteps) {
+			this.endWallTime = System.currentTimeMillis();
+			this.averageTimePerStep = cumulativeTimePerStep / numSteps;
+			this.state.stopSimulation();
+		}
+	}
 
-    @Override
-    public void addSimulationListener(SimulationListener listener) {
-        this.listeners.add(listener);
-    }
+	private void extracted() {
+		this.numStepDone++;
+		this.currentWallTime = System.currentTimeMillis();
+		for (AbstractCarAgent agent : agents) {
+			agent.getSerialAction().run();
+		}
+		this.t += this.dt;
+		this.notifyNewStep(this.t, this.agents, this.environment);
+		cumulativeTimePerStep += System.currentTimeMillis() - this.currentWallTime;
+		if (this.toBeInSyncWithWallTime) {
+			this.syncWithWallTime();
+		}
+	}
 
-    @Override
-    public void doStep() {
-        if (this.numStepDone < this.numSteps) {
+	@Override
+	public long getSimulationDuration() {
+		return (endWallTime - startWallTime);
+	}
 
+	@Override
+	public long getAverageTimePerCycle() {
+		return (averageTimePerStep);
+	}
 
-            try {
-                this.barrier.hitAndWaitAll();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+	@Override
+	public void syncWithTime(int nCyclesPerSec) {
+		this.toBeInSyncWithWallTime = true;
+		this.nStepsPerSec = nCyclesPerSec;
+	}
 
-        }
-        if (this.numStepDone == this.numSteps) {
-            this.endWallTime = System.currentTimeMillis();
-            this.averageTimePerStep = cumulativeTimePerStep / numSteps;
-            this.state.stopSimulation();
-        }
-    }
+	private void syncWithWallTime() {
+		try {
+			long newWallTime = System.currentTimeMillis();
+			long delay = 1000 / this.nStepsPerSec;
+			long wallTimeDT = newWallTime - this.currentWallTime;
+			if (wallTimeDT < delay) {
+				Thread.sleep(delay - wallTimeDT);
+			}
+		} catch (Exception ignored) {
+		}
+	}
 
-    private void extracted() {
-        this.numStepDone++;
-        this.currentWallTime = System.currentTimeMillis();
-        for (AbstractCarAgent agent: agents) {
-            agent.getSerialAction().run();
-        }
-        this.t += this.dt;
-        this.notifyNewStep(this.t, this.agents, this.environment);
-        cumulativeTimePerStep += System.currentTimeMillis() - this.currentWallTime;
-        if (this.toBeInSyncWithWallTime) {
-            this.syncWithWallTime();
-        }
-    }
+	// todo refactor
+	private void notifyReset(int t0, List<AbstractCarAgent> agents, Environment env) {
+		for (var l : listeners) {
+			l.notifyInit(t0, agents, env);
+		}
+	}
 
-    @Override
-    public long getSimulationDuration() {
-        return (endWallTime - startWallTime);
-    }
+	@Override
+	public SimulationState getState() {
+		return this.state;
+	}
 
-    @Override
-    public long getAverageTimePerCycle() {
-        return (averageTimePerStep);
-    }
+	private void notifyNewStep(int t, List<AbstractCarAgent> agents, Environment env) {
+		for (var l : listeners) {
+			l.notifyStepDone(t, agents, env);
+		}
+	}
 
-    @Override
-    public void syncWithTime(int nCyclesPerSec) {
-        this.toBeInSyncWithWallTime = true;
-        this.nStepsPerSec = nCyclesPerSec;
-    }
-
-    private void syncWithWallTime() {
-        try {
-            long newWallTime = System.currentTimeMillis();
-            long delay = 1000 / this.nStepsPerSec;
-            long wallTimeDT = newWallTime - this.currentWallTime;
-            if (wallTimeDT < delay) {
-                Thread.sleep(delay - wallTimeDT);
-            }
-        } catch (Exception ex) {
-        }
-    }
-
-    // todo refactor
-    private void notifyReset(int t0, List<AbstractCarAgent> agents, Environment env) {
-        for (var l : listeners) {
-            l.notifyInit(t0, agents, env);
-        }
-    }
-
-    @Override
-    public SimulationState getState() {
-        return this.state;
-    }
-
-    private void notifyNewStep(int t, List<AbstractCarAgent> agents, Environment env) {
-        for (var l : listeners) {
-            l.notifyStepDone(t, agents, env);
-        }
-    }
 }

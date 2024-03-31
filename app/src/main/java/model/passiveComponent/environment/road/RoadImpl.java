@@ -9,45 +9,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoadImpl implements Road {
-    //todo refactor
 
-
-    private double len;
-    private Point2D from;
-    private Point2D to;
-    private List<TrafficLight> trafficLights;
+    private final double length;
+    private final Point2D startPoint;
+    private final Point2D endPoint;
+    private final List<TrafficLight> trafficLights = new ArrayList<>();
 
     public RoadImpl(Point2D p0, Point2D p1) {
-        this.from = p0;
-        this.to = p1;
-        this.len = Point2D.len(from, to);
-        trafficLights = new ArrayList<>();
+        this.startPoint = p0;
+        this.endPoint = p1;
+        this.length = Point2D.len(startPoint, endPoint);
     }
 
     @Override
-    public double getLen() {
-        return len;
+    public Point2D getStartPoint() {
+        return startPoint;
     }
 
     @Override
-    public Point2D getFrom() {
-        return from;
+    public Point2D getEndPoint() {
+        return endPoint;
     }
 
     @Override
-    public Point2D getTo() {
-        return to;
+    public double getLength() {
+        return length;
     }
 
     @Override
-    public void addTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, double roadPos) {
-        this.trafficLights.add(new TrafficLightImpl(pos, initialState, greenDuration, yellowDuration, redDuration, roadPos));
+    public void addTrafficLight(Point2D position, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, double roadPosition) {
+        this.trafficLights.add(new TrafficLightImpl(position, initialState, greenDuration, yellowDuration, redDuration, roadPosition));
     }
 
-
-
     @Override
-    public List<TrafficLight> getTrafficLights(){
+    public List<TrafficLight> getTrafficLights() {
         return trafficLights;
     }
+
 }

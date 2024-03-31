@@ -8,9 +8,11 @@ import model.passiveComponent.environment.trafficLight.TrafficLight;
 import java.util.Optional;
 
 public interface Perception {
-    double getRoadPos();
+
+    double getRoadPosition();
 
     Optional<TrafficLight> getNearestSem();
 
     Optional<AbstractCarAgent> getNearestCarInFront();
+
 }

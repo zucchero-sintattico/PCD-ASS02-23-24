@@ -1,24 +1,19 @@
 package model.passiveComponent.environment.trafficLight;
 
-import model.passiveComponent.environment.road.Road;
 import utils.Point2D;
 
 public interface TrafficLight {
 
-    boolean isGreen();
+	void step(int dt);
 
-    void step(int simulationStep);
+	Point2D getPosition();
 
+	double getRoadPosition();
 
-    boolean isRed();
+	boolean isGreen();
 
-    boolean isYellow();
+	boolean isRed();
 
-    Point2D getPos();
+	boolean isYellow();
 
-
-
-
-
-    double getRoadPos();
 }

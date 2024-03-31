@@ -10,13 +10,14 @@ import java.util.List;
 
 public interface Road {
 
-    Point2D getFrom();
+    Point2D getStartPoint();
 
-    Point2D getTo();
+    Point2D getEndPoint();
 
-    void addTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, double roadPos);
+    void addTrafficLight(Point2D position, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, double roadPosition);
 
     List<TrafficLight> getTrafficLights();
 
-    double getLen();
+    double getLength();
+
 }
