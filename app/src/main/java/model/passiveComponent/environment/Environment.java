@@ -16,7 +16,6 @@ public interface Environment extends SimulationComponent {
     void registerNewCar(AbstractCarAgent abstractCarAgent);
 
 
-    TrafficLight createTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, Road r, double roadPos);
 
     Road createRoad(Point2D p0, Point2D p1);
 

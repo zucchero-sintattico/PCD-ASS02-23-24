@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class RoadsEnvironment implements Environment{
+public class RoadsEnvironment implements Environment {
     private static final int MIN_DIST_ALLOWED = 5;
     private static final int CAR_DETECTION_RANGE = 30;
     private static final int SEM_DETECTION_RANGE = 30;
@@ -28,14 +28,14 @@ public class RoadsEnvironment implements Environment{
     private List<Road> roads;
 
     /* traffic lights */
-    private List<TrafficLight> trafficLights;
+//    private List<TrafficLight> trafficLights;
 
     /* cars situated in the environment */
     private HashMap<String, AbstractCarAgent> registeredCars;
 
     public RoadsEnvironment() {
         this.registeredCars = new HashMap<>();
-        this.trafficLights = new ArrayList<>();
+//        this.trafficLights = new ArrayList<>();
         this.roads = new ArrayList<>();
     }
 
@@ -43,7 +43,6 @@ public class RoadsEnvironment implements Environment{
     public void registerNewCar(AbstractCarAgent abstractAgent) {
         registeredCars.put(abstractAgent.getAgentID(), abstractAgent);
     }
-
 
 
 //    @Override
@@ -60,13 +59,6 @@ public class RoadsEnvironment implements Environment{
 //        return r;
 //    }
 
-    @Override
-    public TrafficLight createTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, Road r, double roadPos) {
-        TrafficLight t = new TrafficLightImpl(pos, initialState, greenDuration, yellowDuration, redDuration, roadPos);
-        this.trafficLights.add(t);
-        r.addTrafficLight(t);
-        return t;
-    }
 
     @Override
     public Road createRoad(Point2D p0, Point2D p1) {
@@ -138,21 +130,31 @@ public class RoadsEnvironment implements Environment{
 
     @Override
     public void step() {
-        for (TrafficLight tl : trafficLights) {
-            tl.step(simulationStep);
+        for (Road r :
+                roads) {
+            for (TrafficLight tl : r.getTrafficLights()) {
+                tl.step(simulationStep);
+            }
         }
+
     }
 
-    public List<AbstractCarAgent> getAgentInfo(){
+    public List<AbstractCarAgent> getAgentInfo() {
         return this.registeredCars.entrySet().stream().map(el -> el.getValue()).toList();
     }
 
-    public List<Road> getRoads(){
+    public List<Road> getRoads() {
         return roads;
     }
 
-    public List<TrafficLight> getTrafficLights(){
-        return trafficLights;
+    //todo maybe optimize with an init
+    public List<TrafficLight> getTrafficLights() {
+        List<TrafficLight> tl = new ArrayList<>();
+        for (Road r :
+                roads) {
+            tl.addAll(r.getTrafficLights());
+        }
+        return tl;
     }
 
     @Override

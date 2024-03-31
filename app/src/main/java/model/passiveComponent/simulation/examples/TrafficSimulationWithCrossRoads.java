@@ -26,7 +26,7 @@ public class TrafficSimulationWithCrossRoads extends AbstractSimulation {
 	@Override
 	protected List<AbstractCarAgent> createAgents() {
 		Road r1 = environment.createRoad(new Point2D(0,300), new Point2D(1500,300));
-		TrafficLight tl1 = environment.createTrafficLight(new Point2D(740,300), TrafficLightState.GREEN, 75, 25, 100,r1,740);
+		r1.addTrafficLight(new Point2D(740,300), TrafficLightState.GREEN, 75, 25, 100,740);
 //		environment.registerNewTrafficLight(tl1);
 		List<AbstractCarAgent> agents = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class TrafficSimulationWithCrossRoads extends AbstractSimulation {
 		agents.add(car2);
 
 		Road r2 = environment.createRoad(new Point2D(750,0), new Point2D(750,600));
-		TrafficLight tl2 = environment.createTrafficLight(new Point2D(750, 290), TrafficLightState.RED, 75, 25, 100,r2,290);
+		r2.addTrafficLight(new Point2D(750, 290), TrafficLightState.RED, 75, 25, 100,290);
 //		environment.registerNewTrafficLight(tl2);
 
 //		r2.addTrafficLight(tl2, 290);

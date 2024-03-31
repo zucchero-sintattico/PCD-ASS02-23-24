@@ -29,7 +29,7 @@ public class TrafficSimulationSingleRoadWithTrafficLightTwoCars extends Abstract
 	protected List<AbstractCarAgent> createAgents() {
 		Road r = environment.createRoad(new Point2D(0,300), new Point2D(1500,300));
 		List<AbstractCarAgent> agents = new ArrayList<>();
-		TrafficLight tl = environment.createTrafficLight(new Point2D(740,300), TrafficLightState.GREEN, 75, 25, 100,r,740);
+		r.addTrafficLight(new Point2D(740,300), TrafficLightState.GREEN, 75, 25, 100,740);
 //		environment.registerNewTrafficLight(tl);
 //		r.addTrafficLight(tl, 740);
 
