@@ -54,7 +54,7 @@ public abstract class AbstractSimulation implements Simulation {
         this.startWallTime = System.currentTimeMillis();
         this.barrier1 = new CyclicBarrier(numOfThread + 1);
         this.barrier2 = new CyclicBarrier(numOfThread + 1);
-        new MasterWorkerHandler(numOfThread, agents.stream().map(AbstractCarAgent::getParallelAction).toList(),
+        new MasterWorkerHandler(numOfThread, agents,
                 numSteps, barrier1, barrier2);
         this.notifyReset(this.t0, this.agents, this.environment);
     }
@@ -94,8 +94,8 @@ public abstract class AbstractSimulation implements Simulation {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            for (var tasks : agents.stream().map(AbstractCarAgent::getSerialAction).toList()) {
-                tasks.run();
+            for (AbstractCarAgent agent: agents) {
+                agent.getSerialAction().run();
             }
             this.t += this.dt;
             this.notifyNewStep(this.t, this.agents, this.environment);

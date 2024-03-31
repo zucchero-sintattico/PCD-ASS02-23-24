@@ -1,6 +1,7 @@
 package model.passiveComponent.simulation;
 
 import model.activeComponent.SimulationWorker;
+import model.passiveComponent.agent.AbstractCarAgent;
 import model.passiveComponent.agent.task.ParallelTask;
 import model.monitor.barrier.CyclicBarrier;
 
@@ -9,12 +10,16 @@ import java.util.List;
 
 public class MasterWorkerHandler {
 
-    // private List<Runnable> listOFAgent;
+     private List<ParallelTask> listOFAgent;
 
-    public MasterWorkerHandler(int numOfThread, List<ParallelTask> listOFAgent, int numOfStep, CyclicBarrier barrier,
-            CyclicBarrier barrier2) {
+    public MasterWorkerHandler(int numOfThread, List<AbstractCarAgent> listOFAgent, int numOfStep, CyclicBarrier barrier,
+                               CyclicBarrier barrier2) {
 
-        // this.listOFAgent = new ArrayList<>(listOFAgent);
+        this.listOFAgent = new ArrayList<>();
+        for (AbstractCarAgent agent : listOFAgent) {
+            this.listOFAgent.add(agent.getParallelAction());
+
+        }
 
         int size = listOFAgent.size();
         int split = size / numOfThread;
@@ -26,7 +31,7 @@ public class MasterWorkerHandler {
         for (int i = 0; i < numOfThread; i++) {
             int start = i == 0 ? 0 : splitIndex.get(i - 1);
             int end = splitIndex.get(i);
-            List<ParallelTask> subList = listOFAgent.subList(start, end);
+            List<ParallelTask> subList = this.listOFAgent.subList(start, end);
             new SimulationWorker(subList, numOfStep, barrier, barrier2).start();
 
         }

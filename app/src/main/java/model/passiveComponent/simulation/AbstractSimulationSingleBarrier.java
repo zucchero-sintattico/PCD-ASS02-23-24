@@ -52,7 +52,7 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation {
         this.startWallTime = System.currentTimeMillis();
         this.barrier = new CyclicBarrier(numOfThread + 1, () -> environment.step(), () -> extracted());
         new MasterWorkerHandlerSingleBarrier(numOfThread,
-                agents.stream().map(AbstractCarAgent::getParallelAction).toList(), numSteps, barrier);
+                agents, numSteps, barrier);
         this.notifyReset(this.t0, this.agents, this.environment);
     }
 
@@ -81,8 +81,7 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation {
     @Override
     public void doStep() {
         if (this.numStepDone < this.numSteps) {
-            this.numStepDone++;
-            this.currentWallTime = System.currentTimeMillis();
+
 
             try {
                 this.barrier.hitAndWaitAll();
@@ -99,8 +98,10 @@ public abstract class AbstractSimulationSingleBarrier implements Simulation {
     }
 
     private void extracted() {
-        for (var tasks : agents.stream().map(AbstractCarAgent::getSerialAction).toList()) {
-            tasks.run();
+        this.numStepDone++;
+        this.currentWallTime = System.currentTimeMillis();
+        for (AbstractCarAgent agent: agents) {
+            agent.getSerialAction().run();
         }
         this.t += this.dt;
         this.notifyNewStep(this.t, this.agents, this.environment);
