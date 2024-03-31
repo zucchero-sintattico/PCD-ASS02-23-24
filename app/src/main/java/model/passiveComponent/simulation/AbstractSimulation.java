@@ -46,7 +46,8 @@ public abstract class AbstractSimulation implements Simulation {
 	private void setupSimulation(int numSteps, int numOfThread) {
 		this.numSteps = numSteps;
 		this.startWallTime = System.currentTimeMillis();
-		this.barrier = new CyclicBarrier(numOfThread + 1, () -> environment.step(), () -> extracted());
+		this.environment.step();
+		this.barrier = new CyclicBarrier(numOfThread + 1, this::postProcessing);
 		new MasterWorkerHandler(numOfThread,
 				agents, numSteps, barrier);
 		this.notifyReset(this.t0, this.agents, this.environment);
@@ -91,7 +92,12 @@ public abstract class AbstractSimulation implements Simulation {
 			this.state.stopSimulation();
 		}
 	}
-
+	private void postProcessing(){
+		extracted();
+		if(this.numStepDone != this.numSteps){
+			environment.step();
+		}
+	}
 	private void extracted() {
 		this.numStepDone++;
 		this.currentWallTime = System.currentTimeMillis();
