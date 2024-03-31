@@ -49,7 +49,10 @@ public class TrafficLightImpl implements TrafficLight {
 				break;
 			default:
 				break;
+
+
 		}
+		System.out.println(state);
 	}
 
 	@Override

@@ -24,10 +24,12 @@ public class CyclicBarrier implements Barrier {
 	@Override
 	public synchronized void hitAndWaitAll() throws InterruptedException {
 		this.enterBarrier();
+//		System.out.println("enter");
 		while (!broken) {
 			wait();
 		}
 		this.passBarrier();
+//		System.out.println("exited");
 	}
 
 	private void enterBarrier() throws InterruptedException {
@@ -44,12 +46,16 @@ public class CyclicBarrier implements Barrier {
 	private void breakBarrier() {
 		broken = true;
 		postprocessing.run();
+		preprocessing.run();
+		System.out.println("runPostProcessing----------------------");
 		this.setupAndNotify();
 	}
 
 	private void reset() {
 		broken = false;
-		preprocessing.run();
+//		System.out.println("runPrePrePreProcessing----------------------");
+
+//		System.out.println("runPreProcessing----------------------");
 		this.setupAndNotify();
 	}
 

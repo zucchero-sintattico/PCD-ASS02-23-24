@@ -20,7 +20,15 @@ public class SimulationWorker extends Thread {
 	@Override
 	public void run() {
 		for (int i = 0; i < step; i++) {
-			this.tasks.forEach(Runnable::run);
+			System.out.println("initrun");
+			for (ParallelTask p: tasks) {
+				System.out.println("taskinit");
+				p.run();
+				System.out.println("taskrunned");
+
+			}
+//			this.tasks.forEach(Runnable::run);
+			System.out.println("endrun");
 			try {
 				this.barrier.hitAndWaitAll();
 			} catch (InterruptedException e) {

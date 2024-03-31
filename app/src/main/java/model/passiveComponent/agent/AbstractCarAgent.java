@@ -17,7 +17,7 @@ public abstract class AbstractCarAgent implements Car, Agent {
 	protected double currentSpeed;
 	protected double acceleration;
 	protected double deceleration;
-	protected double stepSize;
+	protected int stepSize;
 	protected static final int CAR_NEAR_DIST = 15;
 	protected static final int CAR_FAR_ENOUGH_DIST = 20;
 	protected static final int MAX_WAITING_TIME = 2;
@@ -59,6 +59,8 @@ public abstract class AbstractCarAgent implements Car, Agent {
 
 	private void senseAndDecide() {
 		this.sense();
+		this.selectedAction = null;
+		System.out.println("aID "+getAgentID()+" reset "+(this.selectedAction != null));
 		this.decide();
 	}
 
@@ -68,6 +70,7 @@ public abstract class AbstractCarAgent implements Car, Agent {
 
 	private void doAction() {
 		if (this.selectedAction != null) {
+			System.out.println("aID "+getAgentID()+" doAction");
 			this.environment.doAction(this.getAgentID(), selectedAction);
 		}
 	}

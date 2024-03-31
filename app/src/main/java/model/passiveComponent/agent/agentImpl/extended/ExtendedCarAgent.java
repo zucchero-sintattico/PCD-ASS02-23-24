@@ -24,9 +24,13 @@ public class ExtendedCarAgent extends AbstractCarAgent {
 	private boolean detectedNearCar() {
 		Optional<AbstractCarAgent> car = currentPerception.getNearestCarInFront();
 		if (car.isEmpty()) {
+			System.out.println("aID "+getAgentID()+" detectnearcarempty");
 			return false;
 		} else {
 			double dist = car.get().getPosition() - currentPerception.getRoadPosition();
+			System.out.println("aID "+getAgentID()+" detectnearcarNOTempty "+car.get().getPosition());
+			System.out.println("aID "+getAgentID()+" detectnearcarNOTempty "+currentPerception.getRoadPosition());
+			System.out.println("aID "+getAgentID()+" detectnearcarNOTempty "+(dist < CAR_NEAR_DIST));
 			return dist < CAR_NEAR_DIST;
 		}
 	}
@@ -57,7 +61,7 @@ public class ExtendedCarAgent extends AbstractCarAgent {
 	}
 
 	@Override
-	protected void decide() {
+	public void decide() {
 		switch (state) {
 			case ExtendedCarAgentState.STOPPED:
 				if (!detectedNearCar()) {
@@ -86,7 +90,7 @@ public class ExtendedCarAgent extends AbstractCarAgent {
 			case ExtendedCarAgentState.DECELERATING_BECAUSE_OF_A_CAR:
 				this.currentSpeed -= deceleration * stepSize;
 				if (this.currentSpeed <= 0) {
-					state = ExtendedCarAgentState.STOPPED;
+					state =  ExtendedCarAgentState.STOPPED;
 				} else if (this.carFarEnough()) {
 					state = ExtendedCarAgentState.WAIT_A_BIT;
 					waitingTime = 0;
@@ -95,13 +99,13 @@ public class ExtendedCarAgent extends AbstractCarAgent {
 			case ExtendedCarAgentState.DECELERATING_BECAUSE_OF_A_NOT_GREEN_SEM:
 				this.currentSpeed -= deceleration * stepSize;
 				if (this.currentSpeed <= 0) {
-					state = ExtendedCarAgentState.WAITING_FOR_GREEN_SEM;
+					state =  ExtendedCarAgentState.WAITING_FOR_GREEN_SEM;
 				} else if (!detectedRedOrYellowNearTrafficLights()) {
 					state = ExtendedCarAgentState.ACCELERATING;
 				}
 				break;
 			case ExtendedCarAgentState.WAIT_A_BIT:
-				waitingTime += (int) stepSize;
+				waitingTime += stepSize;
 				if (waitingTime > MAX_WAITING_TIME) {
 					state = ExtendedCarAgentState.ACCELERATING;
 				}
@@ -112,10 +116,18 @@ public class ExtendedCarAgent extends AbstractCarAgent {
 				}
 				break;
 		}
-
+		System.out.println("aID "+getAgentID()+" "+detectedRedOrYellowNearTrafficLights());
+		System.out.println("aID "+getAgentID()+" "+detectedGreenTrafficLights());
+		System.out.println("aID "+getAgentID()+" "+detectedNearCar());
+		System.out.println("aID "+getAgentID()+" preactionPresent "+(this.selectedAction != null));
 		if (currentSpeed > 0) {
+			System.out.println("aID "+getAgentID()+" createAction");
 			selectedAction = new MoveForward(currentSpeed * stepSize);
 		}
+		System.out.println("aID "+getAgentID()+" postactionPresent "+(this.selectedAction != null));
+		System.out.println("aID "+getAgentID()+" "+state);
+
+
 	}
 
 
