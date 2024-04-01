@@ -13,6 +13,7 @@ public class MasterWorkerHandler {
 	public MasterWorkerHandler(int numOfThread, List<AbstractCarAgent> listOFAgent, int numOfStep,
 	                           CyclicBarrier barrier) {
 
+
 		List<ParallelTask> listOfParallelTasks = new ArrayList<>();
 		for (AbstractCarAgent agent : listOFAgent) {
 			listOfParallelTasks.add(agent.getParallelAction());

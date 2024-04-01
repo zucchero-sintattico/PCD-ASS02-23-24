@@ -44,7 +44,7 @@ public class MassiveTests {
 		int nSteps = 500;
 
 		var simulation = new TrafficSimulationWithCrossRoads();
-		simulation.setup(nSteps, 4);
+		simulation.setup(nSteps, 500);
 		RoadSimStatistics stat = new RoadSimStatistics();
 		simulation.addSimulationListener(stat);
 		Thread t = new SimulationRunner(simulation);
