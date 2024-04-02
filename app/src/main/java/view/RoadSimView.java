@@ -1,11 +1,11 @@
 package view;
 
-import model.passiveComponent.agent.AbstractCarAgent;
-import model.passiveComponent.environment.Environment;
-import model.passiveComponent.environment.road.Road;
-import model.passiveComponent.environment.RoadsEnvironment;
-import model.passiveComponent.environment.trafficLight.TrafficLight;
-import model.passiveComponent.simulation.listeners.SimulationListener;
+import logic.passiveComponent.agent.AbstractCarAgent;
+import logic.passiveComponent.environment.Environment;
+import logic.passiveComponent.environment.road.Road;
+import logic.passiveComponent.environment.RoadsEnvironment;
+import logic.passiveComponent.environment.trafficLight.TrafficLight;
+import logic.passiveComponent.simulation.listeners.SimulationListener;
 import utils.Vector2D;
 
 import javax.swing.*;

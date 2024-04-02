@@ -21,12 +21,12 @@ import javax.swing.JCheckBox;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
-import controller.Controller;
-import controller.ControllerImpl;
-import model.passiveComponent.agent.AbstractCarAgent;
-import model.passiveComponent.environment.Environment;
-import model.passiveComponent.simulation.SimulationType;
-import model.passiveComponent.simulation.listeners.SimulationListener;
+import logic.controller.Controller;
+import logic.controller.ControllerImpl;
+import logic.passiveComponent.agent.AbstractCarAgent;
+import logic.passiveComponent.environment.Environment;
+import logic.passiveComponent.simulation.SimulationType;
+import logic.passiveComponent.simulation.listeners.SimulationListener;
 
 public class StatisticalView extends JFrame implements ActionListener, SimulationListener {
     private final static int DEFAULT_SIZE = 1000;
