@@ -1,1 +1,1 @@
-average speed: 3.7499999999999973
+average speed: 3.3999999999999997E-4
