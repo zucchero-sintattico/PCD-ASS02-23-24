@@ -1,6 +1,5 @@
 package model.passiveComponent.simulation.examples;
 
-
 import model.passiveComponent.agent.AbstractCarAgent;
 import model.passiveComponent.agent.agentImpl.base.BaseCarAgent;
 import model.passiveComponent.environment.Environment;
@@ -13,19 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * Traffic Simulation about 2 cars moving on a single road, no traffic lights
- * 
  */
 public class TrafficSimulationSingleRoadTwoCars extends AbstractSimulation {
 
-//	public TrafficSimulationSingleRoadTwoCars() {
-//		super();
-//	}
-
 	@Override
 	protected List<AbstractCarAgent> createAgents() {
-		Road r = environment.createRoad(new Point2D(0,300), new Point2D(1500,300));
+		Road r = environment.createRoad(new Point2D(0, 300), new Point2D(1500, 300));
 		List<AbstractCarAgent> agents = new ArrayList<>();
 		AbstractCarAgent car1 = new BaseCarAgent("car-1", environment, r, 0, 0.1, 0.2, 8);
 		agents.add(car1);
@@ -53,5 +46,4 @@ public class TrafficSimulationSingleRoadTwoCars extends AbstractSimulation {
 	}
 
 
-	
 }

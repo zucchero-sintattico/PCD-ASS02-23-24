@@ -48,7 +48,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 	@Override
 	public void notifyStepDone(int t,List<AbstractCarAgent> agents, Environment env) {
 		var e = ((RoadsEnvironment) env);
-		panel.update(e.getRoads(), e.getAgentInfo(), e.getTrafficLights());
+		panel.update(e.getRoads(), e.getCarAgents(), e.getTrafficLights());
 	}
 	
 	
@@ -70,7 +70,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 			
 			if (roads != null) {
 				for (var r: roads) {
-					g2.drawLine((int)r.getFrom().getX(), (int)r.getFrom().getY(), (int)r.getTo().getX(), (int)r.getTo().getY());
+					g2.drawLine((int)r.getStartPoint().getX(), (int)r.getStartPoint().getY(), (int)r.getEndPoint().getX(), (int)r.getEndPoint().getY());
 				}
 			}
 			
@@ -83,7 +83,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 					} else {
 						g.setColor(new Color(255, 255, 0, 255));
 					}
-					g2.fillRect((int)(s.getPos().getX()-5), (int)(s.getPos().getY()-5), 10, 10);
+					g2.fillRect((int)(s.getPosition().getX()-5), (int)(s.getPosition().getY()-5), 10, 10);
 				}
 			}
 			int i = 0;
@@ -95,13 +95,13 @@ public class RoadSimView extends JFrame implements SimulationListener {
 				for (var c: cars) {
 					double pos = c.getPosition();
 					Road r = c.getRoad();
-					Vector2D dir = Vector2D.makeV2d(r.getFrom(), r.getTo()).getNormalized().mul(pos);
+					Vector2D dir = Vector2D.makeV2d(r.getStartPoint(), r.getEndPoint()).getNormalized().mul(pos);
 					g.setColor(c2);
 					if (i == 0) {
 						g.setColor(c1);
 						i++;
 					}
-					g2.fillOval((int)(r.getFrom().getX() + dir.getX() - CAR_DRAW_SIZE/2), (int)(r.getFrom().getY() + dir.getY() - CAR_DRAW_SIZE/2), CAR_DRAW_SIZE , CAR_DRAW_SIZE);
+					g2.fillOval((int)(r.getStartPoint().getX() + dir.getX() - CAR_DRAW_SIZE/2), (int)(r.getStartPoint().getY() + dir.getY() - CAR_DRAW_SIZE/2), CAR_DRAW_SIZE , CAR_DRAW_SIZE);
 				}
 			}
   	   }

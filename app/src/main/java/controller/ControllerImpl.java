@@ -4,8 +4,8 @@ import model.activeComponent.SimulationRunner;
 import model.monitor.state.SimulationState;
 import model.passiveComponent.simulation.Simulation;
 import model.passiveComponent.simulation.SimulationType;
-import view.RoadSimView;
 import model.passiveComponent.simulation.listeners.SimulationListener;
+import view.RoadSimView;
 
 public class ControllerImpl implements Controller {
 
@@ -28,7 +28,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void setupSimulation(SimulationType type, int numberOfSteps, int numberOfThread) {
-        if(this.simulationView != null){
+        if (this.simulationView != null) {
             this.simulationView.dispose();
         }
         this.simulation = type.getSimulation(type);
@@ -37,7 +37,7 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public int getAvaiableProcessor() {
+    public int getAvailableProcessor() {
         return Runtime.getRuntime().availableProcessors();
     }
 

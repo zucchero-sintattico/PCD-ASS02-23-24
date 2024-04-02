@@ -1,18 +1,17 @@
 package model.passiveComponent.agent;
 
-
 import model.passiveComponent.environment.road.Road;
 
 public interface Car {
 
-    String getAgentID();
+	String getAgentID();
 
-    double getCurrentSpeed();
+	double getCurrentSpeed();
 
-    double getPosition();
+	double getPosition();
 
-    void updatePosition(double position);
+	void updatePosition(double position);
 
-    Road getRoad();
+	Road getRoad();
 
 }

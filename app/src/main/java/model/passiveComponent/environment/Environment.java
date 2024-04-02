@@ -5,23 +5,27 @@ import model.passiveComponent.agent.action.Action;
 import model.passiveComponent.agent.perception.Perception;
 import model.passiveComponent.environment.road.Road;
 import model.passiveComponent.environment.trafficLight.TrafficLight;
-import model.passiveComponent.environment.trafficLight.TrafficLightState;
 import model.passiveComponent.simulation.SimulationComponent;
 import utils.Point2D;
 
+import java.util.List;
+
 public interface Environment extends SimulationComponent {
 
-    //todo refactor
-    //todo missing id
-    void registerNewCar(AbstractCarAgent abstractCarAgent);
+    void step();
+
+    void registerNewCarAgent(AbstractCarAgent abstractCarAgent);
+
+    List<AbstractCarAgent> getCarAgents();
 
     Road createRoad(Point2D p0, Point2D p1);
 
-    TrafficLight createTrafficLight(Point2D pos, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration);
+    List<Road> getRoads();
 
-    Perception getCurrentPercept(String agentID);
+    List<TrafficLight> getTrafficLights();
+
+    Perception getCurrentPerception(String agentID);
 
     void doAction(String agentID, Action selectedAction);
 
-    void step();
 }

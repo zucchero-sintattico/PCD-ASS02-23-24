@@ -5,17 +5,18 @@ import model.passiveComponent.simulation.listeners.SimulationListener;
 
 public interface Simulation {
 
-    void setup(int numSteps, int numOfThread);
+	void setup(int numSteps, int numOfThread);
 
-    void addSimulationListener(SimulationListener listener);
+	void addSimulationListener(SimulationListener listener);
 
-    void doStep();
+	void doStep();
 
-    long getSimulationDuration();
+	long getSimulationDuration();
 
-    long getAverageTimePerCycle();
+	long getAverageTimePerCycle();
 
-    void syncWithTime(int nCyclesPerSec);
+	void syncWithTime(int nCyclesPerSec);
 
-    SimulationState getState();
+	SimulationState getState();
+
 }

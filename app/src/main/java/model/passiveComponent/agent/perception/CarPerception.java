@@ -1,33 +1,35 @@
 package model.passiveComponent.agent.perception;
 
 import model.passiveComponent.agent.AbstractCarAgent;
-import model.passiveComponent.environment.trafficLight.TrafficLightInfo;
+import model.passiveComponent.environment.trafficLight.TrafficLight;
 
 import java.util.Optional;
 
 public class CarPerception implements Perception {
-    private final double roadPos;
-    private final TrafficLightInfo nearestSem;
-    private final AbstractCarAgent nearestCarInFront;
 
-    public CarPerception(double roadPos, AbstractCarAgent nearestCarInFront, TrafficLightInfo nearestSem){
-        this.roadPos = roadPos;
-        this.nearestCarInFront = nearestCarInFront;
-        this.nearestSem = nearestSem;
-    }
+	private final double roadPosition;
+	private final TrafficLight nearestTrafficLight;
+	private final AbstractCarAgent nearestCarInFront;
 
-    @Override
-    public double getRoadPos() {
-        return roadPos;
-    }
+	public CarPerception(double roadPosition, AbstractCarAgent nearestCarInFront, TrafficLight nearestTrafficLight) {
+		this.roadPosition = roadPosition;
+		this.nearestCarInFront = nearestCarInFront;
+		this.nearestTrafficLight = nearestTrafficLight;
+	}
 
-    @Override
-    public Optional<TrafficLightInfo> getNearestSem() {
-        return nearestSem == null ? Optional.empty() : Optional.of(nearestSem);
-    }
+	@Override
+	public double getRoadPosition() {
+		return roadPosition;
+	}
 
-    @Override
-    public Optional<AbstractCarAgent> getNearestCarInFront() {
-        return nearestCarInFront == null ? Optional.empty() : Optional.of(nearestCarInFront);
-    }
+	@Override
+	public Optional<TrafficLight> getNearestSem() {
+		return nearestTrafficLight == null ? Optional.empty() : Optional.of(nearestTrafficLight);
+	}
+
+	@Override
+	public Optional<AbstractCarAgent> getNearestCarInFront() {
+		return nearestCarInFront == null ? Optional.empty() : Optional.of(nearestCarInFront);
+	}
+
 }

@@ -2,18 +2,18 @@ package model.monitor.state;
 
 public class SimulationState {
 
-    private boolean isRunning;
+	private boolean isRunning;
 
-    public synchronized void stopSimulation() {
-        isRunning = false;
-    }
+	public synchronized void stopSimulation() {
+		isRunning = false;
+	}
 
-    public synchronized void startSimulation() {
-        isRunning = true;
-    }
+	public synchronized void startSimulation() {
+		isRunning = true;
+	}
 
-    public synchronized boolean isSimulationRunning() {
-        return isRunning;
-    }
+	public synchronized boolean isSimulationRunning() {
+		return isRunning;
+	}
 
 }

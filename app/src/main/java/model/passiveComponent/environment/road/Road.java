@@ -3,20 +3,21 @@ package model.passiveComponent.environment.road;
 
 
 import model.passiveComponent.environment.trafficLight.TrafficLight;
-import model.passiveComponent.environment.trafficLight.TrafficLightInfo;
+import model.passiveComponent.environment.trafficLight.TrafficLightState;
 import utils.Point2D;
 
 import java.util.List;
 
 public interface Road {
 
-    Point2D getFrom();
+    Point2D getStartPoint();
 
-    Point2D getTo();
+    Point2D getEndPoint();
 
-    void addTrafficLight(TrafficLight sem, double pos);
+    void addTrafficLight(Point2D position, TrafficLightState initialState, int greenDuration, int yellowDuration, int redDuration, double roadPosition);
 
-    List<TrafficLightInfo> getTrafficLights();
+    List<TrafficLight> getTrafficLights();
 
-    double getLen();
+    double getLength();
+
 }

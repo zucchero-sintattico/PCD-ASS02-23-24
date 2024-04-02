@@ -4,15 +4,16 @@ import utils.Point2D;
 
 public interface TrafficLight {
 
-    boolean isGreen();
+	void step(int dt);
 
-    void step(int simulationStep);
+	Point2D getPosition();
 
-    void init();
+	double getRoadPosition();
 
-    boolean isRed();
+	boolean isGreen();
 
-    boolean isYellow();
+	boolean isRed();
 
-    Point2D getPos();
+	boolean isYellow();
+
 }

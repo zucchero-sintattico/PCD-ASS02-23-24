@@ -1,23 +1,22 @@
 package model.passiveComponent.simulation.examples;
 
-
 import model.passiveComponent.agent.AbstractCarAgent;
 import model.passiveComponent.agent.agentImpl.base.BaseCarAgent;
 import model.passiveComponent.environment.Environment;
-import model.passiveComponent.environment.road.Road;
 import model.passiveComponent.environment.RoadsEnvironment;
-import model.passiveComponent.simulation.AbstractSimulationSingleBarrier;
+import model.passiveComponent.environment.road.Road;
+import model.passiveComponent.simulation.AbstractSimulation;
 import utils.Point2D;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimulationSingleBarrier {
+public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimulation {
 
-	private int numCars;
+	private final int numCars;
 	private Optional<Integer> seed = Optional.empty();
-	
+
 	public TrafficSimulationSingleRoadMassiveNumberOfCars(int numCars) {
 		super();
 		this.numCars = numCars;
@@ -28,7 +27,6 @@ public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimu
 		this.numCars = numCars;
 		this.seed = Optional.of(seed);
 	}
-	
 
 	@Override
 	protected List<AbstractCarAgent> createAgents() {
@@ -72,5 +70,6 @@ public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimu
 	protected int setInitialCondition() {
 		return 0;
 	}
+
 }
 	
