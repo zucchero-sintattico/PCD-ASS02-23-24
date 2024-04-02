@@ -24,13 +24,9 @@ public class ExtendedCarAgent extends AbstractCarAgent {
 	private boolean detectedNearCar() {
 		Optional<AbstractCarAgent> car = currentPerception.getNearestCarInFront();
 		if (car.isEmpty()) {
-//			System.out.println("aID "+getAgentID()+" detectnearcarempty");
 			return false;
 		} else {
 			double dist = car.get().getPosition() - currentPerception.getRoadPosition();
-//			System.out.println("aID "+getAgentID()+" detectnearcarNOTempty "+car.get().getPosition());
-//			System.out.println("aID "+getAgentID()+" detectnearcarNOTempty "+currentPerception.getRoadPosition());
-//			System.out.println("aID "+getAgentID()+" detectnearcarNOTempty "+(dist < CAR_NEAR_DIST));
 			return dist < CAR_NEAR_DIST;
 		}
 	}
@@ -116,18 +112,9 @@ public class ExtendedCarAgent extends AbstractCarAgent {
 				}
 				break;
 		}
-//		System.out.println("aID "+getAgentID()+" "+detectedRedOrYellowNearTrafficLights());
-//		System.out.println("aID "+getAgentID()+" "+detectedGreenTrafficLights());
-//		System.out.println("aID "+getAgentID()+" "+detectedNearCar());
-//		System.out.println("aID "+getAgentID()+" preactionPresent "+(this.selectedAction != null));
 		if (currentSpeed > 0) {
-//			System.out.println("aID "+getAgentID()+" createAction");
 			selectedAction = new MoveForward(currentSpeed * stepSize);
 		}
-//		System.out.println("aID "+getAgentID()+" postactionPresent "+(this.selectedAction != null));
-//		System.out.println("aID "+getAgentID()+" "+state);
-
-
 	}
 
 
