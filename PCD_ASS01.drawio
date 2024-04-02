@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-04-02T10:17:37.813Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="-9FgM8vR-bH5n6cUZkdp" version="24.0.4" type="github">
+<mxfile host="app.diagrams.net" modified="2024-04-02T10:21:28.308Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="SBt2JreFloiz3AG1mHew" version="24.0.4" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="1687" dy="878" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -42,6 +42,14 @@
         <mxCell id="NOwEHH1t8_DrOCpnonOM-16" value="use" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="NOwEHH1t8_DrOCpnonOM-15">
           <mxGeometry x="-0.1" relative="1" as="geometry">
             <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NOwEHH1t8_DrOCpnonOM-37" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="NOwEHH1t8_DrOCpnonOM-9" target="NOwEHH1t8_DrOCpnonOM-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NOwEHH1t8_DrOCpnonOM-38" value="has" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="NOwEHH1t8_DrOCpnonOM-37">
+          <mxGeometry x="-0.0264" y="1" relative="1" as="geometry">
+            <mxPoint y="-1" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="NOwEHH1t8_DrOCpnonOM-9" value="&lt;div style=&quot;&quot;&gt;&amp;nbsp;+ setup(int numSteps, int numOfThread): void&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;div style=&quot;&quot;&gt;&amp;nbsp;+ addSimulationListener(SimulationListener listener): void&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;+ doStep(): void&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
@@ -92,6 +100,9 @@
         </mxCell>
         <mxCell id="NOwEHH1t8_DrOCpnonOM-29" value="&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;div&gt;&lt;b&gt;Runnable&lt;/b&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="90" y="945" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NOwEHH1t8_DrOCpnonOM-35" value="&lt;div&gt;&lt;b&gt;SimulationState&lt;/b&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="827" y="460" width="160" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
