@@ -1,6 +1,6 @@
-import model.activeComponent.SimulationRunner;
-import model.passiveComponent.simulation.listeners.RoadSimStatistics;
-import model.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import logic.activeComponent.SimulationRunner;
+import logic.passiveComponent.simulation.listeners.RoadSimStatistics;
+import logic.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
 
 import java.io.FileWriter;
 import java.util.List;
