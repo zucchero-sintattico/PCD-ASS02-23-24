@@ -83,6 +83,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.areaConsoleLog.setMargin(new Insets(10, 10, 10, 10));
         this.areaConsoleLog.setEditable(false);
         this.populateComboBox();
+        this.buttonStop.setEnabled(false);
         this.buttonStart.addActionListener(this);
         this.buttonStop.addActionListener(this);
         this.buttonReset.addActionListener(this);
@@ -234,6 +235,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
             if (!this.isStartedSimulation) {
                 SwingUtilities.invokeLater(() -> {
                     updateViewWhenSimulationStart();
+                    this.clearTextArea();
                     this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps(), this.getNumberOfThreads());
                     if(this.getShowViewFlag()){
                         this.controller.showView();
@@ -270,7 +272,6 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.buttonReset.setEnabled(false);
         this.buttonStart.setText("Restart Simulation");
         this.isStartedSimulation = true;
-        this.clearTextArea();
     }
 
     @Override

@@ -92,6 +92,7 @@ public abstract class AbstractSimulation implements Simulation {
 		if (this.numStepDone == this.numSteps) {
 			this.endWallTime = System.currentTimeMillis();
 			this.averageTimePerStep = cumulativeTimePerStep / numSteps;
+			this.notifyEnd();
 			this.state.stopSimulation();
 		}
 	}
@@ -188,6 +189,12 @@ public abstract class AbstractSimulation implements Simulation {
 	private void notifyAvarageSpeed(double averageSpeed){
 		for(var l: listeners){
 			l.notifyStat(averageSpeed);
+		}
+	}
+
+	private void notifyEnd(){
+		for(var l: listeners){
+			l.notifySimulationEnded();
 		}
 	}
 
