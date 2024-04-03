@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-04-03T10:28:14.672Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="pOWBxVHFlGpr4SiRiFs-" version="24.2.1" type="github" pages="2">
+<mxfile host="app.diagrams.net" modified="2024-04-03T10:46:25.120Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="P6gVOlYQGrxXpNapuiUl" version="24.2.1" type="github" pages="2">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="uml">
-    <mxGraphModel dx="1060" dy="1888" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1434" dy="1915" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -151,7 +151,7 @@
             <mxPoint x="558" y="-60" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="mXdhoXaVlw24aOnkjG4d-0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="8qQeJ0eEbN7VkORL1g9j-14">
+        <mxCell id="mXdhoXaVlw24aOnkjG4d-0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="8qQeJ0eEbN7VkORL1g9j-14" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="670" y="331.5" as="targetPoint" />
           </mxGeometry>
@@ -199,14 +199,14 @@
         <mxCell id="1Bwv_G0Kj5Zrv0i_R8ov-0" value="SimulationRunner" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="106.5" y="410" width="122.5" height="140" as="geometry" />
         </mxCell>
-        <mxCell id="mXdhoXaVlw24aOnkjG4d-2" value="&lt;b&gt;RoadSimStatistics&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="mXdhoXaVlw24aOnkjG4d-2" value="&lt;b&gt;RoadSimStatistics&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="449" y="280" width="170" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram id="9Pr5VRRHsF01CLueVyCL" name="petrinet">
-    <mxGraphModel dx="2607" dy="2525" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2206" dy="2317" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -476,6 +476,9 @@
               <mxPoint x="1090" y="940" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="1HG38KPQrh8N9U1vl_gj-1" value="&lt;span style=&quot;font-size: 16px;&quot;&gt;NumStep&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="910" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
