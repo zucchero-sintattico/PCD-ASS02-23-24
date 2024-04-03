@@ -30,6 +30,8 @@ public abstract class AbstractSimulation implements Simulation {
 	private long startWallTime;
 	private long averageTimePerStep;
 	private long endWallTime;
+	private double maxSpeed;
+	private double minSpeed;
 
 	public AbstractSimulation() {
 		this.state = new SimulationState();
@@ -106,6 +108,7 @@ public abstract class AbstractSimulation implements Simulation {
 			agent.getSerialAction().run();
 		}
 		this.t += this.dt;
+		this.notifyAvarageSpeed(this.computeAvarageSpeed());
 		this.notifyNewStep(this.t, this.agents, this.environment);
 		cumulativeTimePerStep += System.currentTimeMillis() - this.currentWallTime;
 		if (this.toBeInSyncWithWallTime) {
@@ -156,6 +159,35 @@ public abstract class AbstractSimulation implements Simulation {
 	private void notifyNewStep(int t, List<AbstractCarAgent> agents, Environment env) {
 		for (var l : listeners) {
 			l.notifyStepDone(t, agents, env);
+		}
+	}
+
+	private double computeAvarageSpeed(){
+		double avSpeed = 0;
+		
+		maxSpeed = -1;
+		minSpeed = Double.MAX_VALUE;
+		for (var agent: agents) {
+			AbstractCarAgent car = (AbstractCarAgent) agent;
+			double currSpeed = car.getCurrentSpeed();
+			avSpeed += currSpeed;			
+			if (currSpeed > maxSpeed) {
+				maxSpeed = currSpeed;
+			} else if (currSpeed < minSpeed) {
+				minSpeed = currSpeed;
+			}
+		}
+		
+		if (agents.size() > 0) {
+			avSpeed /= agents.size();
+		}
+
+		return avSpeed;
+	}
+
+	private void notifyAvarageSpeed(double averageSpeed){
+		for(var l: listeners){
+			l.notifyStat(averageSpeed);
 		}
 	}
 
