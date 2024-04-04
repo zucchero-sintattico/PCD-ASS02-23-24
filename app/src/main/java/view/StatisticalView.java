@@ -23,8 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import logic.controller.Controller;
 import logic.controller.ControllerImpl;
