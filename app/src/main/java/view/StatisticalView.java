@@ -23,6 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import logic.controller.Controller;
 import logic.controller.ControllerImpl;
@@ -45,6 +47,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     private JLabel labelBox;
     private JComboBox<SimulationType> comboBox;
     private JCheckBox checkBox;
+    private JCheckBox checkBoxAvaiableProcessor;
     private JScrollPane scroll;
     private JPanel inputContainer;
     private JPanel buttonContainer;
@@ -90,6 +93,8 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.buttonStart.addActionListener(this);
         this.buttonStop.addActionListener(this);
         this.buttonReset.addActionListener(this);
+        this.checkBoxAvaiableProcessor.addActionListener(this);
+        this.checkBoxAvaiableProcessor.setSelected(true);
         this.labelNumberOfSteps.setFont(new Font(getName(), Font.PLAIN, 16));
         this.labelNumberOfThreads.setFont(new Font(getName(), Font.PLAIN, 16));
         this.labelConsoleLog.setFont(new Font(getName(), Font.PLAIN, 16));
@@ -97,6 +102,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.fieldNumberOfSteps.setFont(new Font(getName(), Font.PLAIN, 14));
         this.fieldNumberOfThreads.setFont(new Font(getName(), Font.PLAIN, 14));
         this.checkBox.setFont(new Font(getName(), Font.PLAIN, 14));
+        this.checkBoxAvaiableProcessor.setFont(new Font(getName(), Font.PLAIN, 14));
         this.buttonStart.setFont(new Font(getName(), Font.PLAIN, 14));
         this.buttonStop.setFont(new Font(getName(), Font.PLAIN, 14));
         this.buttonReset.setFont(new Font(getName(), Font.PLAIN, 14));
@@ -118,44 +124,45 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         constraints.insets = new Insets(16, 16, 0, 16);
         constraints.fill = GridBagConstraints.NONE;
         constraints.fill = GridBagConstraints.NONE;
-
-        this.add(this.labelBox, constraints);
+        this.add(this.checkBoxAvaiableProcessor, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 5;
-        constraints.ipadx = 500;
+        constraints.insets = new Insets(16, 16, 0, 16);
         constraints.fill = GridBagConstraints.NONE;
-
-        this.add(this.comboBox, constraints);
+        constraints.fill = GridBagConstraints.NONE;
+        this.add(this.labelBox, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 6;
-        constraints.ipadx = 0;
+        constraints.ipadx = 500;
         constraints.fill = GridBagConstraints.NONE;
-
-        this.add(this.checkBox, constraints);
+        this.add(this.comboBox, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 7;
         constraints.ipadx = 0;
         constraints.fill = GridBagConstraints.NONE;
-
-        this.add(this.labelConsoleLog, constraints);
+        this.add(this.checkBox, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 8;
-        constraints.ipady = 200;
-        constraints.ipadx = 500;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-
-        this.add(this.scroll, constraints);
+        constraints.ipadx = 0;
+        constraints.fill = GridBagConstraints.NONE;
+        this.add(this.labelConsoleLog, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 9;
+        constraints.ipady = 200;
+        constraints.ipadx = 500;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        this.add(this.scroll, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 10;
         constraints.ipady = 10;
         constraints.ipadx = 10;
         constraints.fill = GridBagConstraints.HORIZONTAL;
-
         this.add(this.buttonContainer, constraints);
     }
 
@@ -163,7 +170,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.labelNumberOfSteps = new JLabel("Number of steps");
         this.fieldNumberOfSteps = new JTextField("200", 1);
         this.labelNumberOfThreads = new JLabel("Number of threads");
-        this.fieldNumberOfThreads = new JTextField(String.valueOf(this.controller.getAvailableProcessor()), 1);
+        this.fieldNumberOfThreads = new JTextField(this.getProcessor(), 1);
         this.labelConsoleLog = new JLabel("Console log");
         this.areaConsoleLog = new JTextArea("Console log");
         this.buttonStart = new JButton("Start simulation");
@@ -174,6 +181,8 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.labelBox = new JLabel("Choise simulation");
         this.comboBox = new JComboBox<SimulationType>();
         this.checkBox = new JCheckBox("Display simulation view");
+        this.fieldNumberOfThreads.setEnabled(false);
+        this.checkBoxAvaiableProcessor = new JCheckBox("Use avaiable processor (max: " + getProcessor() + ")");
         this.inputContainer = new JPanel(new GridLayout(2, 2, 10, 10));
         this.inputContainer.add(this.labelNumberOfSteps);
         this.inputContainer.add(this.labelNumberOfThreads);
@@ -183,6 +192,10 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.buttonContainer.add(this.buttonStart);
         this.buttonContainer.add(this.buttonStop);
         this.buttonContainer.add(this.buttonReset);
+    }
+
+    private String getProcessor() {
+        return String.valueOf(this.controller.getAvailableProcessor());
     }
 
     public void display() {
@@ -287,6 +300,14 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
                     this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get(), this.getNumberOfThreads().get());
                 }
             });
+        }else if(e.getSource() == this.checkBoxAvaiableProcessor){
+            if(this.checkBoxAvaiableProcessor.isSelected()){
+                this.fieldNumberOfThreads.setEnabled(false);
+                this.fieldNumberOfThreads.setText(this.getProcessor());
+            }else{
+                this.fieldNumberOfThreads.setEnabled(true);
+                this.fieldNumberOfThreads.setText(this.getProcessor());
+            }
         } else {
             SwingUtilities.invokeLater(() -> {
                 this.buttonStart.setEnabled(true);
