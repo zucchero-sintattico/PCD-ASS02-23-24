@@ -9,10 +9,13 @@ import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.List;
+import java.util.Optional;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -191,12 +194,36 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.areaConsoleLog.setCaretPosition(this.areaConsoleLog.getDocument().getLength());
     }
 
-    public int getNumberOfSteps() {
-        return Integer.valueOf(this.fieldNumberOfSteps.getText());
+    public Optional<Integer> getNumberOfSteps() {
+        try {
+            return Optional.of(Integer.valueOf(this.fieldNumberOfSteps.getText()));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public int getNumberOfThreads() {
-        return Integer.valueOf(this.fieldNumberOfThreads.getText());
+    public Optional<Integer> getNumberOfThreads() {
+        try {
+            return Optional.of(Integer.valueOf(this.fieldNumberOfThreads.getText()));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public boolean validateInput(){
+        if(this.getNumberOfSteps().isEmpty()){
+            displayMessageDialog("Number of steps isn't an integer");
+            return false;
+        }else if(this.getNumberOfThreads().isEmpty()){
+            displayMessageDialog("Number of threads isn't an integer");
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    private void displayMessageDialog(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public void clearTextArea() {
@@ -234,14 +261,16 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         if (e.getSource() == this.buttonStart) {
             if (!this.isStartedSimulation) {
                 SwingUtilities.invokeLater(() -> {
-                    updateViewWhenSimulationStart();
-                    this.clearTextArea();
-                    this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps(), this.getNumberOfThreads());
-                    if(this.getShowViewFlag()){
-                        this.controller.showView();
+                    if(validateInput()){
+                        updateViewWhenSimulationStart();
+                        this.clearTextArea();
+                        this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get(), this.getNumberOfThreads().get());
+                        if(this.getShowViewFlag()){
+                            this.controller.showView();
+                        }
+                        this.controller.attachListener(this);
+                        this.controller.startSimulation();
                     }
-                    this.controller.attachListener(this);
-                    this.controller.startSimulation();
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
@@ -251,10 +280,12 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
             }
         } else if (e.getSource() == this.buttonReset) {
             SwingUtilities.invokeLater(() -> {
-                this.clearTextArea();
-                this.areaConsoleLog.setText("Console log");
-                this.resetView();
-                this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps(), this.getNumberOfThreads());
+                if(validateInput()){
+                    this.clearTextArea();
+                    this.areaConsoleLog.setText("Console log");
+                    this.resetView();
+                    this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get(), this.getNumberOfThreads().get());
+                }
             });
         } else {
             SwingUtilities.invokeLater(() -> {
