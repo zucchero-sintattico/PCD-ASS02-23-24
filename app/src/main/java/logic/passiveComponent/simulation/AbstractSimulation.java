@@ -109,7 +109,7 @@ public abstract class AbstractSimulation implements Simulation {
 			agent.getSerialAction().run();
 		}
 		this.t += this.dt;
-		this.notifyAvarageSpeed(this.computeAvarageSpeed());
+		this.notifyAverageSpeed(this.computeAvarageSpeed());
 		this.notifyNewStep(this.t, this.agents, this.environment);
 		cumulativeTimePerStep += System.currentTimeMillis() - this.currentWallTime;
 		if (this.toBeInSyncWithWallTime) {
@@ -186,7 +186,7 @@ public abstract class AbstractSimulation implements Simulation {
 		return avSpeed;
 	}
 
-	private void notifyAvarageSpeed(double averageSpeed){
+	private void notifyAverageSpeed(double averageSpeed){
 		for(var l: listeners){
 			l.notifyStat(averageSpeed);
 		}
