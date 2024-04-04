@@ -1,4 +1,4 @@
-package logic.passiveComponent.simulation;
+package logic.simulation;
 
 import logic.activeComponent.SimulationWorker;
 import logic.monitor.barrier.CyclicBarrier;

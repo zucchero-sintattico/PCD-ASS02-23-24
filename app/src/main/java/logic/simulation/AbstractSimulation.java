@@ -1,10 +1,10 @@
-package logic.passiveComponent.simulation;
+package logic.simulation;
 
 import logic.passiveComponent.environment.Environment;
 import logic.monitor.barrier.CyclicBarrier;
 import logic.monitor.state.SimulationState;
 import logic.passiveComponent.agent.AbstractCarAgent;
-import logic.passiveComponent.simulation.listeners.SimulationListener;
+import logic.simulation.listeners.SimulationListener;
 
 import java.util.ArrayList;
 import java.util.List;

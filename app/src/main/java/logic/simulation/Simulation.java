@@ -1,7 +1,7 @@
-package logic.passiveComponent.simulation;
+package logic.simulation;
 
 import logic.monitor.state.SimulationState;
-import logic.passiveComponent.simulation.listeners.SimulationListener;
+import logic.simulation.listeners.SimulationListener;
 
 public interface Simulation {
 

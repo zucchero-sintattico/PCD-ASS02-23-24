@@ -1,6 +1,6 @@
 package logic.passiveComponent.environment;
 
-import logic.passiveComponent.simulation.SimulationComponent;
+import logic.simulation.SimulationComponent;
 import logic.passiveComponent.agent.AbstractCarAgent;
 import logic.passiveComponent.agent.action.Action;
 import logic.passiveComponent.agent.perception.Perception;

@@ -1,6 +1,6 @@
 package logic.activeComponent;
 
-import logic.passiveComponent.simulation.Simulation;
+import logic.simulation.Simulation;
 
 public class SimulationRunner extends Thread {
 

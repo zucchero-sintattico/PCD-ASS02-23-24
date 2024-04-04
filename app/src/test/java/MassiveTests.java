@@ -1,7 +1,7 @@
 import logic.activeComponent.SimulationRunner;
-import logic.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
-import logic.passiveComponent.simulation.examples.TrafficSimulationWithCrossRoads;
-import logic.passiveComponent.simulation.listeners.RoadSimStatistics;
+import logic.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import logic.simulation.examples.TrafficSimulationWithCrossRoads;
+import logic.simulation.listeners.RoadSimStatistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

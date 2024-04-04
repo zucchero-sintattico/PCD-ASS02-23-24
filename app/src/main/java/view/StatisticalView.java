@@ -28,8 +28,8 @@ import logic.controller.Controller;
 import logic.controller.ControllerImpl;
 import logic.passiveComponent.agent.AbstractCarAgent;
 import logic.passiveComponent.environment.Environment;
-import logic.passiveComponent.simulation.SimulationType;
-import logic.passiveComponent.simulation.listeners.SimulationListener;
+import logic.simulation.SimulationType;
+import logic.simulation.listeners.SimulationListener;
 
 public class StatisticalView extends JFrame implements ActionListener, SimulationListener {
     private final static int DEFAULT_SIZE = 1000;

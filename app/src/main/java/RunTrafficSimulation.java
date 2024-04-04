@@ -1,7 +1,7 @@
 import logic.activeComponent.SimulationRunner;
-import logic.passiveComponent.simulation.listeners.RoadSimStatistics;
+import logic.simulation.listeners.RoadSimStatistics;
 import view.RoadSimView;
-import logic.passiveComponent.simulation.examples.TrafficSimulationWithCrossRoads;
+import logic.simulation.examples.TrafficSimulationWithCrossRoads;
 
 /**
  * 

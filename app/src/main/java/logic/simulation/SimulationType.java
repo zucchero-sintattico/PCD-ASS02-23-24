@@ -1,10 +1,10 @@
-package logic.passiveComponent.simulation;
+package logic.simulation;
 
-import logic.passiveComponent.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
-import logic.passiveComponent.simulation.examples.TrafficSimulationSingleRoadSeveralCars;
-import logic.passiveComponent.simulation.examples.TrafficSimulationSingleRoadTwoCars;
-import logic.passiveComponent.simulation.examples.TrafficSimulationSingleRoadWithTrafficLightTwoCars;
-import logic.passiveComponent.simulation.examples.TrafficSimulationWithCrossRoads;
+import logic.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
+import logic.simulation.examples.TrafficSimulationSingleRoadSeveralCars;
+import logic.simulation.examples.TrafficSimulationSingleRoadTwoCars;
+import logic.simulation.examples.TrafficSimulationSingleRoadWithTrafficLightTwoCars;
+import logic.simulation.examples.TrafficSimulationWithCrossRoads;
 
 public enum SimulationType {
 	SINGLE_ROAD_TWO_CAR,

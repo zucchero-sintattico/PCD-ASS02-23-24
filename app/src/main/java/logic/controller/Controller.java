@@ -1,7 +1,7 @@
 package logic.controller;
 
-import logic.passiveComponent.simulation.SimulationType;
-import logic.passiveComponent.simulation.listeners.SimulationListener;
+import logic.simulation.SimulationType;
+import logic.simulation.listeners.SimulationListener;
 
 public interface Controller {
 

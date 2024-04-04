@@ -2,9 +2,9 @@ package logic.controller;
 
 import logic.activeComponent.SimulationRunner;
 import logic.monitor.state.SimulationState;
-import logic.passiveComponent.simulation.Simulation;
-import logic.passiveComponent.simulation.SimulationType;
-import logic.passiveComponent.simulation.listeners.SimulationListener;
+import logic.simulation.Simulation;
+import logic.simulation.SimulationType;
+import logic.simulation.listeners.SimulationListener;
 import view.RoadSimView;
 
 public class ControllerImpl implements Controller {
