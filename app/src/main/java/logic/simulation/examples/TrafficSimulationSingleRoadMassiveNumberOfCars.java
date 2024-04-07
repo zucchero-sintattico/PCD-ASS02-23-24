@@ -39,16 +39,16 @@ public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimu
 			double carAcceleration = 1;
 			double carDeceleration = 0.3;
 			double carMaxSpeed = 7;
-
-			AbstractCarAgent car = new BaseCarAgent(carId, environment,
+			AbstractCarAgent car;
+			if (seed.isPresent()) {
+				car = new BaseCarAgent(carId, environment, road, initialPos, seed.get()+i);
+			}else{
+				car = new BaseCarAgent(carId, environment,
 					road,
 					initialPos,
 					carAcceleration,
 					carDeceleration,
 					carMaxSpeed);
-
-			if (seed.isPresent()) {
-				car = new BaseCarAgent(carId, environment, road, initialPos, seed.get());
 			}
 
 			agents.add(car);

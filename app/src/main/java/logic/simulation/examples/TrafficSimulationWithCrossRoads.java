@@ -14,10 +14,6 @@ import java.util.List;
 
 public class TrafficSimulationWithCrossRoads extends AbstractSimulation {
 
-//	public TrafficSimulationWithCrossRoads() {
-//		super();
-//	}
-
 	@Override
 	protected List<AbstractCarAgent> createAgents() {
 		Road r1 = environment.createRoad(new Point2D(0, 300), new Point2D(1500, 300));

@@ -18,7 +18,7 @@ public class RunTrafficSimulationMassiveTest {
 
 		numOfThreads.forEach(numOfThread -> {
 			System.out.println("Thread: " + numOfThread);
-			var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars);
+			var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars,1234);
 			simulation.setup(nSteps, numOfThread);
 
 			log("Running the simulation: " + numCars + " cars, for " + nSteps + " steps ...");
