@@ -13,8 +13,7 @@ public class ControllerImpl implements Controller {
     private SimulationState simulationState;
     private RoadSimView simulationView;
 
-    public ControllerImpl() {
-    }
+    public ControllerImpl() {}
 
     @Override
     public void stopSimulation() {

@@ -18,6 +18,5 @@ public class SimulationRunner extends Thread {
 		}
 	}
 
-
 }
 

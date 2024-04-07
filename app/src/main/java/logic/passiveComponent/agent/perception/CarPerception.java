@@ -2,7 +2,6 @@ package logic.passiveComponent.agent.perception;
 
 import logic.passiveComponent.agent.AbstractCarAgent;
 import logic.passiveComponent.environment.trafficLight.TrafficLight;
-
 import java.util.Optional;
 
 public class CarPerception implements Perception {

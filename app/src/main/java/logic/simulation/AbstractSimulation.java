@@ -5,7 +5,6 @@ import logic.monitor.barrier.CyclicBarrier;
 import logic.monitor.state.SimulationState;
 import logic.passiveComponent.agent.AbstractCarAgent;
 import logic.simulation.listeners.SimulationListener;
-
 import java.util.ArrayList;
 import java.util.List;
 

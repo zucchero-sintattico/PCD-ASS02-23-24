@@ -6,7 +6,6 @@ import logic.passiveComponent.agent.perception.Perception;
 import logic.passiveComponent.agent.task.ParallelTask;
 import logic.passiveComponent.agent.task.SerialTask;
 import logic.passiveComponent.environment.road.Road;
-
 import java.util.Random;
 
 public abstract class AbstractCarAgent implements Car, Agent {

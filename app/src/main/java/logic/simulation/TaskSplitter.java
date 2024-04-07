@@ -4,7 +4,6 @@ import logic.activeComponent.SimulationWorker;
 import logic.monitor.barrier.CyclicBarrier;
 import logic.passiveComponent.agent.AbstractCarAgent;
 import logic.passiveComponent.agent.task.ParallelTask;
-
 import java.util.ArrayList;
 import java.util.List;
 

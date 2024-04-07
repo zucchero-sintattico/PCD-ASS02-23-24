@@ -1,18 +1,10 @@
 package logic.simulation.listeners;
 
-
 import logic.passiveComponent.agent.AbstractCarAgent;
 import logic.passiveComponent.environment.Environment;
-
 import java.io.FileWriter;
 import java.util.List;
 
-/**
- * Simple class keeping track of some statistics about a traffic simulation
- * - average number of cars
- * - min speed
- * - max speed
- */
 public class RoadSimStatistics implements SimulationListener {
 
 	private double averageSpeed;

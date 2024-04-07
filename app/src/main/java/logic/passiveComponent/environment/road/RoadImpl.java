@@ -4,7 +4,6 @@ import logic.passiveComponent.environment.trafficLight.TrafficLight;
 import logic.passiveComponent.environment.trafficLight.TrafficLightImpl;
 import logic.passiveComponent.environment.trafficLight.TrafficLightState;
 import utils.Point2D;
-
 import java.util.ArrayList;
 import java.util.List;
 

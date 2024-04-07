@@ -9,7 +9,6 @@ import logic.passiveComponent.environment.road.Road;
 import logic.passiveComponent.environment.road.RoadImpl;
 import logic.passiveComponent.environment.trafficLight.TrafficLight;
 import utils.Point2D;
-
 import java.util.*;
 
 public class RoadsEnvironment implements Environment {
@@ -75,7 +74,6 @@ public class RoadsEnvironment implements Environment {
 		return roads;
 	}
 
-	//todo maybe optimize with an init
 	@Override
 	public List<TrafficLight> getTrafficLights() {
 		List<TrafficLight> tl = new ArrayList<>();

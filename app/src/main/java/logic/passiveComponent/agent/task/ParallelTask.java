@@ -1,4 +1,3 @@
 package logic.passiveComponent.agent.task;
 
-public interface ParallelTask extends Runnable {
-}
+public interface ParallelTask extends Runnable {}

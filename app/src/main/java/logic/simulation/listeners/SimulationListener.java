@@ -1,9 +1,7 @@
 package logic.simulation.listeners;
 
-
 import logic.passiveComponent.agent.AbstractCarAgent;
 import logic.passiveComponent.environment.Environment;
-
 import java.util.List;
 
 public interface SimulationListener {

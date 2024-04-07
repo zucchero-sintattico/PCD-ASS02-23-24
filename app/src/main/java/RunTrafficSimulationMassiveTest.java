@@ -1,7 +1,6 @@
 import logic.activeComponent.SimulationRunner;
 import logic.simulation.listeners.RoadSimStatistics;
 import logic.simulation.examples.TrafficSimulationSingleRoadMassiveNumberOfCars;
-
 import java.io.FileWriter;
 import java.util.List;
 

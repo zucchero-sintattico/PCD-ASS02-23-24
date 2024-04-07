@@ -1,7 +1,5 @@
 package logic.passiveComponent.agent.perception;
 
-
-
 import logic.passiveComponent.agent.AbstractCarAgent;
 import logic.passiveComponent.environment.trafficLight.TrafficLight;
 

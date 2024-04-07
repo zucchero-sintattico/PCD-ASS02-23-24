@@ -5,11 +5,10 @@ public class CyclicBarrier implements Barrier {
 	private final int numberOfParticipants;
 	private int participants = 0;
 	private boolean broken;
-	private Runnable postprocessing = () -> {
-	};
+	private final Runnable postprocessing;
 
 	public CyclicBarrier(int numberOfParticipants) {
-		this.numberOfParticipants = numberOfParticipants;
+		this(numberOfParticipants, () -> {});
 	}
 
 	public CyclicBarrier(int numberOfParticipants, Runnable postprocessing) {

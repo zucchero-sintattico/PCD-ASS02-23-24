@@ -2,7 +2,6 @@ package logic.activeComponent;
 
 import logic.monitor.barrier.CyclicBarrier;
 import logic.passiveComponent.agent.task.ParallelTask;
-
 import java.util.List;
 
 public class SimulationWorker extends Thread {

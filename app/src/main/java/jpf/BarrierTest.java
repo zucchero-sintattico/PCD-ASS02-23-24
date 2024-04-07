@@ -1,6 +1,5 @@
 package jpf;
 
-
 import logic.monitor.barrier.Barrier;
 import logic.monitor.barrier.CyclicBarrier;
 

@@ -3,11 +3,6 @@ import logic.simulation.listeners.RoadSimStatistics;
 import view.RoadSimView;
 import logic.simulation.examples.TrafficSimulationWithCrossRoads;
 
-/**
- * 
- * Main class to create and run a simulation
- * 
- */
 public class RunTrafficSimulation {
 
 	public static void main(String[] args) throws InterruptedException {

@@ -7,7 +7,6 @@ import logic.passiveComponent.environment.RoadsEnvironment;
 import logic.passiveComponent.environment.trafficLight.TrafficLight;
 import logic.simulation.listeners.SimulationListener;
 import utils.Vector2D;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;

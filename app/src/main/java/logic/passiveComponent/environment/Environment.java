@@ -7,7 +7,6 @@ import logic.passiveComponent.agent.perception.Perception;
 import logic.passiveComponent.environment.road.Road;
 import logic.passiveComponent.environment.trafficLight.TrafficLight;
 import utils.Point2D;
-
 import java.util.List;
 
 public interface Environment extends SimulationComponent {

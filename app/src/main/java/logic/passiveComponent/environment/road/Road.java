@@ -1,11 +1,8 @@
 package logic.passiveComponent.environment.road;
 
-
-
 import logic.passiveComponent.environment.trafficLight.TrafficLight;
 import logic.passiveComponent.environment.trafficLight.TrafficLightState;
 import utils.Point2D;
-
 import java.util.List;
 
 public interface Road {

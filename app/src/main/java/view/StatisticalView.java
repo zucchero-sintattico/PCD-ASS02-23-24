@@ -10,7 +10,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.List;
 import java.util.Optional;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -23,7 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-
 import logic.controller.Controller;
 import logic.controller.ControllerImpl;
 import logic.passiveComponent.agent.AbstractCarAgent;
