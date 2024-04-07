@@ -17,8 +17,8 @@ public class RunTrafficSimulationMassiveTest {
 //		List<Integer> numOfThreads = List.of(64);
 
 		numOfThreads.forEach(numOfThread -> {
-			System.out.println("Thread: " + numOfThread);
-			var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars,1234);
+			log("Thread: " + numOfThread);
+			var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars);
 			simulation.setup(nSteps, numOfThread);
 
 			log("Running the simulation: " + numCars + " cars, for " + nSteps + " steps ...");
@@ -31,14 +31,12 @@ public class RunTrafficSimulationMassiveTest {
 			t.start();
 			try {
 				t.join();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+			} catch (InterruptedException ignored) {}
 
 			long d = simulation.getSimulationDuration();
 			log("Completed in " + d + " ms - average time per step: " + simulation.getAverageTimePerCycle() + " ms");
 
-			//ad d in a file
+			//add d in a file
 			try {
 				FileWriter myWriter = new FileWriter("log_time_thread.txt", true);
 				myWriter.write(numOfThread + "\t" + d + "\n");

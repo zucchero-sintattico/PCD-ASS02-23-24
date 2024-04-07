@@ -12,8 +12,6 @@ public class TaskSplitter {
 
 	public TaskSplitter(int numOfThread, List<AbstractCarAgent> listOFAgent, int numOfStep,
 						CyclicBarrier barrier) {
-
-
 		List<ParallelTask> listOfParallelTasks = new ArrayList<>();
 		for (AbstractCarAgent agent : listOFAgent) {
 			listOfParallelTasks.add(agent.getParallelAction());
@@ -25,7 +23,6 @@ public class TaskSplitter {
 		for (int i = 1; i < numOfThread + 1; i++) {
 			splitIndex.add(i * split + size % numOfThread);
 		}
-
 		for (int i = 0; i < numOfThread; i++) {
 			int start = i == 0 ? 0 : splitIndex.get(i - 1);
 			int end = splitIndex.get(i);
@@ -33,7 +30,6 @@ public class TaskSplitter {
 			new SimulationWorker(subList, numOfStep, barrier).start();
 
 		}
-
 	}
 
 }

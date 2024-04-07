@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimulation {
+public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractTrafficSimulationExample {
 
 	private final int numCars;
 	private Optional<Integer> seed = Optional.empty();
@@ -33,7 +33,6 @@ public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimu
 		Road road = environment.createRoad(new Point2D(0, 300), new Point2D(15000, 300));
 		List<AbstractCarAgent> agents = new ArrayList<>();
 		for (int i = 0; i < numCars; i++) {
-
 			String carId = "car-" + i;
 			double initialPos = i * 10;
 			double carAcceleration = 1;
@@ -50,25 +49,9 @@ public class TrafficSimulationSingleRoadMassiveNumberOfCars extends AbstractSimu
 					carDeceleration,
 					carMaxSpeed);
 			}
-
 			agents.add(car);
 		}
 		return agents;
-	}
-
-	@Override
-	protected Environment createEnvironment() {
-		return new RoadsEnvironment();
-	}
-
-	@Override
-	protected int setDelta() {
-		return 1;
-	}
-
-	@Override
-	protected int setInitialCondition() {
-		return 0;
 	}
 
 }

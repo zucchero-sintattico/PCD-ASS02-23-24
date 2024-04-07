@@ -12,26 +12,24 @@ import java.util.List;
 public abstract class AbstractSimulation implements Simulation {
 
 	private final SimulationState state;
-	protected List<AbstractCarAgent> agents;
-	private final List<SimulationListener> listeners = new ArrayList<>();
-	private boolean toBeInSyncWithWallTime;
 	protected Environment environment;
-	/* logical time step */
+	protected List<AbstractCarAgent> agents;
+	private CyclicBarrier barrier;
+	private final List<SimulationListener> listeners = new ArrayList<>();
+
 	private int dt;
-	/* initial logical time */
 	private int t0;
 	private int t;
+	private boolean toBeInSyncWithWallTime;
+	private long startWallTime;
 	private long currentWallTime;
-	private long cumulativeTimePerStep;
+	private long endWallTime;
+
 	private int nStepsPerSec;
 	private int numSteps;
 	private int numStepDone;
-	private CyclicBarrier barrier;
-	private long startWallTime;
+	private long cumulativeTimePerStep;
 	private long averageTimePerStep;
-	private long endWallTime;
-	private double maxSpeed;
-	private double minSpeed;
 
 	public AbstractSimulation() {
 		this.state = new SimulationState();
@@ -50,7 +48,7 @@ public abstract class AbstractSimulation implements Simulation {
 		this.startWallTime = System.currentTimeMillis();
 		this.environment.step();
 		int effectiveNumOfThread = Math.min(numOfThread, agents.size());
-		this.barrier = new CyclicBarrier(effectiveNumOfThread + 1, this::postProcessing);
+		this.barrier = new CyclicBarrier(effectiveNumOfThread + 1, this::sequentialTask);
 		new TaskSplitter(effectiveNumOfThread,
 				agents, numSteps, barrier);
 		this.notifyReset(this.t0, this.agents, this.environment);
@@ -62,6 +60,29 @@ public abstract class AbstractSimulation implements Simulation {
 		agents = createAgents();
 		for (var agent : agents) {
 			agent.setup(dt);
+		}
+	}
+
+	private void sequentialTask() {
+		this.numStepDone++;
+		this.currentWallTime = System.currentTimeMillis();
+		for (AbstractCarAgent agent : this.agents) {
+			agent.getSerialAction().run();
+		}
+		this.t += this.dt;
+		this.notifyAverageSpeed(this.computeAverageSpeed());
+		this.notifyNewStep(this.t, this.agents, this.environment);
+		this.cumulativeTimePerStep += System.currentTimeMillis() - this.currentWallTime;
+		if (this.toBeInSyncWithWallTime) {
+			this.syncWithWallTime();
+		}
+		if(this.numStepDone != this.numSteps){
+			environment.step();
+		}else{
+			this.endWallTime = System.currentTimeMillis();
+			this.averageTimePerStep = cumulativeTimePerStep / numSteps;
+			this.notifyEnd();
+			this.state.stopSimulation();
 		}
 	}
 
@@ -81,39 +102,11 @@ public abstract class AbstractSimulation implements Simulation {
 	@Override
 	public void doStep() {
 		if (this.numStepDone < this.numSteps) {
-
 			try {
 				this.barrier.hitAndWaitAll();
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
-
-		}
-		if (this.numStepDone == this.numSteps) {
-			this.endWallTime = System.currentTimeMillis();
-			this.averageTimePerStep = cumulativeTimePerStep / numSteps;
-			this.notifyEnd();
-			this.state.stopSimulation();
-		}
-	}
-	private void postProcessing(){
-		extracted();
-		if(this.numStepDone != this.numSteps){
-			environment.step();
-		}
-	}
-	private void extracted() {
-		this.numStepDone++;
-		this.currentWallTime = System.currentTimeMillis();
-		for (AbstractCarAgent agent : agents) {
-			agent.getSerialAction().run();
-		}
-		this.t += this.dt;
-		this.notifyAverageSpeed(this.computeAvarageSpeed());
-		this.notifyNewStep(this.t, this.agents, this.environment);
-		cumulativeTimePerStep += System.currentTimeMillis() - this.currentWallTime;
-		if (this.toBeInSyncWithWallTime) {
-			this.syncWithWallTime();
 		}
 	}
 
@@ -133,6 +126,11 @@ public abstract class AbstractSimulation implements Simulation {
 		this.nStepsPerSec = nCyclesPerSec;
 	}
 
+	@Override
+	public SimulationState getState() {
+		return this.state;
+	}
+
 	private void syncWithWallTime() {
 		try {
 			long newWallTime = System.currentTimeMillis();
@@ -141,49 +139,19 @@ public abstract class AbstractSimulation implements Simulation {
 			if (wallTimeDT < delay) {
 				Thread.sleep(delay - wallTimeDT);
 			}
-		} catch (Exception ignored) {
-		}
+		} catch (Exception ignored) {}
 	}
 
-	// todo refactor
 	private void notifyReset(int t0, List<AbstractCarAgent> agents, Environment env) {
 		for (var l : listeners) {
 			l.notifyInit(t0, agents, env);
 		}
 	}
 
-	@Override
-	public SimulationState getState() {
-		return this.state;
-	}
-
 	private void notifyNewStep(int t, List<AbstractCarAgent> agents, Environment env) {
 		for (var l : listeners) {
 			l.notifyStepDone(t, agents, env);
 		}
-	}
-
-	private double computeAvarageSpeed(){
-		double avSpeed = 0;
-		
-		maxSpeed = -1;
-		minSpeed = Double.MAX_VALUE;
-		for (var agent: agents) {
-			AbstractCarAgent car = (AbstractCarAgent) agent;
-			double currSpeed = car.getCurrentSpeed();
-			avSpeed += currSpeed;			
-			if (currSpeed > maxSpeed) {
-				maxSpeed = currSpeed;
-			} else if (currSpeed < minSpeed) {
-				minSpeed = currSpeed;
-			}
-		}
-		
-		if (agents.size() > 0) {
-			avSpeed /= agents.size();
-		}
-
-		return avSpeed;
 	}
 
 	private void notifyAverageSpeed(double averageSpeed){
@@ -196,6 +164,26 @@ public abstract class AbstractSimulation implements Simulation {
 		for(var l: listeners){
 			l.notifySimulationEnded();
 		}
+	}
+
+	private double computeAverageSpeed(){
+		double avSpeed = 0;
+		double maxSpeed = -1;
+		double minSpeed = Double.MAX_VALUE;
+		for (var agent: agents) {
+			AbstractCarAgent car = agent;
+			double currSpeed = car.getCurrentSpeed();
+			avSpeed += currSpeed;			
+			if (currSpeed > maxSpeed) {
+				maxSpeed = currSpeed;
+			} else if (currSpeed < minSpeed) {
+				minSpeed = currSpeed;
+			}
+		}
+		if (agents.size() > 0) {
+			avSpeed /= agents.size();
+		}
+		return avSpeed;
 	}
 
 }

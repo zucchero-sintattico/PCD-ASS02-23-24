@@ -41,9 +41,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 	}
 
 	@Override
-	public void notifyInit(int t, List<AbstractCarAgent> agents, Environment env) {
-
-	}
+	public void notifyInit(int t, List<AbstractCarAgent> agents, Environment env) {}
 
 	@Override
 	public void notifyStepDone(int t,List<AbstractCarAgent> agents, Environment env) {
@@ -70,7 +68,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 			
 			if (roads != null) {
 				for (var r: roads) {
-					g2.drawLine((int)r.getStartPoint().getX(), (int)r.getStartPoint().getY(), (int)r.getEndPoint().getX(), (int)r.getEndPoint().getY());
+					g2.drawLine((int)r.getStartPoint().x(), (int)r.getStartPoint().y(), (int)r.getEndPoint().x(), (int)r.getEndPoint().y());
 				}
 			}
 			
@@ -83,7 +81,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 					} else {
 						g.setColor(new Color(255, 255, 0, 255));
 					}
-					g2.fillRect((int)(s.getPosition().getX()-5), (int)(s.getPosition().getY()-5), 10, 10);
+					g2.fillRect((int)(s.getPosition().x()-5), (int)(s.getPosition().y()-5), 10, 10);
 				}
 			}
 			int i = 0;
@@ -101,7 +99,7 @@ public class RoadSimView extends JFrame implements SimulationListener {
 						g.setColor(c1);
 						i++;
 					}
-					g2.fillOval((int)(r.getStartPoint().getX() + dir.getX() - CAR_DRAW_SIZE/2), (int)(r.getStartPoint().getY() + dir.getY() - CAR_DRAW_SIZE/2), CAR_DRAW_SIZE , CAR_DRAW_SIZE);
+					g2.fillOval((int)(r.getStartPoint().x() + dir.x() - CAR_DRAW_SIZE/2), (int)(r.getStartPoint().y() + dir.y() - CAR_DRAW_SIZE/2), CAR_DRAW_SIZE , CAR_DRAW_SIZE);
 				}
 			}
   	   }
@@ -118,11 +116,8 @@ public class RoadSimView extends JFrame implements SimulationListener {
 
 
 	@Override
-	public void notifySimulationEnded() {
-	}
+	public void notifySimulationEnded() {}
 
 	@Override
-	public void notifyStat(double averageSpeed) {
-		
-	}
+	public void notifyStat(double averageSpeed) {}
 }

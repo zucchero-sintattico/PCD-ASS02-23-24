@@ -34,7 +34,7 @@ public class MassiveTests {
 
 		// /app/log.txt must be the same of resources/log.txt
 		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/log_massive_improved.txt");
-		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
+		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log_massive_improved.txt are not the same");
 
 	}
 
@@ -53,7 +53,7 @@ public class MassiveTests {
 
 		// /app/log.txt must be the same of resources/log.txt
 		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/log_with_trafficLights_improved.txt");
-		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
+		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log_with_trafficLights_improved.txt are not the same");
 
 	}
 
@@ -63,17 +63,16 @@ public class MassiveTests {
 		int nSteps = 100;
 
 		var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars, 1234);
-		simulation.setup(nSteps, 200);
+		simulation.setup(nSteps, 32);
 		RoadSimStatistics stat = new RoadSimStatistics();
 		simulation.addSimulationListener(stat);
-//        simulation.run(nSteps, 200);
 		Thread t = new SimulationRunner(simulation);
 		t.start();
 		t.join();
 
 		// /app/log.txt must be the same of resources/log.txt
 		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/resources/rand_log.txt");
-		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/log.txt are not the same");
+		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/resources/rand_log.txt are not the same");
 
 	}
 

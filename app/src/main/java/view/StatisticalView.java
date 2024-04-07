@@ -32,6 +32,7 @@ import logic.simulation.SimulationType;
 import logic.simulation.listeners.SimulationListener;
 
 public class StatisticalView extends JFrame implements ActionListener, SimulationListener {
+
     private final static int DEFAULT_SIZE = 1000;
     private JLabel labelNumberOfSteps;
     private JTextField fieldNumberOfSteps;
@@ -342,4 +343,5 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     public void notifyStat(double averageSpeed) {
         this.updateView("[STAT]: average speed: " + averageSpeed);
     }
+
 }

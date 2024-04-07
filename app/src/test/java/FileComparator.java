@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class FileComparator {
-    public static boolean compareFiles(String path1, String path2) {
 
+    public static boolean compareFiles(String path1, String path2) {
         try {
             BufferedReader buff1 = new BufferedReader(new FileReader(path1));
             BufferedReader buff2 = new BufferedReader(new FileReader(path2));
@@ -18,6 +18,6 @@ public class FileComparator {
             e.printStackTrace();
             return false;
         }
-
     }
+
 }
