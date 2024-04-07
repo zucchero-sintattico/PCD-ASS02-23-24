@@ -15,8 +15,8 @@ public abstract class AbstractCarAgent implements Car, Agent {
 	private final Environment environment;
 	protected final double maxSpeed;
 	protected double currentSpeed;
-	protected double acceleration;
-	protected double deceleration;
+	protected final double acceleration;
+	protected final double deceleration;
 	protected int stepSize;
 	protected static final int CAR_NEAR_DIST = 15;
 	protected static final int CAR_FAR_ENOUGH_DIST = 20;

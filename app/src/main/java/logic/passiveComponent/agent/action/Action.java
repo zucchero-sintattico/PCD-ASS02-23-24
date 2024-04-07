@@ -1,5 +1,3 @@
 package logic.passiveComponent.agent.action;
 
-public interface Action {
-
-}
+public interface Action {}

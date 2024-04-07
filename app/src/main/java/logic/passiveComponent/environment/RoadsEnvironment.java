@@ -106,11 +106,11 @@ public class RoadsEnvironment implements Environment {
 				Optional<AbstractCarAgent> nearestCar = getNearestCarInFront(road, info.getPosition());
 				if (nearestCar.isPresent()) {
 					double dist = nearestCar.get().getPosition() - info.getPosition();
-					if (dist > mv.getDistance() + MIN_DIST_ALLOWED) {
-						info.updatePosition(info.getPosition() + mv.getDistance());
+					if (dist > mv.distance() + MIN_DIST_ALLOWED) {
+						info.updatePosition(info.getPosition() + mv.distance());
 					}
 				} else {
-					info.updatePosition(info.getPosition() + mv.getDistance());
+					info.updatePosition(info.getPosition() + mv.distance());
 				}
 
 				if (info.getPosition() > road.getLength()) {
