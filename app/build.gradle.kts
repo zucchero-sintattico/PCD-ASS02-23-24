@@ -24,6 +24,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+    implementation("org.apache.commons:commons-lang3:3.14.0")
+    implementation("org.jsoup:jsoup:1.17.2")
 
 }
 
