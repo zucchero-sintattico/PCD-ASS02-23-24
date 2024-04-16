@@ -1,7 +1,6 @@
 package part2.virtualThread;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.stream.Streams;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +12,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Test {
     public Test() throws IOException, URISyntaxException {
@@ -27,13 +27,13 @@ public class Test {
         {
             String[] split = val.toLowerCase().split(" ");
 //            System.out.println(val);
-            Streams.of(split).forEach(s ->{
+            Stream.of(split).forEach(s ->{
                 if(s.trim().contains("href=\"https://")){
                     System.out.println(s);
                     href.add(s.split("\"")[1]);
                 }
             });
-            count += (int) Streams.of(val.toLowerCase().split(" ")).filter(s ->{
+            count += (int) Stream.of(val.toLowerCase().split(" ")).filter(s ->{
 //                        System.out.println(s);
                         return s.trim().equals(occ);
             }).count();
@@ -44,9 +44,17 @@ public class Test {
         System.out.println(href.size());
         for (String s : href) {
             try{
-            URL url2 = new URI(s).toURL();
-            BufferedReader br2 = new BufferedReader(new InputStreamReader(url.openStream()));
-            }catch (Exception e){
+                URL url2 = new URI(s).toURL();
+                BufferedReader br2 = new BufferedReader(new InputStreamReader(url2.openStream()));
+                String val2;
+                while ((val2 = br2.readLine()) != null)   // condition
+                {
+                    count += (int) Stream.of(val2.toLowerCase().split(" ")).filter(s2 -> {
+//                        System.out.println(s);
+                        return s2.trim().equals(occ);
+                    }).count();
+                }
+            }catch (IOException e){
                 System.out.println(s+" UNAVAILABLE");
             }
             System.out.println(s);
