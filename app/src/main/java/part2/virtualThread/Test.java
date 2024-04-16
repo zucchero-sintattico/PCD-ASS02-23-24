@@ -9,9 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class Test {
@@ -20,7 +18,7 @@ public class Test {
         //set user agent
         System.setProperty("http.agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15");
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-        List<String> href = new ArrayList<>();
+        Set<String> href = new HashSet<>();
         String occ = "ingegneria";
         int count = 0;
 
