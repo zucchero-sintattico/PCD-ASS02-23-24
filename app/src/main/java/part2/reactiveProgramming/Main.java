@@ -1,4 +1,4 @@
-package part2.programmazioneReattiva;
+package part2.reactiveProgramming;
 
 public class Main {
     public static void main(String[] args) {
