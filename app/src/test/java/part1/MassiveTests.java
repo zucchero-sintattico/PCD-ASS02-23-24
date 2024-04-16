@@ -33,7 +33,7 @@ public class MassiveTests {
 		t.join();
 
 		// /app/log.txt must be the same of part1.resources/log.txt
-		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/part1.resources/log_massive_improved.txt");
+		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/part1/resources/log_massive_improved.txt");
 		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/part1.resources/log_massive_improved.txt are not the same");
 
 	}
@@ -52,7 +52,7 @@ public class MassiveTests {
 		t.join();
 
 		// /app/log.txt must be the same of part1.resources/log.txt
-		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/part1.resources/log_with_trafficLights_improved.txt");
+		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/part1/resources/log_with_trafficLights_improved.txt");
 		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/part1.resources/log_with_trafficLights_improved.txt are not the same");
 
 	}
@@ -71,7 +71,7 @@ public class MassiveTests {
 		t.join();
 
 		// /app/log.txt must be the same of part1.resources/log.txt
-		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/part1.resources/rand_log.txt");
+		boolean areFilesEqual = FileComparator.compareFiles("log.txt", "src/test/java/part1/resources/rand_log.txt");
 		assertTrue(areFilesEqual, "The files /app/log.txt and /app/src/test/java/part1.resources/rand_log.txt are not the same");
 
 	}
