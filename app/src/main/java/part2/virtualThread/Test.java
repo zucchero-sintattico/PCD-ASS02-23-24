@@ -16,15 +16,18 @@ import java.util.stream.Stream;
 
 public class Test {
     public Test() throws IOException, URISyntaxException {
-        URL url = new URI("https://it.wikipedia.org/wiki/Felis_silvestris_catus").toURL();
+        URL url = new URI("https://www.unipg.it").toURL();
+        //set user agent
+        System.setProperty("http.agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15");
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
         List<String> href = new ArrayList<>();
-        String occ = "gatto";
+        String occ = "ingegneria";
         int count = 0;
 
         String val;
         while ((val = br.readLine()) != null)   // condition
         {
+            //System.out.println(val);
             String[] split = val.toLowerCase().split(" ");
 //            System.out.println(val);
             Stream.of(split).forEach(s ->{
