@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import part1.utils.Point2D;
 import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.monitor.SafeSet;
+import part2.virtualThread.utils.parser.HtmlParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,89 +45,76 @@ public class PageHandler extends Thread{
 
     public void run(){
         try {
-//            HttpURLConnection conn=(HttpURLConnection)(new URL(urlString).openConnection());
-//            InputStream is=conn.getInputStream();
-//            String str=new String(is.readAllBytes());
-//            is.close();
-//            read(str);
-
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(urlString)
                     .build();
-            Response response = client.newCall(request).execute();
-            read(response.body().string());
-
-//            HttpClient client=HttpClient.newHttpClient();
-//            HttpRequest request = HttpRequest.newBuilder().uri(new URI(urlString)).GET().build();
-//            HttpResponse<String> response=client.send(request, HttpResponse.BodyHandlers.ofString(Charset.defaultCharset()));
-//            read(response.body());
+            try (Response response = client.newCall(request).execute()) {
+                if (response.body() != null) {
+                    this.read(response.body().string());
+                }else{
+                    //TODO see when empty
+                }
+            }
         }  catch (IOException e) {
             System.out.println(e);
-            throw new RuntimeException(e);
-//        }
-//        catch (URISyntaxException e) {
-//            System.out.println("URI "+e);
-////            throw new RuntimeException(e);
-//        } catch (InterruptedException e) {
-//            System.out.println("INT" +e);
-////            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
         }
 
 
     }
 
     private void read(String text) {
-        List<Thread> handlers = new ArrayList<>();
         try{
-
+            List<Thread> handlers = new ArrayList<>();
             List<String> toVisit = new ArrayList<>();
-            String[] split = text.toLowerCase().split(" ");
-            Stream.of(split).forEach(s ->{
-                if(s.trim().contains("href=\"https://")){
-                    String href = s.split("\"")[1];
-                    if(!safeSet.contains(href)) {
-                        safeSet.add(href);
-                        toVisit.add(href);
-                    }
-                }
-            });
-            int count = (int) Stream.of(split).filter(s -> s.trim().equals(word)).count();
-            safeCounter.update(count);
-            if(count > 0){
-                listener.countUpdated(count, urlString);
-            }
-            if(depth > 0){
-                for (String s1: toVisit) {
-                    listener.pageRequested(s1);
-                    request.add(s1);
-                    Thread t = Thread.ofVirtual().unstarted(new PageHandler(s1, word, depth-1, safeCounter, safeSet,request,listener));
-                    handlers.add(t);
-                    t.start();
-                }
-                for (Thread t: handlers) {
-                    t.join();
-                }
+            SafeCounter wordFound = new SafeCounter();
 
+            HtmlParser.parse(text)
+                    .foreach(line -> getLinks(line, toVisit))
+                    .doAction(() -> visitLinks(toVisit, handlers))
+                    .foreach(line -> matchLine(line, wordFound));
+
+            this.updateWordCount(wordFound);
+            for (Thread t: handlers) {
+                t.join();
             }
-        }
-//        catch (IOException e){
-//            System.out.println("Cannot read line");
-//        }
-        catch (InterruptedException e) {
+
+        } catch (InterruptedException e) {
             System.out.println("Cannot join threads");
         }
     }
 
-//    private Optional<BufferedReader> openStream() {
-//        try {
-//            URL url = new URI(urlString).toURL();
-//            return Optional.of(new BufferedReader(new InputStreamReader(url.openStream())));
-//        } catch (MalformedURLException | URISyntaxException e) {
-//            System.out.println("Invalid URL");
-//        } catch (IOException e) {
-//            System.out.println("Cannot open stream");
-//        }
-//        return Optional.empty();
-//    }
+    private void visitLinks(List<String> toVisit, List<Thread> handlers) {
+        if(this.depth > 0){
+            for (String link: toVisit) {
+                this.listener.pageRequested(link);
+                this.request.add(link);
+                Thread t = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, safeCounter, safeSet,request,listener));
+                handlers.add(t);
+            }
+        }
+    }
+
+    private void updateWordCount(SafeCounter wordFound) {
+        int count = wordFound.getValue();
+        if (count > 0) {
+            this.safeCounter.update(count);
+            this.listener.countUpdated(wordFound.getValue(), this.urlString);
+        }
+    }
+
+    private void matchLine(String line, SafeCounter wordFound) {
+        HtmlParser.match(line, this.word, (s) -> wordFound.inc());
+    }
+
+    private void getLinks(String line, List<String> toVisit) {
+        HtmlParser.findLinks(line, link -> {
+            if (!this.safeSet.contains(link)) {
+                this.safeSet.add(link);
+                toVisit.add(link);
+            }
+        });
+    }
+
 }

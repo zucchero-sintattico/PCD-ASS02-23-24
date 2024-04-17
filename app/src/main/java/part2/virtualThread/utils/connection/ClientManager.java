@@ -1,4 +1,4 @@
-package part2.virtualThread.connection;
+package part2.virtualThread.utils.connection;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
