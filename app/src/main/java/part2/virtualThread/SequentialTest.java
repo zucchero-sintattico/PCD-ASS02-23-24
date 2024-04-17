@@ -5,15 +5,14 @@ package part2.virtualThread;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class Test {
-    public Test() throws IOException, URISyntaxException {
+public class SequentialTest {
+    public SequentialTest() throws IOException, URISyntaxException {
         URL url = new URI("https://www.unipg.it").toURL();
         //set user agent
         System.setProperty("http.agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15");

@@ -16,4 +16,7 @@ public class SafeCounter {
 		return count;
 	}
 
+	public synchronized void update(int increment) {
+		count += increment;
+	}
 }
