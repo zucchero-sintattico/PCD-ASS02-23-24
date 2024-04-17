@@ -1,45 +1,104 @@
-let globalCounter = 0;
-const justVisitedLinks = [];
+const express = require('express');
 
-const options = {
-    headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15'}
-}
+const app = express();
 
+const http = require('http').Server(app);
 
-
-
-function countWords(word, url, deep) {
+const io = require('socket.io')(http);
 
 
-    fetch(url, options)
-        .then(response => response.text()).catch((e) => {
-            console.log(`text err ${e} \t ${url} `);
-            resolve(0) ;})
-        .then(content => {
-            const words = content.split(" ");
-            const count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
-            globalCounter += count;
+let stopProcess = false;
 
-            if (deep > 0) {
+app.get('/socket.io/socket.io.js', (req, res) => {
+    res.sendFile(__dirname + '/node_modules/socket.io/client-dist/socket.io.js');
+  });
 
-                const links = content.match(/href="https:\/\/[^"]+"/g);
-                console.log("Link to check ",links.length);
-                if (links) {
-                    links.forEach(link => {
-                        const linkUrl = link.slice(6, -1);
-                        if (justVisitedLinks.includes(linkUrl)) return;
-                        countWords(word, linkUrl, deep - 1);
-                        justVisitedLinks.push(linkUrl);
-                    });
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });
+
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/count-words', (req, res) => {
+    stopProcess = false;
+
+    const word = req.query.word;
+    const url = req.query.url;
+    const deep = parseInt(req.query.deep);
+
+    if (!word || !url || isNaN(deep)) {
+        res.status(400).json({ error: 'Invalid parameters' });
+        return;
+    }
+
+    let globalCounter = 0;
+    const justVisitedLinks = [];
+    countWords(word, url, deep); // wait that the function is and then send the response
+
+
+    function countWords(word, url, deep) {
+
+
+        fetch(url)
+            .then(response => response.text())
+            .catch((e) => {
+                console.log(`text err ${e} \t ${url}`);
+            })
+            .then(content => {
+                const words = content.split(' ');
+                const count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
+                globalCounter += count;
+
+                if (deep > 0 && !stopProcess) {
+                    const links = content.match(/href="https:\/\/[^"]+"/g)
+                    .filter(link => !link.includes('.pdf')
+                     && !link.includes('.jpg') 
+                     && !link.includes('.png') 
+                     && !link.includes('.jpeg')
+                     && !link.includes('.gif')
+                     && !link.includes('.svg'));
+
+                    console.log('Link to check ', links.length);
+                    if (links) {
+                        links.forEach(link => {
+                            const linkUrl = link.slice(6, -1);
+                            if (justVisitedLinks.includes(linkUrl)) return;
+                            countWords(word, linkUrl, deep - 1);
+                            justVisitedLinks.push(linkUrl);
+                        });
+                    }
                 }
-            }
 
-            console.log(`link: ${url} \t  appears ${count} \t  total: ${globalCounter}, links checked: ${justVisitedLinks.length}`);
+                console.log(`link: ${url} \t  appears ${count} \t  total: ${globalCounter}, links checked: ${justVisitedLinks.length}`);
 
-        }).catch((e) => {
-            console.log(`Not valid Link ${e} \t ${url} `);
-            resolve(0) ;});
-         
-}
+                io.emit('countRealTime', { url, count, globalCounter,justVisitedLinks: justVisitedLinks.length });
 
-countWords("ingegneria", "https://www.unipg.it", 1)
+            })
+            .catch((e) => {
+                console.log(`Not valid Link ${e} \t ${url}`);
+                
+            });
+    }
+
+    
+});
+
+app.get('/stop-process', (req, res) => {
+    stopProcess = true;
+    res.json({ message: 'Process stopped' });
+});
+
+
+  
+
+http.listen(3000, () => {
+    console.log('API server is running on port 3000');
+    
+});
