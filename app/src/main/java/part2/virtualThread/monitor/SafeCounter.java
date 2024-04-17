@@ -4,19 +4,15 @@ public class SafeCounter {
 
 	private int count;
 
-	public SafeCounter() {
-		count = 0;
-	}
-
 	public synchronized void inc() {
-		count++;
+		this.count++;
 	}
 
 	public synchronized int getValue() {
-		return count;
+		return this.count;
 	}
 
 	public synchronized void update(int increment) {
-		count += increment;
+		this.count += increment;
 	}
 }

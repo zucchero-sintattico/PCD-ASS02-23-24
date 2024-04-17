@@ -1,7 +1,6 @@
 package part2.virtualThread;
 
-import part2.virtualThread.monitor.SafeCounter;
-import part2.virtualThread.monitor.SafeSet;
+import part2.virtualThread.monitor.SearchState;
 
 
 public class Main {
@@ -10,33 +9,37 @@ public class Main {
         System.setProperty("http.agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15");
         String url = "https://www.unipg.it/";
         String word = "ingegneria";
-        SafeCounter counter = new SafeCounter();
-        SafeSet set = new SafeSet(url);
-        SafeSet setRequested = new SafeSet(url);
-        PageListener listener = new PageListener() {
+
+        SearchState state = new SearchState();
+
+        SearchListener listener = new SearchListener() {
             @Override
             public void pageRequested(String url) {
-                System.out.println("Requested: "+url);
+//               System.out.println("Requested: "+url);
             }
             @Override
             public void countUpdated(int count, String urlString) {
-                System.out.println("Total: "+counter.getValue()+" inc: "+count+ " from: "+urlString);
+                System.out.println("Total: "+state.getWordOccurrences().getValue()+" inc: "+count+ " from: "+urlString);
             }
         };
 
-        PageHandler handler = new PageHandler(url, word, 1, counter, set, setRequested, listener);
-        Thread t = Thread.ofVirtual().start(handler);
+        PageHandler handler = new PageHandler(url, word, 3, state, listener);
+        handler.start();
 
         try {
-            t.join();
+            handler.join();
         } catch (InterruptedException e) {
             System.out.println("Cannot join threads");
         }
-        System.out.println("Found: "+set.size());
-        System.out.println("Found: "+set.toString());
-        System.out.println("req: "+setRequested.size());
-        System.out.println("req: "+setRequested.toString());
-        System.out.println("Total: "+counter.getValue());
+        System.out.println("Link Found: "+state.getLinkFound().size());
+//            System.out.println("Link Found: "+state.getLinkFound().toString());
+        System.out.println("Link Explored: "+state.getLinkExplored().size());
+//            System.out.println("Link Explored: "+state.getLinkExplored().toString());
+        System.out.println("Link Down: "+state.getLinkDown().size());
+        System.out.println("Link Up: "+(state.getLinkExplored().size() - state.getLinkDown().size()));
+        System.out.println("Total Occurrences: "+state.getWordOccurrences().getValue());
+
+
 
     }
 

@@ -7,6 +7,7 @@ import okhttp3.Response;
 public class ClientManager {
 
     //dump connection test
+    //todo handle connection limit
 
     //            HttpURLConnection conn=(HttpURLConnection)(new URL(urlString).openConnection());
 //            InputStream is=conn.getInputStream();

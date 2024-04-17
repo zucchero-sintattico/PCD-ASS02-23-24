@@ -3,43 +3,27 @@ package part2.virtualThread;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import part1.utils.Point2D;
 import part2.virtualThread.monitor.SafeCounter;
-import part2.virtualThread.monitor.SafeSet;
+import part2.virtualThread.monitor.SearchState;
 import part2.virtualThread.utils.parser.HtmlParser;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.*;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+
 
 
 public class PageHandler extends Thread{
     private final String urlString;
     private final String word;
     private final int depth;
-    private final SafeCounter safeCounter;
-    private final SafeSet safeSet,request;
-    private final PageListener listener;
+    private final SearchState searchState;
+    private final SearchListener listener;
 
-    public PageHandler(String urlString, String word, int depth, SafeCounter occurrenceCounter, SafeSet linkManager, SafeSet request, PageListener listener){
+    public PageHandler(String urlString, String word, int depth, SearchState searchState, SearchListener listener){
         this.urlString = urlString;
         this.word = word;
         this.depth = depth;
-        this.safeCounter = occurrenceCounter;
-        this.safeSet = linkManager;
-        this.request = request;
+        this.searchState = searchState;
         this.listener = listener;
     }
 
@@ -58,6 +42,7 @@ public class PageHandler extends Thread{
             }
         }  catch (IOException e) {
             System.out.println(e);
+            searchState.getLinkDown().add(urlString);
 //            throw new RuntimeException(e);
         }
 
@@ -89,8 +74,8 @@ public class PageHandler extends Thread{
         if(this.depth > 0){
             for (String link: toVisit) {
                 this.listener.pageRequested(link);
-                this.request.add(link);
-                Thread t = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, safeCounter, safeSet,request,listener));
+                this.searchState.getLinkExplored().add(link);
+                Thread t = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,listener));
                 handlers.add(t);
             }
         }
@@ -99,7 +84,7 @@ public class PageHandler extends Thread{
     private void updateWordCount(SafeCounter wordFound) {
         int count = wordFound.getValue();
         if (count > 0) {
-            this.safeCounter.update(count);
+            this.searchState.getWordOccurrences().update(count);
             this.listener.countUpdated(wordFound.getValue(), this.urlString);
         }
     }
@@ -110,8 +95,8 @@ public class PageHandler extends Thread{
 
     private void getLinks(String line, List<String> toVisit) {
         HtmlParser.findLinks(line, link -> {
-            if (!this.safeSet.contains(link)) {
-                this.safeSet.add(link);
+            if (!this.searchState.getLinkFound().contains(link)) {
+                this.searchState.getLinkFound().add(link);
                 toVisit.add(link);
             }
         });
