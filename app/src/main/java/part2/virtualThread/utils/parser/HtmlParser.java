@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 public class HtmlParser {
 
     private static List<String> extensionToFilter = new ArrayList<>();
-    private String[] words;
+    private final String[] words;
 
     public static void findLinks(String word, Consumer<String> consumer){
         if(word.trim().contains("href=\"https://")){
@@ -16,8 +16,6 @@ public class HtmlParser {
             if(extensionToFilter.stream().noneMatch(href::endsWith)){
                 consumer.accept(href);
             }
-
-            //TODO FILTER EXTENSION
         }
     }
 

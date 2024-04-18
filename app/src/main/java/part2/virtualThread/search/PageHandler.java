@@ -1,17 +1,11 @@
 package part2.virtualThread.search;
 
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
 import part2.virtualThread.monitor.SafeCounter;
+import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.HtmlParser;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class PageHandler extends Thread{
 
@@ -32,15 +26,10 @@ public class PageHandler extends Thread{
     @Override
     public void run() {
         try {
-            HttpGet request = new HttpGet(urlString);
-            CloseableHttpClient client = HttpClients.createDefault();
-            String response = client.execute(request, new BasicHttpClientResponseHandler());
-            read(response);
-        } catch (IOException e) {  // IOException
-            System.out.println(e +"aa");
+            read(RequestHandler.getBody(urlString));
+        } catch (IOException e) {
             searchState.getLinkDown().add(urlString);
         }
-
     }
 
     private void read(String text) {
@@ -59,7 +48,7 @@ public class PageHandler extends Thread{
                 t.join();
             }
         } catch (InterruptedException e) {
-            System.out.println("Cannot join threads");
+            System.out.println("Thread interrupted");
         }
     }
 
