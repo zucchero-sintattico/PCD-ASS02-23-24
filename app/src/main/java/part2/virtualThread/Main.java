@@ -3,14 +3,28 @@ package part2.virtualThread;
 import part2.virtualThread.monitor.SearchState;
 import part2.virtualThread.utils.parser.HtmlParser;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException{
         //set user agent
 //        System.setProperty("http.agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15");
         String url = "https://www.unipg.it/";
         String word = "ingegneria";
-        HtmlParser.addExtensionToFilter(".png", ".jpg", ".jpeg", ".gif", ".pdf", ".mp4", ".mp3", ".avi", ".flv", ".mov", ".wmv", ".zip", ".dmg", ".exe", ".msi");
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("app/src/main/java/part2/resources/file/ExtensionToExclude.csv"));
+            HtmlParser.addExtensionToFilter(lines.toArray(String[]::new));
+        } catch (IOException e) {
+            System.out.println("Failed to load extension to exclude file");
+        }
 
         SearchState state = new SearchState();
         state.getLinkFound().add(url);
