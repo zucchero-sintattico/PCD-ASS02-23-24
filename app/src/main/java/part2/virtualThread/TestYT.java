@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public class TestYT {
     public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
         System.setProperty("http.agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15");
-
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         HttpGet request = new HttpGet("https://www.youtube.com/studiumgeneraleperugia1308");
         CloseableHttpClient client = HttpClients.createDefault();
         String response = client.execute(request, new BasicHttpClientResponseHandler());
