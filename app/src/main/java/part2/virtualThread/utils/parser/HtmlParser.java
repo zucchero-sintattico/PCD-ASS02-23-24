@@ -13,7 +13,10 @@ public class HtmlParser {
     public static void findLinks(String word, Consumer<String> consumer){
         if(word.trim().contains("href=\"https://")){
             String href = word.split("\"")[1];
-            consumer.accept(href);
+            if(extensionToFilter.stream().noneMatch(href::endsWith)){
+                consumer.accept(href);
+            }
+
             //TODO FILTER EXTENSION
         }
     }
