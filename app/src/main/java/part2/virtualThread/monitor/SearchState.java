@@ -9,7 +9,6 @@ public class SearchState {
     private final SafeSet linkDown = new SafeSet();
     private final SafeCounter wordOccurrences = new SafeCounter();
 
-
     public SafeSet getLinkFound() {
 //        synchronized (this.linkFound) {
             return this.linkFound;
@@ -33,5 +32,7 @@ public class SearchState {
             return this.wordOccurrences;
 //        }
     }
+
+
 
 }

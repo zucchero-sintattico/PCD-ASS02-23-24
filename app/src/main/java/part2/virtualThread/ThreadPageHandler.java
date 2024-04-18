@@ -6,11 +6,8 @@ import okhttp3.Response;
 import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.monitor.SearchState;
 import part2.virtualThread.utils.parser.HtmlParser;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,14 +21,14 @@ import java.util.List;
 
 
 
-public class PageHandler extends Thread{
+public class ThreadPageHandler extends Thread{
     private final String urlString;
     private final String word;
     private final int depth;
     private final SearchState searchState;
     private final SearchListener listener;
 
-    public PageHandler(String urlString, String word, int depth, SearchState searchState, SearchListener listener){
+    public ThreadPageHandler(String urlString, String word, int depth, SearchState searchState, SearchListener listener){
         this.urlString = urlString;
         this.word = word;
         this.depth = depth;
@@ -41,19 +38,18 @@ public class PageHandler extends Thread{
 
     public void run(){
         try {
+//            HttpClient client=HttpClient.newHttpClient();
+//            HttpRequest request = HttpRequest.newBuilder().uri(new URI(urlString)).GET().build();
+//            HttpResponse<String> response=client.send(request, HttpResponse.BodyHandlers.ofString());
+//            read(response.body());
             HttpClient client=HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(urlString))
-                    .GET()
-                    .timeout(Duration.ofSeconds(10))
-                    .build();
+            HttpRequest request = HttpRequest.newBuilder().uri(new URI(urlString)).GET().build();
             HttpResponse<String> response=client.send(request, HttpResponse.BodyHandlers.ofString());
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 10; i++) {
                 if(response.statusCode() > 300 && response.statusCode() < 400){
                     String url = response.headers().firstValue("Location").get();
                     request = HttpRequest.newBuilder()
                             .uri(new URI(url))
-//                            .timeout(Duration.ofSeconds(3))
                             .setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15")
                             .GET().build();
                     response=client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -63,16 +59,7 @@ public class PageHandler extends Thread{
                     break;
                 }
             }
-
-
-
 //            HttpURLConnection conn=(HttpURLConnection)(new URI(urlString).toURL().openConnection());
-//            BufferedReader is= new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            StringBuilder stringBuilder = new StringBuilder();
-//            is.lines().forEach(stringBuilder::append);
-//            read(stringBuilder.toString());
-//            HttpURLConnection conn=(HttpURLConnection)(new URI(urlString).toURL().openConnection());
-////            conn.setReadTimeout(2000);
 //            conn.setConnectTimeout(2000);
 //            InputStream is=conn.getInputStream();
 //            String str=new String(is.readAllBytes());
@@ -90,33 +77,26 @@ public class PageHandler extends Thread{
 //                    //TODO see when empty
 //                }
 //            }
-        }  catch (IOException | InterruptedException e) {
-            System.out.println(e +"aa");
+        }  catch (IOException e) {
+            System.out.println(e +" "+ urlString);
             searchState.getLinkDown().add(urlString);
-        } catch (URISyntaxException e) {
-            System.out.println(e +"aa");
-
-//            throw new RuntimeException(e);
-        }
 //            throw new RuntimeException(e);
 //        } catch (URISyntaxException e) {
-//            System.out.println(e +"aa");
+//            System.out.println(e +" "+ urlString);
 ////            throw new RuntimeException(e);
 //        } catch (InterruptedException e) {
-//            System.out.println(e +"aa");
+//            System.out.println(e +" "+ urlString);
 ////            throw new RuntimeException(e);
-//        }
+        } catch (URISyntaxException e) {
+            System.out.println(e +" "+ urlString);
+//            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            System.out.println(e +" "+ urlString);
+        }
 //        catch (URISyntaxException e) {
 ////            throw new RuntimeException(e);
 //        } catch (InterruptedException e) {
 ////            throw new RuntimeException(e);
-//        } catch (URISyntaxException e) {
-//            System.out.println(e +"aa");
-
-//            throw new RuntimeException(e);
-//        }
-//        catch (InterruptedException e) {
-//            System.out.println(e +"aa");
 //        }
 
 
@@ -148,7 +128,8 @@ public class PageHandler extends Thread{
             for (String link: toVisit) {
                 this.listener.pageRequested(link);
                 this.searchState.getLinkExplored().add(link);
-                Thread t = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,listener));
+                Thread t = new ThreadPageHandler(link, word, depth-1, searchState,listener);
+                t.start();
                 handlers.add(t);
             }
         }
