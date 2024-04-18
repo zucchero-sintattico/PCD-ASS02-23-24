@@ -1,4 +1,7 @@
-package part2.virtualThread.monitor;
+package part2.virtualThread.search;
+
+import part2.virtualThread.monitor.SafeCounter;
+import part2.virtualThread.monitor.SafeSet;
 
 public class SearchState {
 
@@ -10,27 +13,19 @@ public class SearchState {
     private final SafeCounter wordOccurrences = new SafeCounter();
 
     public SafeSet getLinkFound() {
-//        synchronized (this.linkFound) {
             return this.linkFound;
-//        }
     }
 
     public SafeSet getLinkExplored() {
-//        synchronized (this.linkExplored) {
             return this.linkExplored;
-//        }
     }
 
     public SafeSet getLinkDown() {
-//        synchronized (this.linkDown) {
             return this.linkDown;
-//        }
     }
 
     public SafeCounter getWordOccurrences() {
-//        synchronized (this.wordOccurrences){
             return this.wordOccurrences;
-//        }
     }
 
 

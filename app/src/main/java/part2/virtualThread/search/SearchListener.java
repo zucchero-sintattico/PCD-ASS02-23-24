@@ -1,4 +1,4 @@
-package part2.virtualThread;
+package part2.virtualThread.search;
 
 public interface SearchListener {
     void pageRequested(String page);

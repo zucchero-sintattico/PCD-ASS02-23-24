@@ -1,13 +1,11 @@
 package part2.virtualThread;
 
-import part2.virtualThread.monitor.SearchState;
+import part2.virtualThread.search.PageHandler;
+import part2.virtualThread.search.SearchListener;
+import part2.virtualThread.search.SearchState;
 import part2.virtualThread.utils.parser.HtmlParser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
