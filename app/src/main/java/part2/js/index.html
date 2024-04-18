@@ -10,10 +10,12 @@
 
 <input type="text" id="wordInput" placeholder="Enter word" value="ingegneria">
 <input type="text" id="urlInput" placeholder="Enter URL" value="https://www.unipg.it">
+<input type="text" id="deepInput" placeholder="Enter deep" value="1">
 <button id="sendButton">Send Request</button>
 <button id="stopButton">Stop Request</button>
-<p id="count">No data</p>
 <p id="finalData">No data</p>
+<p id="count">No data</p>
+
 
 
 <script>
@@ -27,11 +29,13 @@
 
     
     // Listen for the 'count' event from the server
-    socket.on('countRealTime', ({ url, count, globalCounter, justVisitedLinks }) => {
-        // Update the page with the received data
-        // Replace the following line with your desired logic
+    socket.on('countRealTime', ({ url, count, globalWordsCounter, justVisitedLength }) => {
         document.getElementById('count').innerText = `URL: ${url}, Count: ${count}`;
-        document.getElementById('finalData').innerText = `Global Counter: ${globalCounter}, Number of URLs: ${justVisitedLinks}`;
+        document.getElementById('finalData').innerText = `Global Counter: ${globalWordsCounter}, Number of URLs: ${justVisitedLength}`;
+    });
+
+    socket.on('endProcess', () => {
+        document.getElementById('count').innerText = `PROCESS ENDED`;
     });
 
 
@@ -40,7 +44,7 @@
         // Construct the URL with the specified parameters
         const word = document.getElementById('wordInput').value;
         const url = document.getElementById('urlInput').value;
-        const deep = 1;
+        const deep = document.getElementById('deepInput').value;
         const requestUrl = `http://localhost:3000/count-words?word=${word}&url=${encodeURIComponent(url)}&deep=${deep}`;
 
         // Send the request

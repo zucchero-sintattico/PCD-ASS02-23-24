@@ -1,29 +1,21 @@
-word = "ingegneria";
-url = "https://www.unipg.it";
-deep = 1;
-
-const options = {
-    headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15'}
-}
+let justVisited = [];
+let globalWordsCounter = 0;
+let listOfPromises = [];
 
 
+listOfMediaExention = [".png", ".jpg", ".jpeg", ".gif", ".pdf", ".mp4", ".mp3", ".avi", ".flv", ".mov", ".wmv"];
 
-justVisited = [];
-globalWordsCounter = 0;
-
-function countWordsInOnePage(word, url) {
+function countWordsInOnePage(word, url, logger) {
     return new Promise((resolve) => {
-        fetch(url, options)
+        fetch(url)
             .then(response => response.text())
             .then(content => {
 
-                //give me content inside tags
                 var words = content.split(" ");
-
                 var count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
-                
                 globalWordsCounter += count;
-                console.log(`The word "${word}" appears ${count} times in the page ${url}  \t  Total: ${globalWordsCounter}, Links checked: ${justVisited.length}`);
+                //console.log(`The word "${word}" appears ${count} times in the page ${url}  \t  Total: ${globalWordsCounter}, Links checked: ${justVisited.length}`);
+                logger(url, count,  globalWordsCounter, justVisited.length );
                 resolve(count);
             })
             .catch(() => {
@@ -35,11 +27,18 @@ function countWordsInOnePage(word, url) {
 
 function getAllLinksInAPage(url) {
     let listOfLinks = [];
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(url)
             .then(response => response.text())
             .then(content => {
                 var links = content.match(/href="https:\/\/[^"]+"/g);
+                //delete png pdf and midia links
+                if (links) {
+                    links = links.filter(link => {
+                        return !listOfMediaExention.some(ext => link.includes(ext));
+                    });
+                }
+                
                 if (links) {
                     links.forEach(link => {
                         link = link.slice(6, -1);
@@ -50,40 +49,45 @@ function getAllLinksInAPage(url) {
                     });
                 }
                 resolve(listOfLinks);
-            })
-            .catch(error => {
-                
+            }).catch(() => {
+                resolve(listOfLinks);
             });
     });
 }
 
 
 
-async function countWords(word, url, deep) {
-    var listOfPromises = [];
-
-    var count = await countWordsInOnePage(word, url);
-    listOfPromises.push(count);
+async function countWords(word, url, deep, logger) {
+    var count = await countWordsInOnePage(word, url, logger);
+    var counts = [count];
 
     if (deep > 0) {
         var links = await getAllLinksInAPage(url);
-        links.forEach(link => {
-            listOfPromises.push(countWords(word, link, deep - 1));
-        });
+        var linkCounts = await Promise.all(links.map(link => countWords(word, link, deep - 1, logger)));
+        counts.push(...linkCounts);
     }
 
-    return listOfPromises;
+    return counts;
+}
+
+
+module.exports.startCounting = async function (word, url, deep, runInTheEnd, logger) {
+    var counts = await countWords(word, url, deep, logger);
+    var total = counts.reduce((a, b) => a + b, 0);
+    runInTheEnd(total);
+    console.log("Process finished");
 }
 
 
 
 
-countWords(word, url, deep).then(listOfPromises => {
-    Promise.all(listOfPromises).then(values => {
-        console.log(values);
-        var total = values.map(Number).reduce((acc, val) => acc + val, 0);
-        console.log("Total: ", total);
-        console.log("Total global var: ", globalWordsCounter);
-    });
+// countWords(word, url, deep, runInTheEnd, logger).then(listOfPromises => {
+//     Promise.all(listOfPromises).then(values => {
+//         runInTheEnd(values);
+//         // console.log(values);
+//         // var total = values.map(Number).reduce((acc, val) => acc + val, 0);
+//         // console.log("Total: ", total);
+//         // console.log("Total global var: ", globalWordsCounter);
+//     });
 
-});
+// });
