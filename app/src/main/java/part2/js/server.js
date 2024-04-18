@@ -2,9 +2,8 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const { startCounting } = require('./step_by_step.js');
+const { startCounting, stopCounting } = require('./step_by_step.js');
 
-let stopProcess = false;
 
 app.get('/socket.io/socket.io.js', (req, res) => {
     res.sendFile(__dirname + '/node_modules/socket.io/client-dist/socket.io.js');
@@ -45,7 +44,7 @@ app.get('/count-words', (req, res) => {
 });
 
 app.get('/stop-process', (req, res) => {
-    stopProcess = true;
+    stopCounting();
     res.json({ message: 'Process stopped' });
 });
 

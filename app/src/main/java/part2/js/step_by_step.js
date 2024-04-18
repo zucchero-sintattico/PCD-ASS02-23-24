@@ -1,6 +1,7 @@
 let justVisited = [];
 let globalWordsCounter = 0;
 let listOfPromises = [];
+let stop = false;
 
 
 listOfMediaExention = [".png", ".jpg", ".jpeg", ".gif", ".pdf", ".mp4", ".mp3", ".avi", ".flv", ".mov", ".wmv"];
@@ -58,6 +59,8 @@ function getAllLinksInAPage(url) {
 
 
 async function countWords(word, url, deep, logger) {
+    if (stop) return [];
+
     var count = await countWordsInOnePage(word, url, logger);
     var counts = [count];
 
@@ -75,10 +78,25 @@ module.exports.startCounting = async function (word, url, deep, runInTheEnd, log
     var counts = await countWords(word, url, deep, logger);
     var total = counts.reduce((a, b) => a + b, 0);
     runInTheEnd(total);
+
+    stop = false;
+    globalWordsCounter = 0;
+    justVisited = [];
+
     console.log("Process finished");
 }
 
 
+
+
+module.exports.stopCounting = async function () {
+    console.log("Process stopped");
+    stop = true;
+    listOfPromises.forEach(promise => {
+        console.log("Canceling promise");
+        promise.cancel();
+    });
+}
 
 
 // countWords(word, url, deep, runInTheEnd, logger).then(listOfPromises => {
