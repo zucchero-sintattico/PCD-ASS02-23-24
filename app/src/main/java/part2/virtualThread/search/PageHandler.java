@@ -26,8 +26,10 @@ public class PageHandler extends Thread{
     @Override
     public void run() {
         try {
+            this.listener.pageRequested(urlString);
             read(RequestHandler.getBody(urlString));
         } catch (IOException e) {
+            this.listener.pageDown(e, urlString);
             searchState.getLinkDown().add(urlString);
         }
     }
@@ -55,7 +57,7 @@ public class PageHandler extends Thread{
     private void visitLinks(List<String> toVisit, List<Thread> handlers) {
         if(this.depth > 0){
             for (String link: toVisit) {
-                this.listener.pageRequested(link);
+                this.listener.pageFound(link);
                 this.searchState.getLinkExplored().add(link);
                 Thread t = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,listener));
                 handlers.add(t);

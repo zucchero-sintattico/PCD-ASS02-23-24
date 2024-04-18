@@ -7,25 +7,29 @@ public class SearchState {
 
     //TODO synchronized not needed, only getters are present
     //TODO for real sync update listener should be in the counter
-    private final SafeSet linkFound = new SafeSet();
+    private final SafeSet linkFound;
     private final SafeSet linkExplored = new SafeSet();
     private final SafeSet linkDown = new SafeSet();
     private final SafeCounter wordOccurrences = new SafeCounter();
 
+    public SearchState(String url) {
+        linkFound = new SafeSet(url);
+    }
+
     public SafeSet getLinkFound() {
-            return this.linkFound;
+        return this.linkFound;
     }
 
     public SafeSet getLinkExplored() {
-            return this.linkExplored;
+        return this.linkExplored;
     }
 
     public SafeSet getLinkDown() {
-            return this.linkDown;
+        return this.linkDown;
     }
 
     public SafeCounter getWordOccurrences() {
-            return this.wordOccurrences;
+        return this.wordOccurrences;
     }
 
 
