@@ -27,7 +27,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.17.2")
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.12")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
-    testImplementation("org.slf4j:slf4j-reload4j:1.7.36")
+    implementation("org.slf4j:slf4j-nop:1.7.36")
     implementation("log4j:log4j:1.2.17")
 
 
