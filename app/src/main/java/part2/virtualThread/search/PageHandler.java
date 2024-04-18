@@ -29,7 +29,7 @@ public class PageHandler extends Thread{
             this.listener.pageRequested(urlString);
             read(RequestHandler.getBody(urlString));
         } catch (IOException e) {
-            this.listener.pageDown(e, urlString);
+            this.listener.pageDown(e.getMessage(), urlString);
             searchState.getLinkDown().add(urlString);
         }
     }
