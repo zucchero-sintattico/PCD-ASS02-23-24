@@ -1,5 +1,10 @@
 package part2.virtualThread;
 
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -13,29 +18,10 @@ public class TestYT {
     public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
         System.setProperty("http.agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15");
 
-        HttpClient client=HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("https://www.youtube.com/studiumgeneraleperugia1308"))
-                .setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15")
-                .GET().build();
-        HttpResponse<Stream<String>> response=client.send(request, HttpResponse.BodyHandlers.ofLines());
-        System.out.println(response.statusCode());
-        System.out.println(
-                response.headers().map()
-        );
-        while(response.statusCode() > 300){
-            String url = response.headers().firstValue("Location").get();
-            System.out.println(url);
-            request = HttpRequest.newBuilder()
-                    .uri(new URI(url))
-                    .setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15")
-                    .GET().build();
-            response=client.send(request, HttpResponse.BodyHandlers.ofLines());
-            System.out.println(response.statusCode());
-
-        }
-        System.out.println(response.statusCode());
-        response.body().forEach(l -> System.out.println(l));
+        HttpGet request = new HttpGet("https://www.youtube.com/studiumgeneraleperugia1308");
+        CloseableHttpClient client = HttpClients.createDefault();
+        String response = client.execute(request, new BasicHttpClientResponseHandler());
+        System.out.println(response);
 
 //        HttpURLConnection conn=(HttpURLConnection)(new URI("https://www.youtube.com/studiumgeneraleperugia1308").toURL().openConnection());
 //        BufferedReader is= new BufferedReader(new InputStreamReader(conn.getInputStream()));

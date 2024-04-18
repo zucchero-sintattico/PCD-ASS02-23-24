@@ -23,7 +23,7 @@ public class Main {
             }
         };
 //        ThreadPageHandler handler = new ThreadPageHandler(url, word, 3, state, listener);
-        PageHandler handler = new PageHandler(url, word, 2, state, listener);
+        PageHandler handler = new PageHandler(url, word, 5, state, listener);
         handler.start();
         handler.join();
 

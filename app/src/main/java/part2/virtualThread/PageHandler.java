@@ -3,6 +3,10 @@ package part2.virtualThread;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.monitor.SearchState;
 import part2.virtualThread.utils.parser.HtmlParser;
@@ -39,88 +43,102 @@ public class PageHandler extends Thread{
         this.listener = listener;
     }
 
-    public void run(){
+    @Override
+    public void run() {
         try {
-            HttpClient client=HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(urlString))
-                    .GET()
-                    .timeout(Duration.ofSeconds(10))
-                    .build();
-            HttpResponse<String> response=client.send(request, HttpResponse.BodyHandlers.ofString());
-            for (int i = 0; i < 5; i++) {
-                if(response.statusCode() > 300 && response.statusCode() < 400){
-                    String url = response.headers().firstValue("Location").get();
-                    request = HttpRequest.newBuilder()
-                            .uri(new URI(url))
-//                            .timeout(Duration.ofSeconds(3))
-                            .setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15")
-                            .GET().build();
-                    response=client.send(request, HttpResponse.BodyHandlers.ofString());
-                    System.out.println(response.statusCode());
-                }else{
-                    read(response.body());
-                    break;
-                }
-            }
-
-
-
-//            HttpURLConnection conn=(HttpURLConnection)(new URI(urlString).toURL().openConnection());
-//            BufferedReader is= new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            StringBuilder stringBuilder = new StringBuilder();
-//            is.lines().forEach(stringBuilder::append);
-//            read(stringBuilder.toString());
-//            HttpURLConnection conn=(HttpURLConnection)(new URI(urlString).toURL().openConnection());
-////            conn.setReadTimeout(2000);
-//            conn.setConnectTimeout(2000);
-//            InputStream is=conn.getInputStream();
-//            String str=new String(is.readAllBytes());
-//            is.close();
-//            read(str);
-
-//            OkHttpClient client = new OkHttpClient();
-//            Request request = new Request.Builder()
-//                    .url(urlString)
-//                    .build();
-//            try (Response response = client.newCall(request).execute()) {
-//                if (response.body() != null) {
-//                    this.read(response.body().string());
-//                }else{
-//                    //TODO see when empty
-//                }
-//            }
-        }  catch (IOException | InterruptedException e) {
+            HttpGet request = new HttpGet(urlString);
+            CloseableHttpClient client = HttpClients.createDefault();
+            String response = client.execute(request, new BasicHttpClientResponseHandler());
+            read(response);
+        } catch (IOException e) {  // IOException
             System.out.println(e +"aa");
             searchState.getLinkDown().add(urlString);
-        } catch (URISyntaxException e) {
-            System.out.println(e +"aa");
-
-//            throw new RuntimeException(e);
         }
-//            throw new RuntimeException(e);
-//        } catch (URISyntaxException e) {
-//            System.out.println(e +"aa");
-////            throw new RuntimeException(e);
-//        } catch (InterruptedException e) {
-//            System.out.println(e +"aa");
-////            throw new RuntimeException(e);
-//        }
-//        catch (URISyntaxException e) {
-////            throw new RuntimeException(e);
-//        } catch (InterruptedException e) {
-////            throw new RuntimeException(e);
-//        } catch (URISyntaxException e) {
-//            System.out.println(e +"aa");
-
-//            throw new RuntimeException(e);
-//        }
-//        catch (InterruptedException e) {
-//            System.out.println(e +"aa");
-//        }
-
 
     }
+
+    //    public void run(){
+//        try {
+//            HttpClient client=HttpClient.newHttpClient();
+//            HttpRequest request = HttpRequest.newBuilder()
+//                    .uri(new URI(urlString))
+//                    .GET()
+//                    .timeout(Duration.ofSeconds(10))
+//                    .build();
+//            HttpResponse<String> response=client.send(request, HttpResponse.BodyHandlers.ofString());
+//            for (int i = 0; i < 5; i++) {
+//                if(response.statusCode() > 300 && response.statusCode() < 400){
+//                    String url = response.headers().firstValue("Location").get();
+//                    request = HttpRequest.newBuilder()
+//                            .uri(new URI(url))
+////                            .timeout(Duration.ofSeconds(3))
+//                            .setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15")
+//                            .GET().build();
+//                    response=client.send(request, HttpResponse.BodyHandlers.ofString());
+//                    System.out.println(response.statusCode());
+//                }else{
+//                    read(response.body());
+//                    break;
+//                }
+//            }
+//
+//
+//
+////            HttpURLConnection conn=(HttpURLConnection)(new URI(urlString).toURL().openConnection());
+////            BufferedReader is= new BufferedReader(new InputStreamReader(conn.getInputStream()));
+////            StringBuilder stringBuilder = new StringBuilder();
+////            is.lines().forEach(stringBuilder::append);
+////            read(stringBuilder.toString());
+////            HttpURLConnection conn=(HttpURLConnection)(new URI(urlString).toURL().openConnection());
+//////            conn.setReadTimeout(2000);
+////            conn.setConnectTimeout(2000);
+////            InputStream is=conn.getInputStream();
+////            String str=new String(is.readAllBytes());
+////            is.close();
+////            read(str);
+//
+////            OkHttpClient client = new OkHttpClient();
+////            Request request = new Request.Builder()
+////                    .url(urlString)
+////                    .build();
+////            try (Response response = client.newCall(request).execute()) {
+////                if (response.body() != null) {
+////                    this.read(response.body().string());
+////                }else{
+////                    //TODO see when empty
+////                }
+////            }
+//        }  catch (IOException | InterruptedException e) {
+//            System.out.println(e +"aa");
+//            searchState.getLinkDown().add(urlString);
+//        } catch (URISyntaxException e) {
+//            System.out.println(e +"aa");
+//
+////            throw new RuntimeException(e);
+//        }
+////            throw new RuntimeException(e);
+////        } catch (URISyntaxException e) {
+////            System.out.println(e +"aa");
+//////            throw new RuntimeException(e);
+////        } catch (InterruptedException e) {
+////            System.out.println(e +"aa");
+//////            throw new RuntimeException(e);
+////        }
+////        catch (URISyntaxException e) {
+//////            throw new RuntimeException(e);
+////        } catch (InterruptedException e) {
+//////            throw new RuntimeException(e);
+////        } catch (URISyntaxException e) {
+////            System.out.println(e +"aa");
+//
+////            throw new RuntimeException(e);
+////        }
+////        catch (InterruptedException e) {
+////            System.out.println(e +"aa");
+////        }
+//
+//
+//    }
 
     private void read(String text) {
         try{

@@ -26,6 +26,8 @@ dependencies {
     implementation(libs.guava)
     implementation("org.jsoup:jsoup:1.17.2")
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.12")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
+
 
 }
 
