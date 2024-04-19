@@ -7,6 +7,10 @@ public class SafeCounter {
 	public synchronized void inc() {
 		this.count++;
 	}
+	public synchronized void dec(String log) {
+		this.count--;
+		System.out.println(log + " " + this.count);
+	}
 	public synchronized int getValue() {
 		return this.count;
 	}

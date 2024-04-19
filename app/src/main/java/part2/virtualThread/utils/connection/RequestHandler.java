@@ -4,6 +4,9 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.io.IOException;
 
 public class RequestHandler {
@@ -16,6 +19,8 @@ public class RequestHandler {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             return client.execute(request, new BasicHttpClientResponseHandler());
         }
+
+//        return Jsoup.connect(url).get().body().toString();
     }
 
 }

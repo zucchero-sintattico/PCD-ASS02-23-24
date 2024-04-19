@@ -14,6 +14,7 @@ public class PageHandler extends Thread{
     private final int depth;
     private final SearchState searchState;
     private final SearchListener listener;
+    private final List<Thread> handlers = new ArrayList<>();
 
     public PageHandler(String urlString, String word, int depth, SearchState searchState, SearchListener listener){
         this.urlString = urlString;
@@ -21,22 +22,27 @@ public class PageHandler extends Thread{
         this.depth = depth;
         this.searchState = searchState;
         this.listener = listener;
+        this.searchState.getThreadAlive().inc();
     }
 
     @Override
     public void run() {
-        try {
-            this.listener.pageRequested(urlString);
-            read(RequestHandler.getBody(urlString));
-        } catch (IOException e) {
-            this.listener.pageDown(e.getMessage(), urlString);
-            searchState.getLinkDown().add(urlString);
-        }
+            try {
+                if (this.searchState.getSearchEnded().isSimulationRunning()) {
+                    this.listener.pageRequested(urlString);
+                    this.read(RequestHandler.getBody(urlString));
+                }
+            } catch (IOException e) {
+                this.listener.pageDown(e.getMessage(), urlString);
+                searchState.getLinkDown().add(urlString);
+            } finally {
+                searchState.getThreadAlive().dec("dec");
+            }
     }
 
     private void read(String text) {
+
         try{
-            List<Thread> handlers = new ArrayList<>();
             List<String> toVisit = new ArrayList<>();
             SafeCounter wordFound = new SafeCounter();
 
@@ -46,7 +52,7 @@ public class PageHandler extends Thread{
                     .foreach(line -> matchLine(line, wordFound));
 
             this.updateWordCount(wordFound);
-            for (Thread t: handlers) {
+            for (Thread t : handlers) {
                 t.join();
             }
         } catch (InterruptedException e) {
@@ -59,8 +65,8 @@ public class PageHandler extends Thread{
             for (String link: toVisit) {
                 this.listener.pageFound(link);
                 this.searchState.getLinkExplored().add(link);
-                Thread t = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,listener));
-                handlers.add(t);
+                Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,listener));
+                handlers.add(vt);
             }
         }
     }

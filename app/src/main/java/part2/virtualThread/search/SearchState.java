@@ -1,6 +1,7 @@
 package part2.virtualThread.search;
 
 import part2.virtualThread.monitor.SafeCounter;
+import part2.virtualThread.monitor.SafeFlag;
 import part2.virtualThread.monitor.SafeSet;
 
 public class SearchState {
@@ -11,6 +12,10 @@ public class SearchState {
     private final SafeSet linkExplored = new SafeSet();
     private final SafeSet linkDown = new SafeSet();
     private final SafeCounter wordOccurrences = new SafeCounter();
+    private final SafeFlag searchEnded = new SafeFlag(true);
+
+    //debug
+    private final SafeCounter threadAlive = new SafeCounter();
 
     public SearchState(String url) {
         linkFound = new SafeSet(url);
@@ -30,6 +35,15 @@ public class SearchState {
 
     public SafeCounter getWordOccurrences() {
         return this.wordOccurrences;
+    }
+
+    public SafeFlag getSearchEnded() {
+        return this.searchEnded;
+    }
+
+    //debug
+    public SafeCounter getThreadAlive() {
+        return this.threadAlive;
     }
 
 

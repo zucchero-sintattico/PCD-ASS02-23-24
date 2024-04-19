@@ -39,6 +39,7 @@ public class GUI extends JFrame implements SearchListener {
         //temp setting
         this.fieldAddress.setText("https://www.unipg.it/");
         this.fieldWord.setText("ingegneria");
+        this.fieldDepth.setText("3");
     }
 
     private void addListeners() {
