@@ -2,7 +2,10 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const { startCounting, stopCounting } = require('./step_by_step.js');
+
+const WordCounter = require('./WordCounter');
+
+var wordCounter;
 
 
 app.get('/socket.io/socket.io.js', (req, res) => {
@@ -16,8 +19,6 @@ io.on('connection', (socket) => {
       console.log('user disconnected');
     });
   });
-
-
 
 
 
@@ -37,14 +38,24 @@ app.get('/count-words', (req, res) => {
         io.emit('endProcess');
     }
 
-    startCounting(req.query.word, req.query.url, req.query.deep, runInTheEnd, logger);
+    wordCounter = new WordCounter();
+
+
+
+    wordCounter.startCounting(req.query.word, req.query.url, req.query.deep, runInTheEnd, logger);
 
     res.json({ message: 'Process started' });
     
 });
 
 app.get('/stop-process', (req, res) => {
-    stopCounting();
+    wordCounter.stopCounting();
+    res.json({ message: 'Process stopped' });
+});
+
+
+app.get('/force-stop', (req, res) => {
+    delete wordCounter;
     res.json({ message: 'Process stopped' });
 });
 

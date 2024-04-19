@@ -1,20 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Socket.io Example</title>
+    <title>Word Counter</title>
     <!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script> -->
     <script src="/socket.io/socket.io.js"></script>
 
 </head>
 <body>
 
-<input type="text" id="wordInput" placeholder="Enter word" value="ingegneria">
-<input type="text" id="urlInput" placeholder="Enter URL" value="https://www.unipg.it">
-<input type="text" id="deepInput" placeholder="Enter deep" value="1">
-<button id="sendButton">Send Request</button>
-<button id="stopButton">Stop Request</button>
-<p id="finalData">No data</p>
-<p id="count">No data</p>
+<style>
+
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        #stopButton {
+            background-color: #f00;
+        }
+        #stopForceButton {
+            background-color: #a00;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        #finalData {
+            font-weight: bold;
+        }
+        #count {
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+
+
+</style>
+
+<div class="container">
+    <h1>Word Counter</h1>
+
+    <input type="text" id="wordInput" placeholder="Enter word" value="ingegneria">
+    <input type="text" id="urlInput" placeholder="Enter URL" value="https://www.unipg.it">
+    <input type="text" id="deepInput" placeholder="Enter deep" value="1">
+    <button id="sendButton">Send Request</button>
+    <button id="stopButton">Stop Request</button>
+    <button id="stopForceButton">Stop Forced</button>
+    <p id="finalData">No data</p>
+    <p id="count">No data</p>
+</div>
 
 
 
@@ -63,6 +134,23 @@
     document.getElementById('stopButton').addEventListener('click', () => {
         // Construct the URL with the specified parameters
         const requestUrl = `http://localhost:3000/stop-process`;
+
+        // Send the request
+        fetch(requestUrl)
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response data
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
+    });
+
+    document.getElementById('stopForceButton').addEventListener('click', () => {
+        // Construct the URL with the specified parameters
+        const requestUrl = `http://localhost:3000/force-stop`;
 
         // Send the request
         fetch(requestUrl)
