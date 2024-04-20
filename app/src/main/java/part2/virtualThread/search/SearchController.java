@@ -22,7 +22,7 @@ public class SearchController {
                 System.out.println("Main Thread interrupted");
             }
             searchEnded = true;
-            listener.searchEnded(searchState.getLinkFound().size(),searchState.getLinkExplored().size(),searchState.getLinkDown().size(),searchState.getWordOccurrences().getValue());
+            listener.searchEnded(searchState.getLinkFound(),searchState.getLinkExplored(),searchState.getLinkDown(),searchState.getWordOccurrences());
         });
     }
 
