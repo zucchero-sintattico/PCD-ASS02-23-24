@@ -1,20 +1,44 @@
 package part2.virtualThread.monitor;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class SafeCounter {
 
+	private final Lock lock = new ReentrantLock();
 	private int count;
 
-	public synchronized void inc() {
-		this.count++;
+	public void inc() {
+		try {
+			lock.lock();
+			this.count++;
+		} finally {
+			lock.unlock();
+		}
 	}
 	public synchronized void dec(String log) {
-		this.count--;
-		System.out.println(log + " " + this.count);
+		try {
+			lock.lock();
+			this.count--;
+			System.out.println(log + " " + this.count);
+		} finally {
+			lock.unlock();
+		}
 	}
 	public synchronized int getValue() {
-		return this.count;
+		try {
+			lock.lock();
+			return this.count;
+		} finally {
+			lock.unlock();
+		}
 	}
 	public synchronized void update(int increment) {
-		this.count += increment;
+		try {
+			lock.lock();
+			this.count += increment;
+		} finally {
+			lock.unlock();
+		}
 	}
 }
