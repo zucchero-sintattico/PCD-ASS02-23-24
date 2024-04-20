@@ -1,5 +1,6 @@
 package part2.virtualThread;
 
+import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.monitor.SafeSet;
 import part2.virtualThread.search.PageHandler;
 import part2.virtualThread.search.SearchListener;
@@ -24,9 +25,15 @@ public class TestMain {
             }
 
             @Override
-            public void pageRequested(String url) {
-               System.out.println("Requested: "+url);
+            public void pageRequested(String pageUrl, SafeSet totalPageRequested) {
+
             }
+
+//            @Override
+            public void pageRequested(String pageUrl, int totalPageRequested) {
+
+            }
+
 
             @Override
             public void pageDown(String exceptionMessage, String url) {
@@ -34,12 +41,28 @@ public class TestMain {
             }
 
             @Override
+            public void countUpdated(int wordFound, String pageUrl, SafeCounter totalWordFound) {
+
+            }
+
+//            @Override
             public void countUpdated(int count, String url) {
                 System.out.println("Total: "+state.getWordOccurrences().getValue()+" inc: "+count+ " from: "+url);
             }
 
             @Override
-            public void searchEnded(SafeSet linkFound, SafeSet linkExplored, SafeSet linkDown, int value) {
+            public void searchEnded(int linkFound, int linkExplored, int linkDown, int wordFound) {
+
+            }
+
+            @Override
+            public void threadAliveUpdated(SafeCounter treadAlive) {
+
+            }
+
+
+//            @Override
+            public void threadAliveUpdated(int treadAlive) {
 
             }
         };

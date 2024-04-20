@@ -22,14 +22,16 @@ public class PageHandler extends Thread{
         this.depth = depth;
         this.searchState = searchState;
         this.listener = listener;
-        this.searchState.getThreadAlive().inc();
     }
 
     @Override
     public void run() {
             try {
+                this.searchState.getThreadAlive().inc();
+                this.listener.threadAliveUpdated(this.searchState.getThreadAlive());
                 if (this.searchState.getSearchEnded().isSimulationRunning()) {
-                    this.listener.pageRequested(urlString);
+                    this.searchState.getLinkExplored().add(urlString);
+                    this.listener.pageRequested(urlString, this.searchState.getLinkExplored());
                     this.read(RequestHandler.getBody(urlString));
                 }
             } catch (IOException e) {
@@ -37,6 +39,7 @@ public class PageHandler extends Thread{
                 searchState.getLinkDown().add(urlString);
             } finally {
                 searchState.getThreadAlive().dec("dec");
+                this.listener.threadAliveUpdated(this.searchState.getThreadAlive());
             }
     }
 
@@ -64,7 +67,6 @@ public class PageHandler extends Thread{
         if(this.depth > 0){
             for (String link: toVisit) {
                 this.listener.pageFound(link);
-                this.searchState.getLinkExplored().add(link);
                 Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,listener));
                 handlers.add(vt);
             }
@@ -75,7 +77,7 @@ public class PageHandler extends Thread{
         int count = wordFound.getValue();
         if (count > 0) {
             this.searchState.getWordOccurrences().update(count);
-            this.listener.countUpdated(wordFound.getValue(), this.urlString);
+            this.listener.countUpdated(wordFound.getValue(), this.urlString, this.searchState.getWordOccurrences());
         }
     }
 

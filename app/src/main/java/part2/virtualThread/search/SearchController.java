@@ -23,22 +23,12 @@ public class SearchController {
             } catch (InterruptedException e) {
                 System.out.println("Main Thread interrupted");
             }
-            System.out.println("alive: "+searchState.getThreadAlive().getValue());
             searchEnded = true;
-            System.out.println("f2");
-            listener.searchEnded(searchState.getLinkFound(),searchState.getLinkExplored(),searchState.getLinkDown(),searchState.getWordOccurrences().getValue());
-            System.out.println("f3");
-            System.out.println("alive2: "+searchState.getThreadAlive().getValue());
-
-
+            listener.searchEnded(searchState.getLinkFound().size(),searchState.getLinkExplored().size(),searchState.getLinkDown().size(),searchState.getWordOccurrences().getValue());
         });
     }
 
     public void stop() {
-        //TODO implement better
-        System.out.println("stop");
-        System.out.println(virtualSearchThread != null);
-        System.out.println(!searchEnded);
         if(virtualSearchThread != null && !searchEnded){
             searchState.getSearchEnded().stopSimulation();
         }
