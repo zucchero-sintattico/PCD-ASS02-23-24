@@ -218,9 +218,10 @@ public class GUI extends JFrame implements SearchListener {
     }
 
     @Override
-    public void threadAliveUpdated(SafeCounter treadAlive) {
+    public void threadAliveUpdated(SafeSet treadAlive) {
         SwingUtilities.invokeLater(() -> {
-            this.fieldThreadAlive.setText(String.valueOf(treadAlive.getValue()));
+            this.fieldThreadAlive.setText(String.valueOf(treadAlive.size()));
         });
     }
+
 }

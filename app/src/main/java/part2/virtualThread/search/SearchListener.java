@@ -9,5 +9,5 @@ public interface SearchListener {
     void pageDown(String exceptionMessage, String pageUrl);
     void countUpdated(int wordFound, String pageUrl, SafeCounter totalWordFound);
     void searchEnded(SafeSet linkFound, SafeSet linkExplored, SafeSet linkDown, SafeCounter wordFound);
-    void threadAliveUpdated(SafeCounter treadAlive);
+    void threadAliveUpdated(SafeSet treadAlive);
 }

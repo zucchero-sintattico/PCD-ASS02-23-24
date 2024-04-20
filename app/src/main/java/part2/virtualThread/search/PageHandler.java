@@ -27,7 +27,7 @@ public class PageHandler extends Thread{
     @Override
     public void run() {
             try {
-                this.searchState.getThreadAlive().inc();
+                this.searchState.getThreadAlive().add(urlString);
                 this.listener.threadAliveUpdated(this.searchState.getThreadAlive());
                 if (this.searchState.getSearchEnded().isSimulationRunning()) {
                     this.searchState.getLinkExplored().add(urlString);
@@ -38,7 +38,7 @@ public class PageHandler extends Thread{
                 this.listener.pageDown(e.getMessage(), urlString);
                 searchState.getLinkDown().add(urlString);
             } finally {
-                searchState.getThreadAlive().dec("dec");
+                searchState.getThreadAlive().remove(urlString);
                 this.listener.threadAliveUpdated(this.searchState.getThreadAlive());
             }
     }

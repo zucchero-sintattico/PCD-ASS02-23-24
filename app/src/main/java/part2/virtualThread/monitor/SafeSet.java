@@ -51,4 +51,14 @@ public class SafeSet {
         }
     }
 
+    public void remove(String urlString) {
+        try {
+            lock.lock();
+            this.set.remove(urlString);
+
+//            System.out.println("Removed " + urlString + " from[" +this.size()+"]: "+this.set);
+        } finally {
+            lock.unlock();
+        }
+    }
 }

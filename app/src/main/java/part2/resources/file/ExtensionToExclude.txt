@@ -13,3 +13,4 @@
 .dmg
 .exe
 .msi
+.ico

@@ -15,7 +15,7 @@ public class SearchState {
     private final SafeFlag searchEnded = new SafeFlag(true);
 
     //debug
-    private final SafeCounter threadAlive = new SafeCounter();
+    private final SafeSet threadAlive = new SafeSet();
 
     public SearchState(String url) {
         linkFound = new SafeSet(url);
@@ -42,7 +42,7 @@ public class SearchState {
     }
 
     //debug
-    public SafeCounter getThreadAlive() {
+    public SafeSet getThreadAlive() {
         return this.threadAlive;
     }
 
