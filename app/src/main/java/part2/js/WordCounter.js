@@ -69,7 +69,7 @@ class WordCounter {
     }
 
     async countWords(word, url, deep, logger) {
-        if (this.stop) return [];
+        if (this.stop) return ;
 
         const count = await this.countWordsInOnePage(word, url, logger);
         const counts = [count];
