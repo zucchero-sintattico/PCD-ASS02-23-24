@@ -1,13 +1,9 @@
 class WordCounter {
     constructor() {
-        const options = {
-            headers: {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36'}
-            }
-    
+
 
         this.justVisited = [];
         this.globalWordsCounter = 0;
-        this.listOfPromises = [];
         this.stop = false;
         this.listOfMediaExention = [
             ".png",
@@ -29,11 +25,11 @@ class WordCounter {
 
     countWordsInOnePage(word, url, logger) {
         return new Promise((resolve) => {
-            fetch(url, this.options)
+            fetch(url)
                 .then(response => response.text())
                 .then(content => {
-                    var words = content.split(" ");
-                    var count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
+                    const words = content.split(" ");
+                    const count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
                     this.globalWordsCounter += count;
                     logger(url, count, this.globalWordsCounter, this.justVisited.length);
                     resolve(count);
@@ -50,7 +46,7 @@ class WordCounter {
             fetch(url)
                 .then(response => response.text())
                 .then(content => {
-                    var links = content.match(/href="https:\/\/[^"]+"/g);
+                    let links = content.match(/href="https:\/\/[^"]+"/g);
                     if (links) {
                         links = links.filter(link => {
                             return !this.listOfMediaExention.some(ext => link.includes(ext));
@@ -75,12 +71,12 @@ class WordCounter {
     async countWords(word, url, deep, logger) {
         if (this.stop) return [];
 
-        var count = await this.countWordsInOnePage(word, url, logger);
-        var counts = [count];
+        const count = await this.countWordsInOnePage(word, url, logger);
+        const counts = [count];
 
         if (deep > 0) {
-            var links = await this.getAllLinksInAPage(url);
-            var linkCounts = await Promise.all(links.map(link => this.countWords(word, link, deep - 1, logger)));
+            const links = await this.getAllLinksInAPage(url);
+            const linkCounts = await Promise.all(links.map(link => this.countWords(word, link, deep - 1, logger)));
             counts.push(...linkCounts);
         }
 
@@ -88,8 +84,8 @@ class WordCounter {
     }
 
     async startCounting(word, url, deep, runInTheEnd, logger) {
-        var counts = await this.countWords(word, url, deep, logger);
-        var total = counts.reduce((a, b) => a + b, 0);
+        const counts = await this.countWords(word, url, deep, logger);
+        const total = counts.reduce((a, b) => a + b, 0);
         runInTheEnd(total);
 
         this.stop = false;
@@ -100,12 +96,8 @@ class WordCounter {
     }
 
     async stopCounting() {
-        console.log("Process stopped");
         this.stop = true;
-        this.listOfPromises.forEach(promise => {
-            console.log("Canceling promise");
-            promise.cancel();
-        });
+        console.log("Process stopping...");
     }
 }
 

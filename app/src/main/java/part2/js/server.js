@@ -6,7 +6,7 @@ const io = require('socket.io')(http);
 app.use(express.static(__dirname + '/res'));
 
 const WordCounter = require('./WordCounter');
-var wordCounter;
+let wordCounter;
 
 
 app.get('/socket.io/socket.io.js', (req, res) => {
@@ -31,11 +31,11 @@ app.get('/', (req, res) => {
 app.get('/count-words', (req, res) => {
     
     function logger(url, count, globalWordsCounter, justVisitedLength) {
-        console.log(`The word "${req.query.word}" appears ${count} times in the page ${url}  \t  Total: ${globalWordsCounter}, Links checked: ${justVisitedLength}`);
+        //console.log(`The word "${req.query.word}" appears ${count} times in the page ${url}  \t  Total: ${globalWordsCounter}, Links checked: ${justVisitedLength}`);
         io.emit('countRealTime', { url, count, globalWordsCounter, justVisitedLength });
     }
 
-    function runInTheEnd(countedWords) {
+    function runInTheEnd() {
         io.emit('endProcess');
     }
 
@@ -43,15 +43,18 @@ app.get('/count-words', (req, res) => {
 
 
 
-    wordCounter.startCounting(req.query.word, req.query.url, req.query.deep, runInTheEnd, logger);
+    wordCounter.startCounting(req.query.word, req.query.url, req.query.deep, runInTheEnd, logger).then(() => {
+        res.json({ message: 'Process finished' });
+    });
 
-    res.json({ message: 'Process started' });
+
     
 });
 
 app.get('/stop-process', (req, res) => {
-    wordCounter.stopCounting();
-    res.json({ message: 'Process stopped' });
+    wordCounter.stopCounting().then(() => {
+        res.json({ message: 'Process stopping...' });
+    });
 });
 
 
