@@ -6,6 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SafeCounter {
 
 	private final Lock lock = new ReentrantLock();
+
 	private int count;
 
 	public void inc() {
@@ -16,7 +17,8 @@ public class SafeCounter {
 			lock.unlock();
 		}
 	}
-	public synchronized void dec(String log) {
+
+	public void dec(String log) {
 		try {
 			lock.lock();
 			this.count--;
@@ -25,7 +27,8 @@ public class SafeCounter {
 			lock.unlock();
 		}
 	}
-	public synchronized int getValue() {
+
+	public int getValue() {
 		try {
 			lock.lock();
 			return this.count;
@@ -33,7 +36,8 @@ public class SafeCounter {
 			lock.unlock();
 		}
 	}
-	public synchronized void update(int increment) {
+
+	public void update(int increment) {
 		try {
 			lock.lock();
 			this.count += increment;
@@ -41,4 +45,5 @@ public class SafeCounter {
 			lock.unlock();
 		}
 	}
+
 }

@@ -6,10 +6,15 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SafeSet {
+
     private final Lock lock = new ReentrantLock();
+
     private final Set<String> set = new HashSet<>();
+
     public SafeSet() {}
+
     public SafeSet(String url) {this.add(url);}
+
     public void add(String value) {
         try {
             lock.lock();
@@ -17,9 +22,8 @@ public class SafeSet {
         } finally {
             lock.unlock();
         }
-
-
     }
+
     public boolean contains(String value) {
         try {
             lock.lock();
@@ -28,6 +32,7 @@ public class SafeSet {
             lock.unlock();
         }
     }
+
     public int size() {
         try {
             lock.lock();
@@ -36,13 +41,14 @@ public class SafeSet {
             lock.unlock();
         }
     }
-    public  String toString() {
+
+    public String toString() {
         try {
             lock.lock();
             return this.set.toString();
         } finally {
             lock.unlock();
         }
-
     }
+
 }

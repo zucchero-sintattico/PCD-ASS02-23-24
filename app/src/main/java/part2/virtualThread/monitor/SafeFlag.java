@@ -6,13 +6,14 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SafeFlag {
 
 	private final Lock lock = new ReentrantLock();
+
 	private boolean flag;
 
 	public SafeFlag(){};
+
 	public SafeFlag(boolean flag){
 		this.flag = flag;
 	};
-
 
 	public void stopSimulation() {
 		try {
