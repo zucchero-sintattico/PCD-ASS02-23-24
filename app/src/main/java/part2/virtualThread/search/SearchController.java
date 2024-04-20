@@ -1,7 +1,5 @@
 package part2.virtualThread.search;
 
-import part2.virtualThread.GUI;
-
 public class SearchController {
 
     private final SearchListener listener;

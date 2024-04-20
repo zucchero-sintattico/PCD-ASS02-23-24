@@ -206,13 +206,13 @@ public class GUI extends JFrame implements SearchListener {
     }
 
     @Override
-    public void searchEnded(int linkFound, int linkExplored, int linkDown, int wordFound) {
+    public void searchEnded(SafeSet linkFound, SafeSet linkExplored, SafeSet linkDown, SafeCounter wordFound) {
         SwingUtilities.invokeLater(() -> {
-            this.areaOutput.append("Link Found: " + linkFound + "\n");
-            this.areaOutput.append("Link Explored: " + linkExplored + "\n");
-            this.areaOutput.append("Link Up: " + (linkExplored - linkDown) + "\n");
-            this.areaOutput.append("Link Down: " + linkDown + "\n");
-            this.areaOutput.append("Total Occurrences: " + wordFound + "\n");
+            this.areaOutput.append("Link Found: " + linkFound.size() + "\n");
+            this.areaOutput.append("Link Explored: " + linkExplored.size() + "\n");
+            this.areaOutput.append("Link Up: " + (linkExplored.size() - linkDown.size()) + "\n");
+            this.areaOutput.append("Link Down: " + linkDown.size() + "\n");
+            this.areaOutput.append("Total Occurrences: " + wordFound.getValue() + "\n");
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
         });
     }
