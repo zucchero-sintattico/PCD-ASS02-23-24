@@ -3,8 +3,9 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-const WordCounter = require('./WordCounter');
+app.use(express.static(__dirname + '/res'));
 
+const WordCounter = require('./WordCounter');
 var wordCounter;
 
 
@@ -24,7 +25,7 @@ io.on('connection', (socket) => {
 
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/res/index.html');
 });
 
 app.get('/count-words', (req, res) => {
@@ -54,13 +55,6 @@ app.get('/stop-process', (req, res) => {
 });
 
 
-app.get('/force-stop', (req, res) => {
-    delete wordCounter;
-    res.json({ message: 'Process stopped' });
-});
-
-
-  
 
 http.listen(3000, () => {
     console.log('API server is running on port 3000');
