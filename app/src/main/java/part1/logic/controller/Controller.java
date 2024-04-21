@@ -9,7 +9,7 @@ public interface Controller {
 
 	void stopSimulation();
 
-	void setupSimulation(SimulationType type, int numberOfSteps, int numberOfThread);
+	void setupSimulation(SimulationType type, int numberOfSteps);
 
 	void showView();
 

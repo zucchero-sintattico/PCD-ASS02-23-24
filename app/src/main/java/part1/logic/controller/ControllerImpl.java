@@ -26,13 +26,13 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void setupSimulation(SimulationType type, int numberOfSteps, int numberOfThread) {
+    public void setupSimulation(SimulationType type, int numberOfSteps) {
         if (this.simulationView != null) {
             this.simulationView.dispose();
         }
         this.simulation = type.getSimulation(type);
         this.simulationState = this.simulation.getState();
-        this.simulation.setup(numberOfSteps, numberOfThread);
+        this.simulation.setup(numberOfSteps);
     }
 
     @Override

@@ -274,7 +274,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
                     if(validateInput()){
                         updateViewWhenSimulationStart();
                         this.clearTextArea();
-                        this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get(), this.getNumberOfThreads().get());
+                        this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get());
                         if(this.getShowViewFlag()){
                             this.controller.showView();
                         }
@@ -294,7 +294,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
                     this.clearTextArea();
                     this.areaConsoleLog.setText("Console log");
                     this.resetView();
-                    this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get(), this.getNumberOfThreads().get());
+                    this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get());
                 }
             });
         }else if(e.getSource() == this.checkBoxAvaiableProcessor){

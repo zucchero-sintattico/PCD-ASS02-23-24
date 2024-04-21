@@ -25,7 +25,7 @@ public class MassiveTests {
 		int nSteps = 100;
 
 		var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars);
-		simulation.setup(nSteps, 32);
+		simulation.setup(nSteps);
 		RoadSimStatistics stat = new RoadSimStatistics();
 		simulation.addSimulationListener(stat);
 		Thread t = new SimulationRunner(simulation);
@@ -44,7 +44,7 @@ public class MassiveTests {
 		int nSteps = 500;
 
 		var simulation = new TrafficSimulationWithCrossRoads();
-		simulation.setup(nSteps, 500);
+		simulation.setup(nSteps);
 		RoadSimStatistics stat = new RoadSimStatistics();
 		simulation.addSimulationListener(stat);
 		Thread t = new SimulationRunner(simulation);
@@ -63,7 +63,7 @@ public class MassiveTests {
 		int nSteps = 100;
 
 		var simulation = new TrafficSimulationSingleRoadMassiveNumberOfCars(numCars, 1234);
-		simulation.setup(nSteps, 32);
+		simulation.setup(nSteps);
 		RoadSimStatistics stat = new RoadSimStatistics();
 		simulation.addSimulationListener(stat);
 		Thread t = new SimulationRunner(simulation);

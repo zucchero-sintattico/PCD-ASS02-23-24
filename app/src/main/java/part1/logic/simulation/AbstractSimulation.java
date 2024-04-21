@@ -1,7 +1,6 @@
 package part1.logic.simulation;
 
 import part1.logic.passiveComponent.environment.Environment;
-import part1.logic.monitor.barrier.CyclicBarrier;
 import part1.logic.monitor.state.SimulationState;
 import part1.logic.passiveComponent.agent.AbstractCarAgent;
 import part1.logic.simulation.listeners.SimulationListener;
@@ -14,7 +13,6 @@ public abstract class AbstractSimulation implements Simulation {
 	private final SimulationState state;
 	protected Environment environment;
 	protected List<AbstractCarAgent> agents;
-	private CyclicBarrier barrier;
 	private final List<SimulationListener> listeners = new ArrayList<>();
 
 	private int dt;
@@ -37,24 +35,18 @@ public abstract class AbstractSimulation implements Simulation {
 	}
 
 	@Override
-	public void setup(int numSteps, int numOfThread) {
+	public void setup(int numSteps) {
 		this.dt = this.setDelta();
 		this.t = this.t0 = this.setInitialCondition();
 		this.setupComponents();
-		this.setupSimulation(numSteps, numOfThread);
+		this.setupSimulation(numSteps);
 	}
 
-	private void setupSimulation(int numSteps, int numOfThread) {
+	private void setupSimulation(int numSteps) {
 		this.numSteps = numSteps;
 		this.startWallTime = System.currentTimeMillis();
 		this.environment.step();
-		int effectiveNumOfThread = Math.min(numOfThread, agents.size());
-		//this.barrier = new CyclicBarrier(effectiveNumOfThread + 1, this::sequentialTask);
 		this.executor = Executors.newCachedThreadPool();
-
-
-//		new ExecutorService(effectiveNumOfThread,
-//				agents, numSteps, barrier);
 		this.notifyReset(this.t0, this.agents, this.environment);
 	}
 
@@ -86,8 +78,10 @@ public abstract class AbstractSimulation implements Simulation {
 			this.endWallTime = System.currentTimeMillis();
 			this.averageTimePerStep = cumulativeTimePerStep / numSteps;
 			this.notifyEnd();
+			this.executor.shutdown();
 			this.state.stopSimulation();
 		}
+
 	}
 
 	protected abstract List<AbstractCarAgent> createAgents();
@@ -118,13 +112,6 @@ public abstract class AbstractSimulation implements Simulation {
 				}
 			}
 			sequentialTask();
-
-
-//			try {
-//				this.barrier.hitAndWaitAll();
-//			} catch (InterruptedException e) {
-//				throw new RuntimeException(e);
-//			}
 		}
 	}
 
@@ -198,7 +185,7 @@ public abstract class AbstractSimulation implements Simulation {
 				minSpeed = currSpeed;
 			}
 		}
-		if (agents.size() > 0) {
+		if (!agents.isEmpty()) {
 			avSpeed /= agents.size();
 		}
 		return avSpeed;
