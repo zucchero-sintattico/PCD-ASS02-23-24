@@ -47,8 +47,8 @@ public class GUI extends JFrame implements SearchListener {
 
         this.addListeners();
         //temp setting
-        this.fieldAddress.setText("https://www.unipg.it/");
-        this.fieldWord.setText("ingegneria");
+        this.fieldAddress.setText("https://www.google.com/");
+        this.fieldWord.setText("google");
         this.fieldDepth.setText("3");
     }
 
@@ -177,7 +177,7 @@ public class GUI extends JFrame implements SearchListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
+//        this.setResizable(false);
     }
 
     public void display(){
@@ -211,6 +211,7 @@ public class GUI extends JFrame implements SearchListener {
 
     @Override
     public void countUpdated(int wordFound, String pageUrl, SafeCounter totalWordFound) {
+        System.out.println(totalWordFound.getValue());
         SwingUtilities.invokeLater(() -> {
             this.labelWordFoundCount.setText(String.valueOf(totalWordFound.getValue()));
             this.areaOutput.append("Total: " + wordFound + " word occurrences from: " + pageUrl + "\n");
@@ -255,6 +256,7 @@ public class GUI extends JFrame implements SearchListener {
 
     @Override
     public void threadAliveUpdated(SafeSet treadAlive) {
+        System.out.println(treadAlive.size());
         SwingUtilities.invokeLater(() -> {
             this.labelThreadAliveCount.setText(String.valueOf(treadAlive.size()));
         });
