@@ -36,11 +36,6 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public int getAvailableProcessor() {
-        return Runtime.getRuntime().availableProcessors();
-    }
-
-    @Override
     public void attachListener(SimulationListener listener) {
         this.simulation.addSimulationListener(listener);
     }

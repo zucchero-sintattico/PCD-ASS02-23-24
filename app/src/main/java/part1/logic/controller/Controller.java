@@ -15,8 +15,6 @@ public interface Controller {
 
 	void attachListener(SimulationListener listener);
 
-	int getAvailableProcessor();
-
 	long getSimulationDuration();
 
 }

@@ -171,10 +171,6 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.buttonContainer.add(this.buttonReset);
     }
 
-    private String getProcessor() {
-        return String.valueOf(this.controller.getAvailableProcessor());
-    }
-
     public void display() {
         SwingUtilities.invokeLater(() -> this.setVisible(true));
     }
