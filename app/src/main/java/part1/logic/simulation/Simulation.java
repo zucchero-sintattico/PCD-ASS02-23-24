@@ -5,7 +5,7 @@ import part1.logic.simulation.listeners.SimulationListener;
 
 public interface Simulation {
 
-	void setup(int numSteps, int numOfThread);
+	void setup(int numSteps);
 
 	void addSimulationListener(SimulationListener listener);
 

@@ -34,8 +34,6 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     private final static int DEFAULT_SIZE = 1000;
     private JLabel labelNumberOfSteps;
     private JTextField fieldNumberOfSteps;
-    private JLabel labelNumberOfThreads;
-    private JTextField fieldNumberOfThreads;
     private JLabel labelConsoleLog;
     private JTextArea areaConsoleLog;
     private JButton buttonStart;
@@ -44,7 +42,6 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     private JLabel labelBox;
     private JComboBox<SimulationType> comboBox;
     private JCheckBox checkBox;
-    private JCheckBox checkBoxAvaiableProcessor;
     private JScrollPane scroll;
     private JPanel inputContainer;
     private JPanel buttonContainer;
@@ -90,16 +87,11 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.buttonStart.addActionListener(this);
         this.buttonStop.addActionListener(this);
         this.buttonReset.addActionListener(this);
-        this.checkBoxAvaiableProcessor.addActionListener(this);
-        this.checkBoxAvaiableProcessor.setSelected(true);
         this.labelNumberOfSteps.setFont(new Font(getName(), Font.PLAIN, 16));
-        this.labelNumberOfThreads.setFont(new Font(getName(), Font.PLAIN, 16));
         this.labelConsoleLog.setFont(new Font(getName(), Font.PLAIN, 16));
         this.labelBox.setFont(new Font(getName(), Font.PLAIN, 16));
         this.fieldNumberOfSteps.setFont(new Font(getName(), Font.PLAIN, 14));
-        this.fieldNumberOfThreads.setFont(new Font(getName(), Font.PLAIN, 14));
         this.checkBox.setFont(new Font(getName(), Font.PLAIN, 14));
-        this.checkBoxAvaiableProcessor.setFont(new Font(getName(), Font.PLAIN, 14));
         this.buttonStart.setFont(new Font(getName(), Font.PLAIN, 14));
         this.buttonStop.setFont(new Font(getName(), Font.PLAIN, 14));
         this.buttonReset.setFont(new Font(getName(), Font.PLAIN, 14));
@@ -116,17 +108,11 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         constraints.fill = GridBagConstraints.HORIZONTAL;
         this.add(this.inputContainer, constraints);
 
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        constraints.insets = new Insets(16, 16, 0, 16);
-        constraints.fill = GridBagConstraints.NONE;
-        constraints.fill = GridBagConstraints.NONE;
-        this.add(this.checkBoxAvaiableProcessor, constraints);
+
 
         constraints.gridx = 0;
         constraints.gridy = 5;
         constraints.insets = new Insets(16, 16, 0, 16);
-        constraints.fill = GridBagConstraints.NONE;
         constraints.fill = GridBagConstraints.NONE;
         this.add(this.labelBox, constraints);
 
@@ -166,8 +152,6 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
     private void setViewComponents() {
         this.labelNumberOfSteps = new JLabel("Number of steps");
         this.fieldNumberOfSteps = new JTextField("200", 1);
-        this.labelNumberOfThreads = new JLabel("Number of threads");
-        this.fieldNumberOfThreads = new JTextField(this.getProcessor(), 1);
         this.labelConsoleLog = new JLabel("Console log");
         this.areaConsoleLog = new JTextArea("Console log");
         this.buttonStart = new JButton("Start simulation");
@@ -177,22 +161,14 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         this.scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         this.labelBox = new JLabel("Choise simulation");
         this.comboBox = new JComboBox<SimulationType>();
-        this.checkBox = new JCheckBox("Display simulation part1.view");
-        this.fieldNumberOfThreads.setEnabled(false);
-        this.checkBoxAvaiableProcessor = new JCheckBox("Use avaiable processor (max: " + getProcessor() + ")");
+        this.checkBox = new JCheckBox("Display simulation view");
         this.inputContainer = new JPanel(new GridLayout(2, 2, 10, 10));
         this.inputContainer.add(this.labelNumberOfSteps);
-        this.inputContainer.add(this.labelNumberOfThreads);
         this.inputContainer.add(this.fieldNumberOfSteps);
-        this.inputContainer.add(this.fieldNumberOfThreads);
         this.buttonContainer = new JPanel(new FlowLayout());
         this.buttonContainer.add(this.buttonStart);
         this.buttonContainer.add(this.buttonStop);
         this.buttonContainer.add(this.buttonReset);
-    }
-
-    private String getProcessor() {
-        return String.valueOf(this.controller.getAvailableProcessor());
     }
 
     public void display() {
@@ -212,22 +188,11 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
         }
     }
 
-    public Optional<Integer> getNumberOfThreads() {
-        try {
-            return Optional.of(Integer.valueOf(this.fieldNumberOfThreads.getText()));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
     public boolean validateInput(){
         if(this.getNumberOfSteps().isEmpty()){
             displayMessageDialog("Number of steps isn't an integer");
             return false;
-        }else if(this.getNumberOfThreads().isEmpty()){
-            displayMessageDialog("Number of threads isn't an integer");
-            return false;
-        }else{
+        } else{
             return true;
         }
     }
@@ -274,7 +239,7 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
                     if(validateInput()){
                         updateViewWhenSimulationStart();
                         this.clearTextArea();
-                        this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get(), this.getNumberOfThreads().get());
+                        this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get());
                         if(this.getShowViewFlag()){
                             this.controller.showView();
                         }
@@ -294,17 +259,9 @@ public class StatisticalView extends JFrame implements ActionListener, Simulatio
                     this.clearTextArea();
                     this.areaConsoleLog.setText("Console log");
                     this.resetView();
-                    this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get(), this.getNumberOfThreads().get());
+                    this.controller.setupSimulation(this.getSimulationType(), this.getNumberOfSteps().get());
                 }
             });
-        }else if(e.getSource() == this.checkBoxAvaiableProcessor){
-            if(this.checkBoxAvaiableProcessor.isSelected()){
-                this.fieldNumberOfThreads.setEnabled(false);
-                this.fieldNumberOfThreads.setText(this.getProcessor());
-            }else{
-                this.fieldNumberOfThreads.setEnabled(true);
-                this.fieldNumberOfThreads.setText(this.getProcessor());
-            }
         } else {
             SwingUtilities.invokeLater(() -> {
                 this.buttonStart.setEnabled(true);

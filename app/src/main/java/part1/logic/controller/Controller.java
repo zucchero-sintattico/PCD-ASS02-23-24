@@ -9,13 +9,11 @@ public interface Controller {
 
 	void stopSimulation();
 
-	void setupSimulation(SimulationType type, int numberOfSteps, int numberOfThread);
+	void setupSimulation(SimulationType type, int numberOfSteps);
 
 	void showView();
 
 	void attachListener(SimulationListener listener);
-
-	int getAvailableProcessor();
 
 	long getSimulationDuration();
 

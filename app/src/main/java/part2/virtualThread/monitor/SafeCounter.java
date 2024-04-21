@@ -1,10 +1,10 @@
-package part1.jpf;
+package part2.virtualThread.monitor;
 
-public class Counter {
+public class SafeCounter {
 
 	private int count;
 
-	public Counter() {
+	public SafeCounter() {
 		count = 0;
 	}
 

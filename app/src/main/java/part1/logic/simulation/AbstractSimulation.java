@@ -1,19 +1,18 @@
 package part1.logic.simulation;
 
 import part1.logic.passiveComponent.environment.Environment;
-import part1.logic.monitor.barrier.CyclicBarrier;
 import part1.logic.monitor.state.SimulationState;
 import part1.logic.passiveComponent.agent.AbstractCarAgent;
 import part1.logic.simulation.listeners.SimulationListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 public abstract class AbstractSimulation implements Simulation {
 
 	private final SimulationState state;
 	protected Environment environment;
 	protected List<AbstractCarAgent> agents;
-	private CyclicBarrier barrier;
 	private final List<SimulationListener> listeners = new ArrayList<>();
 
 	private int dt;
@@ -29,27 +28,25 @@ public abstract class AbstractSimulation implements Simulation {
 	private int numStepDone;
 	private long cumulativeTimePerStep;
 	private long averageTimePerStep;
+	private ExecutorService executor;
 
 	public AbstractSimulation() {
 		this.state = new SimulationState();
 	}
 
 	@Override
-	public void setup(int numSteps, int numOfThread) {
+	public void setup(int numSteps) {
 		this.dt = this.setDelta();
 		this.t = this.t0 = this.setInitialCondition();
 		this.setupComponents();
-		this.setupSimulation(numSteps, numOfThread);
+		this.setupSimulation(numSteps);
 	}
 
-	private void setupSimulation(int numSteps, int numOfThread) {
+	private void setupSimulation(int numSteps) {
 		this.numSteps = numSteps;
 		this.startWallTime = System.currentTimeMillis();
 		this.environment.step();
-		int effectiveNumOfThread = Math.min(numOfThread, agents.size());
-		this.barrier = new CyclicBarrier(effectiveNumOfThread + 1, this::sequentialTask);
-		new TaskSplitter(effectiveNumOfThread,
-				agents, numSteps, barrier);
+		this.executor = Executors.newCachedThreadPool();
 		this.notifyReset(this.t0, this.agents, this.environment);
 	}
 
@@ -81,8 +78,10 @@ public abstract class AbstractSimulation implements Simulation {
 			this.endWallTime = System.currentTimeMillis();
 			this.averageTimePerStep = cumulativeTimePerStep / numSteps;
 			this.notifyEnd();
+			this.executor.shutdown();
 			this.state.stopSimulation();
 		}
+
 	}
 
 	protected abstract List<AbstractCarAgent> createAgents();
@@ -101,11 +100,18 @@ public abstract class AbstractSimulation implements Simulation {
 	@Override
 	public void doStep() {
 		if (this.numStepDone < this.numSteps) {
-			try {
-				this.barrier.hitAndWaitAll();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
+		List<Future<?>> futures = new ArrayList<>();
+			for (AbstractCarAgent agent : this.agents) {
+				futures.add(this.executor.submit(agent.getParallelAction()));
 			}
+			for (Future<?> future : futures) {
+				try {
+					future.get();
+				} catch (InterruptedException | ExecutionException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			sequentialTask();
 		}
 	}
 
@@ -179,7 +185,7 @@ public abstract class AbstractSimulation implements Simulation {
 				minSpeed = currSpeed;
 			}
 		}
-		if (agents.size() > 0) {
+		if (!agents.isEmpty()) {
 			avSpeed /= agents.size();
 		}
 		return avSpeed;

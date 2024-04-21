@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Word Counter</title>
+    <!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- import style.cc -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+
+
+<div class="container">
+    <h1>Word Counter</h1>
+
+    <input type="text" id="wordInput" placeholder="Enter word" value="ingegneria">
+    <input type="text" id="urlInput" placeholder="Enter URL" value="https://www.unipg.it">
+    <input type="text" id="deepInput" placeholder="Enter deep" value="1">
+    <button id="sendButton">Send Request</button>
+    <button id="stopButton">Stop Request</button>
+    <p id="finalData">No data</p>
+    <p id="count">No data</p>
+</div>
+
+
+
+<script>
+    // Connect to the server using Socket.io
+    var origin = window.location.origin;
+    var socket = io.connect(origin);
+
+    socket.on('connection', function() {
+        console.log('Connected to the server');
+    });
+
+    
+    // Listen for the 'count' event from the server
+    socket.on('countRealTime', ({ url, count, globalWordsCounter, justVisitedLength }) => {
+        document.getElementById('count').innerText = `URL: ${url}, Count: ${count}`;
+        document.getElementById('finalData').innerText = `Global Counter: ${globalWordsCounter}, Number of URLs: ${justVisitedLength}`;
+    });
+
+    socket.on('endProcess', () => {
+        document.getElementById('count').innerText = `PROCESS ENDED`;
+    });
+
+
+    // Attach click event listener to the button
+    document.getElementById('sendButton').addEventListener('click', () => {
+        // Construct the URL with the specified parameters
+        const word = document.getElementById('wordInput').value;
+        const url = document.getElementById('urlInput').value;
+        const deep = document.getElementById('deepInput').value;
+        const requestUrl = `http://localhost:3000/count-words?word=${word}&url=${encodeURIComponent(url)}&deep=${deep}`;
+
+        // Send the request
+        fetch(requestUrl)
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response data
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
+    });
+
+    document.getElementById('stopButton').addEventListener('click', () => {
+        // Construct the URL with the specified parameters
+        const requestUrl = `http://localhost:3000/stop-process`;
+
+        // Send the request
+        fetch(requestUrl)
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response data
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
+    });
+
+
+</script>
+</body>
+</html>
