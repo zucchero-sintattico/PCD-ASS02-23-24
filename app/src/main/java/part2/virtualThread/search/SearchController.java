@@ -1,9 +1,5 @@
 package part2.virtualThread.search;
 
-import part2.virtualThread.monitor.SafeSet;
-
-import java.util.Optional;
-
 public class SearchController {
 
     private final SearchListener listener;
@@ -22,8 +18,7 @@ public class SearchController {
             this.searchState = new SearchState(address);
             this.searchState.setListener(this.listener);
             this.virtualSearchThread = Thread.ofVirtual().start(new PageHandler(address, word, depth, searchState));
-//            virtualSearchThread = new PageHandler(address, word, depth, searchState, listener);
-//            virtualSearchThread.start();
+
             try {
                 this.virtualSearchThread.join();
             } catch (InterruptedException e) {

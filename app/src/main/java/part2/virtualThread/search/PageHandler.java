@@ -5,7 +5,6 @@ import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.HtmlParser;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +67,6 @@ public class PageHandler extends Thread{
             for (String link: toVisit) {
                 this.searchState.getListener().ifPresent(l -> l.pageFound(link));
                 Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState));
-//                Thread vt = new PageHandler(link, word, depth-1, searchState,listener);
-//                vt.start();
                 handlers.add(vt);
             }
         }
