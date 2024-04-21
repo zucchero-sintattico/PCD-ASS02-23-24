@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUI extends JFrame implements SearchListener {
-    private final static int DEFAULT_SIZE = 600;
+    private final static int DEFAULT_SIZE = 700;
     private JLabel labelAddress;
     private JLabel labelWord;
     private JLabel labelDepth;
@@ -17,12 +17,12 @@ public class GUI extends JFrame implements SearchListener {
     private JLabel labelWordFound;
     private JLabel labelThreadAlive;
     private JLabel labelOutput;
+    private JLabel labelLinkRequestedCount;
+    private JLabel labelWordFoundCount;
+    private JLabel labelThreadAliveCount;
     private JTextField fieldAddress;
     private JTextField fieldWord;
     private JTextField fieldDepth;
-    private JTextField fieldLinkRequested;
-    private JTextField fieldWordFound;
-    private JTextField fieldThreadAlive;
     private JTextArea areaOutput;
     private JScrollPane scroll;
     private JButton buttonStart;
@@ -31,6 +31,7 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel logContainer;
     private JPanel buttonContainer;
     private final SearchController searchController = new SearchController(this);
+
     public GUI(){
         super();
 
@@ -75,12 +76,9 @@ public class GUI extends JFrame implements SearchListener {
         this.fieldAddress.setFont(new Font(getName(), Font.PLAIN, 16));
         this.fieldWord.setFont(new Font(getName(), Font.PLAIN, 16));
         this.fieldDepth.setFont(new Font(getName(), Font.PLAIN, 16));
-        this.fieldLinkRequested.setFont(new Font(getName(), Font.PLAIN, 16));
-        this.fieldWordFound.setFont(new Font(getName(), Font.PLAIN, 16));
-        this.fieldThreadAlive.setFont(new Font(getName(), Font.PLAIN, 16));
-        this.fieldLinkRequested.setEditable(false);
-        this.fieldWordFound.setEditable(false);
-        this.fieldThreadAlive.setEditable(false);
+        this.labelLinkRequestedCount.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.labelWordFoundCount.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.labelThreadAliveCount.setFont(new Font(getName(), Font.PLAIN, 16));
     }
 
     private void addAllComponentsIntoFrame() {
@@ -109,7 +107,7 @@ public class GUI extends JFrame implements SearchListener {
         constraints.gridy = 3;
         constraints.insets = new Insets(16, 16, 0, 16);
         constraints.fill = GridBagConstraints.NONE;
-        constraints.ipadx = 500;
+        constraints.ipadx = 603;
         constraints.ipady = 300;
         this.add(this.scroll, constraints);
 
@@ -132,9 +130,9 @@ public class GUI extends JFrame implements SearchListener {
         this.fieldAddress = new JTextField();
         this.fieldWord = new JTextField();
         this.fieldDepth = new JTextField();
-        this.fieldLinkRequested = new JTextField();
-        this.fieldWordFound = new JTextField();
-        this.fieldThreadAlive = new JTextField();
+        this.labelLinkRequestedCount = new JLabel("...");
+        this.labelWordFoundCount = new JLabel("...");
+        this.labelThreadAliveCount = new JLabel("...");
         this.areaOutput = new JTextArea("Output");
         this.scroll = new JScrollPane(this.areaOutput);
         this.buttonStart = new JButton("Start");
@@ -149,11 +147,11 @@ public class GUI extends JFrame implements SearchListener {
         this.container.add(this.fieldWord);
         this.container.add(this.fieldDepth);
         this.logContainer.add(this.labelLinkRequested);
-        this.logContainer.add(this.fieldLinkRequested);
+        this.logContainer.add(this.labelLinkRequestedCount);
         this.logContainer.add(this.labelWordFound);
-        this.logContainer.add(this.fieldWordFound);
+        this.logContainer.add(this.labelWordFoundCount);
         this.logContainer.add(this.labelThreadAlive);
-        this.logContainer.add(this.fieldThreadAlive);
+        this.logContainer.add(this.labelThreadAliveCount);
         this.buttonContainer.add(this.buttonStart);
         this.buttonContainer.add(this.buttonStop);
     }
@@ -182,7 +180,7 @@ public class GUI extends JFrame implements SearchListener {
     @Override
     public void pageRequested(String pageUrl, SafeSet totalPageRequested) {
         SwingUtilities.invokeLater(() -> {
-            this.fieldLinkRequested.setText(String.valueOf(totalPageRequested.size()));
+            this.labelLinkRequestedCount.setText(String.valueOf(totalPageRequested.size()));
             this.areaOutput.append("Page requested: " + pageUrl + "\n");
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
         });
@@ -199,7 +197,7 @@ public class GUI extends JFrame implements SearchListener {
     @Override
     public void countUpdated(int wordFound, String pageUrl, SafeCounter totalWordFound) {
         SwingUtilities.invokeLater(() -> {
-            this.fieldWordFound.setText(String.valueOf(totalWordFound.getValue()));
+            this.labelWordFoundCount.setText(String.valueOf(totalWordFound.getValue()));
             this.areaOutput.append("Total: " + totalWordFound.getValue() + " word occurrences from: " + pageUrl + "\n");
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
         });
@@ -220,7 +218,7 @@ public class GUI extends JFrame implements SearchListener {
     @Override
     public void threadAliveUpdated(SafeSet treadAlive) {
         SwingUtilities.invokeLater(() -> {
-            this.fieldThreadAlive.setText(String.valueOf(treadAlive.size()));
+            this.labelThreadAliveCount.setText(String.valueOf(treadAlive.size()));
         });
     }
 
