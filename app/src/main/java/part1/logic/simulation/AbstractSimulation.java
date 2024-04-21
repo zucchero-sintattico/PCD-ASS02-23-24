@@ -7,6 +7,7 @@ import part1.logic.passiveComponent.agent.AbstractCarAgent;
 import part1.logic.simulation.listeners.SimulationListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 public abstract class AbstractSimulation implements Simulation {
 
@@ -29,6 +30,7 @@ public abstract class AbstractSimulation implements Simulation {
 	private int numStepDone;
 	private long cumulativeTimePerStep;
 	private long averageTimePerStep;
+	private ExecutorService executor;
 
 	public AbstractSimulation() {
 		this.state = new SimulationState();
@@ -47,9 +49,12 @@ public abstract class AbstractSimulation implements Simulation {
 		this.startWallTime = System.currentTimeMillis();
 		this.environment.step();
 		int effectiveNumOfThread = Math.min(numOfThread, agents.size());
-		this.barrier = new CyclicBarrier(effectiveNumOfThread + 1, this::sequentialTask);
-		new TaskSplitter(effectiveNumOfThread,
-				agents, numSteps, barrier);
+		//this.barrier = new CyclicBarrier(effectiveNumOfThread + 1, this::sequentialTask);
+		this.executor = Executors.newCachedThreadPool();
+
+
+//		new ExecutorService(effectiveNumOfThread,
+//				agents, numSteps, barrier);
 		this.notifyReset(this.t0, this.agents, this.environment);
 	}
 
@@ -101,11 +106,25 @@ public abstract class AbstractSimulation implements Simulation {
 	@Override
 	public void doStep() {
 		if (this.numStepDone < this.numSteps) {
-			try {
-				this.barrier.hitAndWaitAll();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
+		List<Future<?>> futures = new ArrayList<>();
+			for (AbstractCarAgent agent : this.agents) {
+				futures.add(this.executor.submit(agent.getParallelAction()));
 			}
+			for (Future<?> future : futures) {
+				try {
+					future.get();
+				} catch (InterruptedException | ExecutionException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			sequentialTask();
+
+
+//			try {
+//				this.barrier.hitAndWaitAll();
+//			} catch (InterruptedException e) {
+//				throw new RuntimeException(e);
+//			}
 		}
 	}
 
