@@ -8,6 +8,7 @@ public interface SearchListener {
     void pageRequested(String pageUrl, SafeSet totalPageRequested);
     void pageDown(String exceptionMessage, String pageUrl);
     void countUpdated(int wordFound, String pageUrl, SafeCounter totalWordFound);
+    void searchStarted();
     void searchEnded(SafeSet linkFound, SafeSet linkExplored, SafeSet linkDown, SafeCounter wordFound);
     void threadAliveUpdated(SafeSet treadAlive);
 }

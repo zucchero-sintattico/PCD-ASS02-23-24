@@ -27,10 +27,12 @@ public class GUI extends JFrame implements SearchListener {
     private JScrollPane scroll;
     private JButton buttonStart;
     private JButton buttonStop;
+    private JButton buttonBruteStop;
     private JPanel container;
     private JPanel logContainer;
     private JPanel buttonContainer;
     private final SearchController searchController = new SearchController(this);
+    private boolean bruteStopped;
 
     public GUI(){
         super();
@@ -59,7 +61,15 @@ public class GUI extends JFrame implements SearchListener {
         });
 
         this.buttonStop.addActionListener(e -> {
+            this.buttonStop.setEnabled(false);
             this.searchController.stop();
+        });
+
+        this.buttonBruteStop.addActionListener(e -> {
+            this.buttonStop.setEnabled(false);
+            this.buttonBruteStop.setEnabled(false);
+            this.searchController.bruteStop();
+            this.bruteStopped = true;
         });
     }
 
@@ -73,6 +83,9 @@ public class GUI extends JFrame implements SearchListener {
         this.areaOutput.setFont(new Font(getName(), Font.PLAIN, 16));
         this.buttonStart.setFont(new Font(getName(), Font.PLAIN, 16));
         this.buttonStop.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.buttonStop.setEnabled(false);
+        this.buttonBruteStop.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.buttonBruteStop.setEnabled(false);
         this.fieldAddress.setFont(new Font(getName(), Font.PLAIN, 16));
         this.fieldWord.setFont(new Font(getName(), Font.PLAIN, 16));
         this.fieldDepth.setFont(new Font(getName(), Font.PLAIN, 16));
@@ -137,6 +150,7 @@ public class GUI extends JFrame implements SearchListener {
         this.scroll = new JScrollPane(this.areaOutput);
         this.buttonStart = new JButton("Start");
         this.buttonStop = new JButton("Stop");
+        this.buttonBruteStop = new JButton("Brute Stop");
         this.container = new JPanel(new GridLayout(2, 3, 16, 4));
         this.logContainer = new JPanel(new GridLayout(1, 6, 16, 4));
         this.buttonContainer = new JPanel(new GridLayout(1, 2, 16, 16));
@@ -154,6 +168,7 @@ public class GUI extends JFrame implements SearchListener {
         this.logContainer.add(this.labelThreadAliveCount);
         this.buttonContainer.add(this.buttonStart);
         this.buttonContainer.add(this.buttonStop);
+        this.buttonContainer.add(this.buttonBruteStop);
     }
 
     private void setFrameProperties() {
@@ -198,7 +213,21 @@ public class GUI extends JFrame implements SearchListener {
     public void countUpdated(int wordFound, String pageUrl, SafeCounter totalWordFound) {
         SwingUtilities.invokeLater(() -> {
             this.labelWordFoundCount.setText(String.valueOf(totalWordFound.getValue()));
-            this.areaOutput.append("Total: " + totalWordFound.getValue() + " word occurrences from: " + pageUrl + "\n");
+            this.areaOutput.append("Total: " + wordFound + " word occurrences from: " + pageUrl + "\n");
+            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+        });
+    }
+
+    @Override
+    public void searchStarted() {
+        SwingUtilities.invokeLater(() -> {
+            this.areaOutput.setText("Search Started:\n");
+            this.labelWordFoundCount.setText("...");
+            this.labelLinkRequestedCount.setText("...");
+            this.labelThreadAliveCount.setText("...");
+            this.buttonStart.setEnabled(false);
+            this.buttonStop.setEnabled(true);
+            this.buttonBruteStop.setEnabled(true);
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
         });
     }
@@ -212,6 +241,15 @@ public class GUI extends JFrame implements SearchListener {
             this.areaOutput.append("Link Down: " + linkDown.size() + "\n");
             this.areaOutput.append("Total Occurrences: " + wordFound.getValue() + "\n");
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+            this.buttonStart.setEnabled(true);
+            this.buttonStop.setEnabled(false);
+            this.buttonBruteStop.setEnabled(false);
+            if(bruteStopped){
+                this.labelWordFoundCount.setText("-");
+                this.labelLinkRequestedCount.setText("-");
+                this.labelThreadAliveCount.setText("-");
+                bruteStopped = false;
+            }
         });
     }
 

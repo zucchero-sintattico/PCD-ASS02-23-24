@@ -4,6 +4,8 @@ import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.HtmlParser;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,33 +15,31 @@ public class PageHandler extends Thread{
     private final String word;
     private final int depth;
     private final SearchState searchState;
-    private final SearchListener listener;
     private final List<Thread> handlers = new ArrayList<>();
 
-    public PageHandler(String urlString, String word, int depth, SearchState searchState, SearchListener listener){
+    public PageHandler(String urlString, String word, int depth, SearchState searchState){
         this.urlString = urlString;
         this.word = word;
         this.depth = depth;
         this.searchState = searchState;
-        this.listener = listener;
     }
 
     @Override
     public void run() {
             try {
                 this.searchState.getThreadAlive().add(urlString);
-                this.listener.threadAliveUpdated(this.searchState.getThreadAlive());
+                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
                 if (this.searchState.getSearchEnded().isSimulationRunning()) {
                     this.searchState.getLinkExplored().add(urlString);
-                    this.listener.pageRequested(urlString, this.searchState.getLinkExplored());
+                    this.searchState.getListener().ifPresent(l -> l.pageRequested(urlString, this.searchState.getLinkExplored()));
                     this.read(RequestHandler.getBody(urlString));
                 }
-            } catch (IOException e) {
-                this.listener.pageDown(e.getMessage(), urlString);
+            } catch (IOException | URISyntaxException | IllegalArgumentException e) {
+                this.searchState.getListener().ifPresent(l -> l.pageDown(e.getMessage(), urlString));
                 searchState.getLinkDown().add(urlString);
             } finally {
                 searchState.getThreadAlive().remove(urlString);
-                this.listener.threadAliveUpdated(this.searchState.getThreadAlive());
+                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
             }
     }
 
@@ -66,8 +66,10 @@ public class PageHandler extends Thread{
     private void visitLinks(List<String> toVisit, List<Thread> handlers) {
         if(this.depth > 0){
             for (String link: toVisit) {
-                this.listener.pageFound(link);
-                Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,listener));
+                this.searchState.getListener().ifPresent(l -> l.pageFound(link));
+                Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState));
+//                Thread vt = new PageHandler(link, word, depth-1, searchState,listener);
+//                vt.start();
                 handlers.add(vt);
             }
         }
@@ -77,7 +79,7 @@ public class PageHandler extends Thread{
         int count = wordFound.getValue();
         if (count > 0) {
             this.searchState.getWordOccurrences().update(count);
-            this.listener.countUpdated(wordFound.getValue(), this.urlString, this.searchState.getWordOccurrences());
+            this.searchState.getListener().ifPresent(l -> l.countUpdated(wordFound.getValue(), this.urlString, this.searchState.getWordOccurrences()));
         }
     }
 

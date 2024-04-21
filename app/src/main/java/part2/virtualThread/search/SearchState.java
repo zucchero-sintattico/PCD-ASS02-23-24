@@ -4,6 +4,10 @@ import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.monitor.SafeFlag;
 import part2.virtualThread.monitor.SafeSet;
 
+import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class SearchState {
 
     //TODO synchronized not needed, only getters are present
@@ -13,6 +17,8 @@ public class SearchState {
     private final SafeSet linkDown = new SafeSet();
     private final SafeCounter wordOccurrences = new SafeCounter();
     private final SafeFlag searchEnded = new SafeFlag(true);
+    private SearchListener listener;
+    private final Lock lock = new ReentrantLock();
 
     //debug
     private final SafeSet threadAlive = new SafeSet();
@@ -47,5 +53,21 @@ public class SearchState {
     }
 
 
+    public Optional<SearchListener> getListener() {
+        try {
+            lock.lock();
+            return listener != null ? Optional.of(listener) : Optional.empty();
+        } finally {
+            lock.unlock();
+        }
+    }
 
+    public void setListener(SearchListener listener) {
+       try {
+              lock.lock();
+              this.listener = listener;
+         } finally {
+              lock.unlock();
+       }
+    }
 }
