@@ -18,7 +18,9 @@ public class SearchState {
     private final SafeCounter wordOccurrences = new SafeCounter();
     private final SafeFlag searchEnded = new SafeFlag(true);
     private SearchListener listener;
-    private final Lock lock = new ReentrantLock();
+    private final Lock listenerLock = new ReentrantLock();
+    private final StringBuilder newLog = new StringBuilder();
+    private final Lock logLock = new ReentrantLock();
 
     //debug
     private final SafeSet threadAlive = new SafeSet();
@@ -55,19 +57,37 @@ public class SearchState {
 
     public Optional<SearchListener> getListener() {
         try {
-            lock.lock();
+            listenerLock.lock();
             return listener != null ? Optional.of(listener) : Optional.empty();
         } finally {
-            lock.unlock();
+            listenerLock.unlock();
         }
     }
 
     public void setListener(SearchListener listener) {
        try {
-              lock.lock();
+              listenerLock.lock();
               this.listener = listener;
          } finally {
-              lock.unlock();
+              listenerLock.unlock();
        }
+    }
+    public void log(String log){
+        try{
+            logLock.lock();
+            newLog.append(log);
+        } finally {
+            logLock.unlock();
+        }
+    }
+    public String getNewLog() {
+        try{
+            logLock.lock();
+            String log = newLog.toString();
+            newLog.setLength(0);
+            return log;
+        } finally {
+            logLock.unlock();
+        }
     }
 }

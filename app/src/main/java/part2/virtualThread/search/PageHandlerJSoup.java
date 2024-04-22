@@ -31,18 +31,19 @@ public class PageHandlerJSoup extends Thread{
     public void run() {
             try {
                 this.searchState.getThreadAlive().add(urlString);
-                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
+//                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
                 if (this.searchState.getSearchEnded().isSimulationRunning()) {
                     this.searchState.getLinkExplored().add(urlString);
-                    this.searchState.getListener().ifPresent(l -> l.pageRequested(urlString, this.searchState.getLinkExplored()));
+//                    this.searchState.getListener().ifPresent(l -> l.pageRequested(urlString, this.searchState.getLinkExplored()));
+                    this.searchState.log("Page requested: " + urlString + "\n");
                     this.read(RequestHandlerJSoup.getBody(urlString));
                 }
             } catch (IOException | URISyntaxException | IllegalArgumentException e) {
-                this.searchState.getListener().ifPresent(l -> l.pageDown(e.getMessage(), urlString));
+                this.searchState.log("Page down: " + urlString + " Reason: " + e + "\n");
                 searchState.getLinkDown().add(urlString);
             } finally {
                 searchState.getThreadAlive().remove(urlString);
-                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
+//                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
             }
     }
 
@@ -69,7 +70,8 @@ public class PageHandlerJSoup extends Thread{
     private void visitLinks(List<String> toVisit, List<Thread> handlers) {
         if(this.depth > 0){
             for (String link: toVisit) {
-                this.searchState.getListener().ifPresent(l -> l.pageFound(link));
+//                this.searchState.getListener().ifPresent(l -> l.pageFound(link));
+                this.searchState.log("Page found: " + link + "\n");
                 Thread vt = Thread.ofVirtual().start(new PageHandlerJSoup(link, word, depth-1, searchState));
                 handlers.add(vt);
             }
@@ -80,7 +82,8 @@ public class PageHandlerJSoup extends Thread{
         int count = wordFound.getValue();
         if (count > 0) {
             this.searchState.getWordOccurrences().update(count);
-            this.searchState.getListener().ifPresent(l -> l.countUpdated(wordFound.getValue(), this.urlString, this.searchState.getWordOccurrences()));
+            this.searchState.log("Word found: " + wordFound.getValue() + " times in " + urlString + "\n");
+//            this.searchState.getListener().ifPresent(l -> l.countUpdated(wordFound.getValue(), this.urlString, this.searchState.getWordOccurrences()));
         }
     }
 
@@ -89,15 +92,10 @@ public class PageHandlerJSoup extends Thread{
     }
 
     private void getLinks(String line, List<String> toVisit) {
-        System.out.println("aqui"+line);
-//        HtmlParserJSoup.findLinks(line, link -> {
             if (!this.searchState.getLinkFound().contains(line)) {
                 this.searchState.getLinkFound().add(line);
                 toVisit.add(line);
-                System.out.println("aqui2");
             }
-//        }
-//        );
     }
 
 }

@@ -33,6 +33,7 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel buttonContainer;
     private final SearchController searchController = new SearchController(this);
     private boolean bruteStopped;
+    private final Timer updater = new Timer(32, e -> SwingUtilities.invokeLater(()->this.updateView(this.searchController.getSearchInfo())));
 
     public GUI(){
         super();
@@ -180,43 +181,53 @@ public class GUI extends JFrame implements SearchListener {
 //        this.setResizable(false);
     }
 
+    private void updateView(SearchInfo info){
+        SwingUtilities.invokeLater(() -> {
+            this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
+            this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
+            this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
+            this.areaOutput.append(info.newLog());
+            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+        });
+    }
+
     public void display(){
         SwingUtilities.invokeLater(() -> this.setVisible(true));
     }
 
     @Override
     public void pageFound(String pageUrl) {
-        SwingUtilities.invokeLater(() -> {
-            this.areaOutput.append("Page found: " + pageUrl + "\n");
-            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            this.areaOutput.append("Page found: " + pageUrl + "\n");
+//            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+//        });
     }
 
     @Override
     public void pageRequested(String pageUrl, SafeSet totalPageRequested) {
-        SwingUtilities.invokeLater(() -> {
-            this.labelLinkRequestedCount.setText(String.valueOf(totalPageRequested.size()));
-            this.areaOutput.append("Page requested: " + pageUrl + "\n");
-            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            this.labelLinkRequestedCount.setText(String.valueOf(totalPageRequested.size()));
+//            this.areaOutput.append("Page requested: " + pageUrl + "\n");
+//            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+//        });
     }
 
     @Override
     public void pageDown(String exceptionMessage, String pageUrl) {
-        SwingUtilities.invokeLater(() -> {
-            this.areaOutput.append("Page down: " + pageUrl + " Reason: " + exceptionMessage + "\n");
-            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            this.areaOutput.append("Page down: " + pageUrl + " Reason: " + exceptionMessage + "\n");
+//            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+//        });
     }
 
     @Override
     public void countUpdated(int wordFound, String pageUrl, SafeCounter totalWordFound) {
-        System.out.println(totalWordFound.getValue());
-        SwingUtilities.invokeLater(() -> {
-            this.labelWordFoundCount.setText(String.valueOf(totalWordFound.getValue()));
-            this.areaOutput.append("Total: " + wordFound + " word occurrences from: " + pageUrl + "\n");
-            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-        });
+//        System.out.println(totalWordFound.getValue());
+//        SwingUtilities.invokeLater(() -> {
+//            this.labelWordFoundCount.setText(String.valueOf(totalWordFound.getValue()));
+//            this.areaOutput.append("Total: " + wordFound + " word occurrences from: " + pageUrl + "\n");
+//            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+//        });
     }
 
     @Override
@@ -230,6 +241,7 @@ public class GUI extends JFrame implements SearchListener {
             this.buttonStop.setEnabled(true);
             this.buttonBruteStop.setEnabled(true);
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+            this.updater.start();
         });
     }
 
@@ -251,15 +263,16 @@ public class GUI extends JFrame implements SearchListener {
                 this.labelThreadAliveCount.setText("-");
                 bruteStopped = false;
             }
+            this.updater.stop();
         });
     }
 
     @Override
     public void threadAliveUpdated(SafeSet treadAlive) {
-        System.out.println(treadAlive.size());
-        SwingUtilities.invokeLater(() -> {
-            this.labelThreadAliveCount.setText(String.valueOf(treadAlive.size()));
-        });
+//        System.out.println(treadAlive.size());
+//        SwingUtilities.invokeLater(() -> {
+//            this.labelThreadAliveCount.setText(String.valueOf(treadAlive.size()));
+//        });
     }
 
 }
