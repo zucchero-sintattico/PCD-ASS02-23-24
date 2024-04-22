@@ -49,7 +49,8 @@ class WordCounter {
         let listOfLinks = [];
       
 
-        let links = content.match(/href="https:\/\/[^"]+"/g);
+        let links = content.match(/href="https*:\/\/[^"]+"/g);
+        
         if (links) {
             links = links.filter(link => {
                 return !this.listOfMediaExention.some(ext => link.includes(ext));
@@ -84,7 +85,7 @@ class WordCounter {
 
     async startCounting(word, url, deep, runInTheEnd, logger) {
         const counts = await this.countWords(word, url, deep, logger);
-        const total = counts.reduce((a, b) => a + b, 0);
+        const total = counts.reduce((a, b) => Number(a) + Number(b), 0);
         runInTheEnd(total);
 
         this.stop = false;
