@@ -1,5 +1,6 @@
 package part2.virtualThread;
 
+import part2.virtualThread.search.SearchController;
 import part2.virtualThread.utils.Configuration;
 
 import javax.swing.*;
