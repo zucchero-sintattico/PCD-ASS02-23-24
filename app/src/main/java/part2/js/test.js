@@ -12,9 +12,7 @@ function countWords(word, url, deep) {
 
 
     fetch(url, options)
-        .then(response => response.text()).catch((e) => {
-            console.log(`text err ${e} \t ${url} `);
-            resolve(0) ;})
+        .then(response => response.text())
         .then(content => {
             const words = content.split(" ");
             const count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
@@ -42,4 +40,4 @@ function countWords(word, url, deep) {
          
 }
 
-countWords("ingegneria", "https://www.unipg.it", 2)
+countWords("google", "https://www.google.com", 4)
