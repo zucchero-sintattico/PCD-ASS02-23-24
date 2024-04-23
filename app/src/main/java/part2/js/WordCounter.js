@@ -23,59 +23,59 @@ class WordCounter {
         ];
     }
 
-    countWordsInOnePage(word, url, logger) {
+
+    async getTextFromUrl(url) {
         return new Promise((resolve) => {
             fetch(url)
                 .then(response => response.text())
                 .then(content => {
-                    const words = content.split(" ");
-                    const count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
-                    this.globalWordsCounter += count;
-                    logger(url, count, this.globalWordsCounter, this.justVisited.length);
-                    resolve(count);
-                })
-                .catch(() => {
-                    resolve(0);
+                    resolve(content);
+                }).catch((e) => {
+                    console.log("Error in getTextFromUrl", url, e);
+                    resolve("");
                 });
         });
     }
 
-    getAllLinksInAPage(url) {
-        let listOfLinks = [];
-        return new Promise((resolve) => {
-            fetch(url)
-                .then(response => response.text())
-                .then(content => {
-                    let links = content.match(/href="https:\/\/[^"]+"/g);
-                    if (links) {
-                        links = links.filter(link => {
-                            return !this.listOfMediaExention.some(ext => link.includes(ext));
-                        });
-                    }
+    countWordsInOnePage(word, url, content, logger) {
+        const words = content.split(" ");
+        const count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
+        this.globalWordsCounter += count;
+        logger(url, count, this.globalWordsCounter, this.justVisited.length);
+        return count;
+    }
 
-                    if (links) {
-                        links.forEach(link => {
-                            link = link.slice(6, -1);
-                            if (this.justVisited.includes(link)) return;
-                            this.justVisited.push(link);
-                            listOfLinks.push(link);
-                        });
-                    }
-                    resolve(listOfLinks);
-                }).catch(() => {
-                    resolve(listOfLinks);
-                });
-        });
+    getAllLinksInAPage(content) {
+        let listOfLinks = [];
+      
+
+        let links = content.match(/href="https*:\/\/[^"]+"/g);
+        
+        if (links) {
+            links = links.filter(link => {
+                return !this.listOfMediaExention.some(ext => link.includes(ext));
+            });
+  
+            links.forEach(link => {
+                link = link.slice(6, -1);
+                if (this.justVisited.includes(link)) return;
+                this.justVisited.push(link);
+                listOfLinks.push(link);
+            });
+        }
+        return listOfLinks;
+
+  
     }
 
     async countWords(word, url, deep, logger) {
         if (this.stop) return ;
-
-        const count = await this.countWordsInOnePage(word, url, logger);
+        const content = await this.getTextFromUrl(url);
+        const count = this.countWordsInOnePage(word, url, content, logger);
         const counts = [count];
 
         if (deep > 0) {
-            const links = await this.getAllLinksInAPage(url);
+            const links = this.getAllLinksInAPage(content);
             const linkCounts = await Promise.all(links.map(link => this.countWords(word, link, deep - 1, logger)));
             counts.push(...linkCounts);
         }
@@ -85,7 +85,7 @@ class WordCounter {
 
     async startCounting(word, url, deep, runInTheEnd, logger) {
         const counts = await this.countWords(word, url, deep, logger);
-        const total = counts.reduce((a, b) => a + b, 0);
+        const total = counts.reduce((a, b) => Number(a) + Number(b), 0);
         runInTheEnd(total);
 
         this.stop = false;

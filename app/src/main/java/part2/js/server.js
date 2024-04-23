@@ -28,6 +28,21 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/res/index.html');
 });
 
+app.get('/base-count-words', (req, res) => {
+    function message(numberOfWords) {
+        res.json({ n: numberOfWords });
+    }
+
+    function logger(url, count, globalWordsCounter, justVisitedLength) {
+        console.log(`The word "${req.query.word}" appears ${count} times in the page ${url}  \t  Total: ${globalWordsCounter}, Links checked: ${justVisitedLength}`);
+    }
+
+    wordCounter = new WordCounter();
+    wordCounter.startCounting(req.query.word, req.query.url, req.query.deep, message, logger);
+
+    //example: http://localhost:3000/base-count-words?word=test&url=http://localhost:4000&deep=1
+});
+
 app.get('/count-words', (req, res) => {
     
     function logger(url, count, globalWordsCounter, justVisitedLength) {
@@ -60,6 +75,6 @@ app.get('/stop-process', (req, res) => {
 
 
 http.listen(3000, () => {
-    console.log('API server is running on port 3000');
+    console.log('API server is running on port http://localhost:3000');
     
 });
