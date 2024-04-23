@@ -8,6 +8,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    scala
 }
 
 repositories {
@@ -29,9 +30,7 @@ dependencies {
     implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
     implementation("org.slf4j:slf4j-nop:1.7.36")
     implementation("log4j:log4j:1.2.17")
-
-
-
+    implementation("org.scala-lang:scala3-library_3:3.4.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
