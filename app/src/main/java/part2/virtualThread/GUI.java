@@ -33,7 +33,7 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel buttonContainer;
     private final SearchController searchController = new SearchController(this);
     private boolean bruteStopped;
-    private final Timer updater = new Timer(32, e -> SwingUtilities.invokeLater(()->this.updateView(this.searchController.getSearchInfo())));
+    private final Timer updater = new Timer(500, e -> SwingUtilities.invokeLater(()->this.updateView(this.searchController.getSearchInfo())));
 
     public GUI(){
         super();
@@ -196,41 +196,6 @@ public class GUI extends JFrame implements SearchListener {
     }
 
     @Override
-    public void pageFound(String pageUrl) {
-//        SwingUtilities.invokeLater(() -> {
-//            this.areaOutput.append("Page found: " + pageUrl + "\n");
-//            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-//        });
-    }
-
-    @Override
-    public void pageRequested(String pageUrl, SafeSet totalPageRequested) {
-//        SwingUtilities.invokeLater(() -> {
-//            this.labelLinkRequestedCount.setText(String.valueOf(totalPageRequested.size()));
-//            this.areaOutput.append("Page requested: " + pageUrl + "\n");
-//            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-//        });
-    }
-
-    @Override
-    public void pageDown(String exceptionMessage, String pageUrl) {
-//        SwingUtilities.invokeLater(() -> {
-//            this.areaOutput.append("Page down: " + pageUrl + " Reason: " + exceptionMessage + "\n");
-//            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-//        });
-    }
-
-    @Override
-    public void countUpdated(int wordFound, String pageUrl, SafeCounter totalWordFound) {
-//        System.out.println(totalWordFound.getValue());
-//        SwingUtilities.invokeLater(() -> {
-//            this.labelWordFoundCount.setText(String.valueOf(totalWordFound.getValue()));
-//            this.areaOutput.append("Total: " + wordFound + " word occurrences from: " + pageUrl + "\n");
-//            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-//        });
-    }
-
-    @Override
     public void searchStarted() {
         SwingUtilities.invokeLater(() -> {
             this.areaOutput.setText("Search Started:\n");
@@ -264,15 +229,8 @@ public class GUI extends JFrame implements SearchListener {
                 bruteStopped = false;
             }
             this.updater.stop();
+            this.updateView(this.searchController.getSearchInfo());
         });
-    }
-
-    @Override
-    public void threadAliveUpdated(SafeSet treadAlive) {
-//        System.out.println(treadAlive.size());
-//        SwingUtilities.invokeLater(() -> {
-//            this.labelThreadAliveCount.setText(String.valueOf(treadAlive.size()));
-//        });
     }
 
 }
