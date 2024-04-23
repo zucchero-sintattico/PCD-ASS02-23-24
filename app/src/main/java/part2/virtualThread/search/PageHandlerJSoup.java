@@ -72,10 +72,12 @@ public class PageHandlerJSoup extends Thread{
             StringBuilder sb = new StringBuilder();
             for (String link: toVisit) {
 //                this.searchState.getListener().ifPresent(l -> l.pageFound(link));
-                this.searchState.log("Page found: " + link + "\n");
+                sb.append("Page found: " + link + "\n");
+
                 Thread vt = Thread.ofVirtual().start(new PageHandlerJSoup(link, word, depth-1, searchState));
                 handlers.add(vt);
             }
+            this.searchState.log(sb.toString());
 
         }
     }
