@@ -31,6 +31,7 @@ dependencies {
     implementation("org.slf4j:slf4j-nop:1.7.36")
     implementation("log4j:log4j:1.2.17")
     implementation("org.scala-lang:scala3-library_3:3.4.0")
+    implementation("io.reactivex:rxscala_2.12:0.27.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
