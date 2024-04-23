@@ -13,19 +13,10 @@ object WebElement:
       (word, links)
 
 
-  /*
-  def getBody(url: String): String =
-    val request = HttpGet(url)
-    val requestConfig = RequestConfig.custom().setConnectionRequestTimeout(Timeout.ofSeconds(5)).setResponseTimeout(Timeout.ofSeconds(5)).build()
-    HttpClients.createDefault().execute(request, BasicHttpClientResponseHandler())
-
-  def parseHTML(HTMLBody: String): Set[String] =
-    val links = mutable.HashSet.empty
-    ???
-  */
-
-
 
 @main def tryRequest(): Unit =
-  val webElement = WebElementImpl("http://en.wikipedia.org/", "wikipedia", 2).connect()
-  webElement._2.forEach(e => WebElementImpl(e, "wikipedia", 2).connect())
+  val url = "http://en.wikipedia.org/"
+  val word = "wikipedia"
+  val depth = 2
+  val webElement = WebElementImpl(url, word, depth).connect()
+  webElement._2.forEach(WebElementImpl(_, "wikipedia", depth - 1).connect())
