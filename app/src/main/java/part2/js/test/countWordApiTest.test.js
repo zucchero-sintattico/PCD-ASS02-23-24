@@ -10,8 +10,11 @@ function getWordCount(word, numberOfWords, deep, numberOfLinks , path = 0) {
 }
 
 function getTeoricalNumber(numberOfWords, deep, numberOfLinks) {
-  return (numberOfWords * (Math.pow(numberOfLinks, deep+1))) - numberOfWords
-
+  sum = 0;
+  for (let i = 0; i <= deep; i++) {
+    sum = sum + numberOfWords *  Math.pow(numberOfLinks, i);
+  }
+  return sum ;
   
 }
 
