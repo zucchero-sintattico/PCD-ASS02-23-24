@@ -1,7 +1,8 @@
 package part2.virtualThread.utils;
 
+
+
 import part2.virtualThread.utils.parser.HtmlParser;
-import part2.virtualThread.utils.parser.HtmlParserJSoup;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +15,6 @@ public class Configuration {
         try {
             List<String> lines = Files.readAllLines(Paths.get("app/src/main/java/part2/resources/file/ExtensionToExclude.txt"));
             HtmlParser.addExtensionToFilter(lines.toArray(String[]::new));
-            HtmlParserJSoup.addExtensionToFilter(lines.toArray(String[]::new));
         } catch (IOException e) {
             System.out.println("Failed to load extension to exclude file");
         }

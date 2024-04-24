@@ -1,6 +1,8 @@
 package part2.virtualThread.search;
 
-import part2.virtualThread.SearchInfo;
+import part2.virtualThread.utils.connection.RequestHandlerApache;
+import part2.virtualThread.utils.connection.RequestHandlerJSoup;
+import part2.virtualThread.view.SearchInfo;
 
 public class SearchController {
 
@@ -19,7 +21,7 @@ public class SearchController {
             this.listener.searchStarted();
             this.searchState = new SearchState(address);
             this.searchState.setListener(this.listener);
-            this.virtualSearchThread = Thread.ofVirtual().start(new PageHandlerJSoup(address, word, depth, searchState));
+            this.virtualSearchThread = Thread.ofVirtual().start(new PageHandler(address, word, depth, searchState, new RequestHandlerApache()));
 
             try {
                 this.virtualSearchThread.join();

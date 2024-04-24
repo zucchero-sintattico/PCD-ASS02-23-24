@@ -1,9 +1,7 @@
 package part2.virtualThread.search;
 
-import org.jsoup.nodes.Document;
 import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.utils.connection.RequestHandler;
-import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 import part2.virtualThread.utils.parser.Body;
 import part2.virtualThread.utils.parser.HtmlParser;
 
@@ -12,7 +10,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageHandlerJSoup extends Thread{
+public class PageHandler extends Thread{
 
     private final String urlString;
     private final String word;
@@ -21,7 +19,7 @@ public class PageHandlerJSoup extends Thread{
     private final List<Thread> handlers = new ArrayList<>();
     private final RequestHandler<?> requestHandler;
 
-    public PageHandlerJSoup(String urlString, String word, int depth, SearchState searchState, RequestHandler<?> requestHandler){
+    public PageHandler(String urlString, String word, int depth, SearchState searchState, RequestHandler<?> requestHandler){
         this.urlString = urlString;
         this.word = word;
         this.depth = depth;
@@ -49,22 +47,22 @@ public class PageHandlerJSoup extends Thread{
             }
     }
 
-    private void read(Body<?> text) {
+    private void read(Body<?> html) {
 
         try{
             List<String> toVisit = new ArrayList<>();
             SafeCounter wordFound = new SafeCounter();
 
-            HtmlParser<?>
-            HtmlParser.parse(text)
-                    .foreachLink(line -> getLinks(line, toVisit))
+            HtmlParser.parse(html)
+                    .foreachLink(link -> evaluateLink(link, toVisit))
                     .doAction(() -> visitLinks(toVisit, handlers))
-                    .foreachWord(line -> matchLine(line, wordFound));
+                    .foreachWord(word -> matchWord(word, wordFound));
 
             this.updateWordCount(wordFound);
             for (Thread t : handlers) {
                 t.join();
             }
+
         } catch (InterruptedException e) {
             System.out.println("Thread interrupted");
         }
@@ -77,7 +75,7 @@ public class PageHandlerJSoup extends Thread{
 //                this.searchState.getListener().ifPresent(l -> l.pageFound(link));
                 sb.append("Page found: " + link + "\n");
 
-                Thread vt = Thread.ofVirtual().start(new PageHandlerJSoup(link, word, depth-1, searchState));
+                Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,requestHandler));
                 handlers.add(vt);
             }
             this.searchState.log(sb.toString());
@@ -94,11 +92,13 @@ public class PageHandlerJSoup extends Thread{
         }
     }
 
-    private void matchLine(String line, SafeCounter wordFound) {
-        HtmlParserJSoup.match(line, this.word, (s) -> wordFound.inc());
+    private void matchWord(String word, SafeCounter wordFound) {
+        if(word.equals(this.word)){
+            wordFound.inc();
+        }
     }
 
-    private void getLinks(String line, List<String> toVisit) {
+    private void evaluateLink(String line, List<String> toVisit) {
             if (!this.searchState.getLinkFound().contains(line)) {
                 this.searchState.getLinkFound().add(line);
                 toVisit.add(line);

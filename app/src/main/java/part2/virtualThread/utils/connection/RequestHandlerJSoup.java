@@ -3,16 +3,41 @@ package part2.virtualThread.utils.connection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import part2.virtualThread.utils.parser.Body;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
-public class RequestHandlerJSoup {
+import static part2.virtualThread.utils.parser.HtmlParser.extensionToFilter;
+import static part2.virtualThread.utils.parser.HtmlParser.linkToMatch;
 
-    private RequestHandlerJSoup() {}
+public class RequestHandlerJSoup implements RequestHandler<Element>{
 
-    public static Document getBody(String url) throws IOException, URISyntaxException, IllegalArgumentException {
-        return Jsoup.connect(url).get();
+    public RequestHandlerJSoup() {}
+
+    public Body<Element> getBody(String url) throws IOException {
+        return new JsoupBody(Jsoup.connect(url).get().body());
     }
 
+    private static class JsoupBody extends Body<Element> {
+        public JsoupBody(Element body) {
+            super(body);
+        }
+
+        @Override
+        public Stream<String> getLinks() {
+            return body.select("a").stream()
+                    .map(e -> e.attr("href"))
+                    .filter(e -> extensionToFilter.stream().noneMatch(e::endsWith))
+                    .filter(e -> e.matches(linkToMatch));
+        }
+
+        @Override
+        public Stream<String> getWords() {
+            return Arrays.stream(getWords(body.text()));
+        }
+
+    }
 }

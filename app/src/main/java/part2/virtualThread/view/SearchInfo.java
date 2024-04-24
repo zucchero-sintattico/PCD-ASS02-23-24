@@ -1,4 +1,4 @@
-package part2.virtualThread;
+package part2.virtualThread.view;
 
 import part2.virtualThread.search.SearchState;
 
