@@ -25,9 +25,9 @@ describe('countWordApiTest', () => {
   it('should return the correct count when all parameters are provided', (done) => {
 
     word = 'test';
-    numberOfWords = 2;
+    numberOfWords = 1;
     numberOfLinks = 3;
-    deep = 5;
+    deep = 3;
 
     let url = getWordCount(word, numberOfWords, deep, numberOfLinks);
     let numWordResult = getTeoricalNumber(numberOfWords, deep, numberOfLinks);

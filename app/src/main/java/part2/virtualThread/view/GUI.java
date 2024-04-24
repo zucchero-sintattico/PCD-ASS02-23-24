@@ -33,7 +33,7 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel buttonContainer;
     private final SearchController searchController = new SearchController(this);
     private boolean bruteStopped;
-    private final Timer updater = new Timer(500, e -> SwingUtilities.invokeLater(()->this.updateView(this.searchController.getSearchInfo())));
+    private final Timer updater = new Timer(32, e -> SwingUtilities.invokeLater(()->this.updateView(this.searchController.getSearchInfo())));
 
     public GUI(){
         super();
@@ -182,13 +182,13 @@ public class GUI extends JFrame implements SearchListener {
     }
 
     private void updateView(SearchInfo info){
-        SwingUtilities.invokeLater(() -> {
-            this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
-            this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
-            this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
-            this.areaOutput.append(info.newLog());
-            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-        });
+
+        this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
+        this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
+        this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
+        this.areaOutput.append(info.newLog());
+        this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+
     }
 
     public void display(){
@@ -213,6 +213,8 @@ public class GUI extends JFrame implements SearchListener {
     @Override
     public void searchEnded(SafeSet linkFound, SafeSet linkExplored, SafeSet linkDown, SafeCounter wordFound) {
         SwingUtilities.invokeLater(() -> {
+            this.updater.stop();
+            this.updateView(this.searchController.getSearchInfo());
             this.areaOutput.append("Link Found: " + linkFound.size() + "\n");
             this.areaOutput.append("Link Explored: " + linkExplored.size() + "\n");
             this.areaOutput.append("Link Up: " + (linkExplored.size() - linkDown.size()) + "\n");
@@ -228,8 +230,6 @@ public class GUI extends JFrame implements SearchListener {
                 this.labelThreadAliveCount.setText("-");
                 bruteStopped = false;
             }
-            this.updater.stop();
-            this.updateView(this.searchController.getSearchInfo());
         });
     }
 

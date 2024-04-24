@@ -64,6 +64,7 @@ public class RequestHandlerApache implements RequestHandler<String>{
             List<String> links = new ArrayList<>();
 
             for (String w : word) {
+                //TODO improve parsing
                 if(w.matches("href=\""+linkToMatch)){
                     String href = w.split("\"")[1];
                     if(extensionToFilter.stream().noneMatch(href::endsWith)){
