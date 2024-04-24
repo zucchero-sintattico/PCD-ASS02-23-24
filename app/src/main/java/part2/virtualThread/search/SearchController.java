@@ -18,10 +18,11 @@ public class SearchController {
     public void start(String address, String word, int depth) {
         this.searchEnded = false;
         Thread.ofVirtual().start(() -> {
-            this.listener.searchStarted();
+
             this.searchState = new SearchState(address);
             this.searchState.setListener(this.listener);
             this.virtualSearchThread = Thread.ofVirtual().start(new PageHandler(address, word, depth, searchState, new RequestHandlerJSoup()));
+            this.listener.searchStarted();
 
             try {
                 this.virtualSearchThread.join();
