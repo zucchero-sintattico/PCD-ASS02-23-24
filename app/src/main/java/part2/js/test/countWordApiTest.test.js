@@ -9,9 +9,12 @@ function getWordCount(word, numberOfWords, deep, numberOfLinks , path = 0) {
   return url;
 }
 
-function getTeoreticalNumber(numberOfWords, deep, numberOfLinks) {
-  return (numberOfWords * (Math.pow(numberOfLinks, deep+1))) - numberOfWords
-
+function getTeoricalNumber(numberOfWords, deep, numberOfLinks) {
+  sum = 0;
+  for (let i = 0; i <= deep; i++) {
+    sum = sum + numberOfWords *  Math.pow(numberOfLinks, i);
+  }
+  return sum ;
   
 }
 
@@ -27,7 +30,7 @@ describe('countWordApiTest', () => {
     deep = 5;
 
     let url = getWordCount(word, numberOfWords, deep, numberOfLinks);
-    let numWordResult = getTeoreticalNumber(numberOfWords, deep, numberOfLinks);
+    let numWordResult = getTeoricalNumber(numberOfWords, deep, numberOfLinks);
 
     console.log('url', url);
   
