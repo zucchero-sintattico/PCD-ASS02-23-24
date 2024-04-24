@@ -58,9 +58,10 @@ class WordCounter {
   
             links.forEach(link => {
                 link = link.slice(6, -1);
-                if (this.justVisited.includes(link)) return;
-                this.justVisited.push(link);
-                listOfLinks.push(link);
+                if (!this.justVisited.includes(link)){
+                    this.justVisited.push(link);
+                    listOfLinks.push(link);
+                }
             });
         }
         return listOfLinks;
@@ -84,9 +85,9 @@ class WordCounter {
     }
 
     async startCounting(word, url, deep, runInTheEnd, logger) {
-        const counts = await this.countWords(word, url, deep, logger);
-        const total = counts.reduce((a, b) => Number(a) + Number(b), 0);
-        runInTheEnd(total);
+        this.justVisited.push(url);
+        await this.countWords(word, url, deep, logger);
+        runInTheEnd(this.globalWordsCounter);
 
         this.stop = false;
         this.globalWordsCounter = 0;
