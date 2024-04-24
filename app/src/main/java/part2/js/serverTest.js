@@ -7,17 +7,22 @@ const io = require('socket.io')(http);
 
 
 
-
+ 
 
 app.get('/', (req, res) => {
     let word = req.query.word;
     let numberOfWords = req.query.numberOfWords;
-    
+    let numberOfLinks = req.query.numberOfLinks;
+    let path = req.query.path;
     //response must be a string with the word repeated numberOfWords times
     let response = "";
-    for (let i = 0; i < numberOfWords; i++) {
+    let i = 0;
+    for (i = 0; i < numberOfWords; i++) {
         response += word + " ";
-        response += `<a href="http://localhost:4000/?word=${word}&numberOfWords=${Number(numberOfWords) + i }">add ${i}</a> `;
+    }
+    
+    for (i = 0; i < numberOfLinks; i++) {
+        response += `<a href="http://localhost:4000/?word=${word}&numberOfWords=${numberOfWords}&numberOfLinks=${numberOfLinks}&path=${path + i}">Go to... </a>`;
     }
     
     res.send(response);
