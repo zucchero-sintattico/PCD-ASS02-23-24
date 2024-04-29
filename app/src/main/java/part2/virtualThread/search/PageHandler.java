@@ -1,5 +1,6 @@
 package part2.virtualThread.search;
 
+import org.apache.hc.client5.http.cookie.CookieRestrictionViolationException;
 import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.Body;
@@ -38,7 +39,7 @@ public class PageHandler extends Thread{
                     this.searchState.log("Page requested: " + urlString + "\n");
                     this.read(requestHandler.getBody(urlString));
                 }
-            } catch (IOException | URISyntaxException | IllegalArgumentException e) {
+            } catch (Exception e) {
                 this.searchState.log("Page down: " + urlString + " Reason: " + e + "\n");
                 searchState.getLinkDown().add(urlString);
             } finally {

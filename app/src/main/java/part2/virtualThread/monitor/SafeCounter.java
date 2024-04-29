@@ -46,4 +46,12 @@ public class SafeCounter {
 		}
 	}
 
+    public void reset() {
+		try {
+			lock.lock();
+			this.count = 0;
+		} finally {
+			lock.unlock();
+		}
+    }
 }

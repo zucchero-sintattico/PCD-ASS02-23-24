@@ -3,8 +3,11 @@ package part2.virtualThread.search;
 import part2.virtualThread.monitor.SafeCounter;
 import part2.virtualThread.monitor.SafeFlag;
 import part2.virtualThread.monitor.SafeSet;
+import part2.virtualThread.view.SearchInfo;
 
 import java.util.Optional;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,9 +24,10 @@ public class SearchState {
     private final Lock listenerLock = new ReentrantLock();
     private final StringBuilder newLog = new StringBuilder();
     private final Lock logLock = new ReentrantLock();
-
+    private final BlockingQueue<SearchInfo> queue = new ArrayBlockingQueue<SearchInfo>(20);
     //debug
     private final SafeSet threadAlive = new SafeSet();
+    private final SafeCounter updateCounter = new SafeCounter();
 
     public SearchState(String url) {
         linkFound = new SafeSet(url);
@@ -51,8 +55,10 @@ public class SearchState {
 
     //debug
     public SafeSet getThreadAlive() {
+        this.addState();
         return this.threadAlive;
     }
+
 
 
     public Optional<SearchListener> getListener() {
@@ -75,6 +81,7 @@ public class SearchState {
     public void log(String log){
         try{
             logLock.lock();
+            this.addState();
             newLog.append(log);
         } finally {
             logLock.unlock();
@@ -88,6 +95,27 @@ public class SearchState {
             return log;
         } finally {
             logLock.unlock();
+        }
+    }
+
+    public Optional<SearchInfo> getState(){
+        try {
+            return !this.queue.isEmpty() ? Optional.of(this.queue.take()) : Optional.empty();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void addState(){
+        try {
+            this.updateCounter.inc();
+            if(this.updateCounter.getValue() > 10 && this.queue.remainingCapacity() > 0){
+                this.updateCounter.reset();
+                this.queue.put(SearchInfo.from(this));
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

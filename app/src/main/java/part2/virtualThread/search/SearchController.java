@@ -4,6 +4,8 @@ import part2.virtualThread.utils.connection.RequestHandlerApache;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 import part2.virtualThread.view.SearchInfo;
 
+import java.util.Optional;
+
 public class SearchController {
 
     private final SearchListener listener;
@@ -56,5 +58,9 @@ public class SearchController {
 
     public SearchInfo getSearchInfo() {
         return SearchInfo.from(searchState);
+    }
+
+    public Optional<SearchInfo> getSearchInfoWhenRun() {
+        return searchState.getState();
     }
 }

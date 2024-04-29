@@ -7,6 +7,7 @@ import part2.virtualThread.search.SearchListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Optional;
 
 public class GUI extends JFrame implements SearchListener {
     private final static int DEFAULT_SIZE = 700;
@@ -33,7 +34,11 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel buttonContainer;
     private final SearchController searchController = new SearchController(this);
     private boolean bruteStopped;
-    private final Timer updater = new Timer(32, e -> SwingUtilities.invokeLater(()->this.updateView(this.searchController.getSearchInfo())));
+    private final Timer updater = new Timer(32, e -> {
+        Optional<SearchInfo> info = this.searchController.getSearchInfoWhenRun();
+        info.ifPresent(this::updateView);
+//        this.updateView(this.searchController.getSearchInfoWhenRun())
+    });
 
     public GUI(){
         super();

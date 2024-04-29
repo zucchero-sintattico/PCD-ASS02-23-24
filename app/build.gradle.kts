@@ -29,8 +29,7 @@ dependencies {
     implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
     implementation("org.slf4j:slf4j-nop:1.7.36")
     implementation("log4j:log4j:1.2.17")
-
-
+    implementation("io.socket:socket.io-client:2.1.0")
 
 }
 
