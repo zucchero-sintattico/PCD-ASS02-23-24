@@ -89,6 +89,7 @@ class WordCounter {
         await this.countWords(word, url, deep, logger);
         runInTheEnd(this.globalWordsCounter);
 
+
         this.stop = false;
         this.globalWordsCounter = 0;
         this.justVisited = [];

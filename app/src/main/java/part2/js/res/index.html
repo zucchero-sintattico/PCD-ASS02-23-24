@@ -20,7 +20,7 @@
     <button id="sendButton">Send Request</button>
     <button id="stopButton">Stop Request</button>
     <p id="finalData">No data</p>
-    <p id="count">No data</p>
+    <textarea id="count"></textarea>
 </div>
 
 
@@ -37,12 +37,13 @@
     
     // Listen for the 'count' event from the server
     socket.on('countRealTime', ({ url, count, globalWordsCounter, justVisitedLength }) => {
-        document.getElementById('count').innerText = `URL: ${url}, Count: ${count}`;
+        document.getElementById('count').append(`${url} -> : ${count}\n`);
         document.getElementById('finalData').innerText = `Global Counter: ${globalWordsCounter}, Number of URLs: ${justVisitedLength}`;
+        document.getElementById("count").scrollTop = document.getElementById("count").scrollHeight
     });
 
     socket.on('endProcess', () => {
-        document.getElementById('count').innerText = `PROCESS ENDED`;
+        document.getElementById('count').append(`PROCESS ENDED \n`);
     });
 
 
