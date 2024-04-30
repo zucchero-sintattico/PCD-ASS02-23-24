@@ -1,9 +1,15 @@
 package part2.reactiveProgramming.view;
 
+import part2.reactiveProgramming.controller.Controller;
+import part2.reactiveProgramming.controller.ControllerImpl;
+import part2.reactiveProgramming.model.ReportListener;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
-public class GUI extends JFrame{
+public class GUI extends JFrame implements ReportListener {
     private final static int DEFAULT_SIZE = 600;
     private JLabel labelAddress;
     private JLabel labelWord;
@@ -18,6 +24,7 @@ public class GUI extends JFrame{
     private JButton buttonStop;
     private JPanel container;
     private JPanel buttonContainer;
+    private Controller controller = new ControllerImpl(this);
 
     public GUI(){
         super();
@@ -29,6 +36,8 @@ public class GUI extends JFrame{
         addAllComponentsIntoFrame();
 
         editAllComponentsProperties();
+
+        attachListeners();
     }
 
     private void editAllComponentsProperties() {
@@ -113,5 +122,26 @@ public class GUI extends JFrame{
 
     public void display(){
         SwingUtilities.invokeLater(() -> this.setVisible(true));
+    }
+
+    public void attachListeners(){
+        this.buttonStart.addActionListener(e -> {
+                try {
+                    this.controller.startSearch("https://en.wikipedia.org", "wikipedia", 5);
+                } catch (ExecutionException | InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+        });
+    }
+    public void updateGUI(String message){
+        SwingUtilities.invokeLater(() -> {
+            this.areaOutput.append(message);
+            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+        });
+    }
+
+    @Override
+    public void wordFounded(String currentUrl, Set<String> link, Long word) {
+        this.updateGUI(currentUrl + "\n [Link: ] " + link + " \n[Count]: " + word);
     }
 }

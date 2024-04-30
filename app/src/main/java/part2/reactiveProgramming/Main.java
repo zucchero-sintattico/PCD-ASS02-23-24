@@ -8,8 +8,8 @@ import java.util.concurrent.ExecutionException;
 
 public class Main {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        //new GUI().display();
-        ConcurrentReader reader = new ConcurrentReader();
-        reader.counter("https://en.wikipedia.org", "wikipedia", 5);
+        new GUI().display();
+        //ConcurrentReader reader = new ConcurrentReader();
+        //reader.counter("https://en.wikipedia.org", "wikipedia", 5);
     }
 }

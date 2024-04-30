@@ -16,6 +16,13 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class ConcurrentReader implements Reader{
+
+    private ReportListener listener;
+
+    public ConcurrentReader(ReportListener listener){
+        this.listener = listener;
+    }
+
     private Observable<String> getAllLines(String url){
         return Observable.create(emitter -> {
             new Thread(() -> {
@@ -63,7 +70,8 @@ public class ConcurrentReader implements Reader{
 
     public void counter(String url, String word, int depth) throws InterruptedException, ExecutionException {
         var count = this.getWordCount(url, word).get();
-        var links = this.getAllPageLinks(url).get().stream().limit(depth).toList();
+        var links = this.getAllPageLinks(url).get().stream().limit(depth).collect(Collectors.toSet());
+        this.listener.wordFounded(url, links, count);
         System.out.println(url + "\n[Count]: " + count + "\n[Links]: " + links);
         if(depth >= 0){
             links.forEach(link -> {
