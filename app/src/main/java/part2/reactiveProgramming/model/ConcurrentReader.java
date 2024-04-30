@@ -1,6 +1,7 @@
 package part2.reactiveProgramming.model;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
@@ -9,11 +10,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
-public class ConcurrentReader {
-
-    public Observable<String> getAllLines(String url){
+public class ConcurrentReader implements Reader{
+    private Observable<String> getAllLines(String url){
         return Observable.create(emitter -> {
             new Thread(() -> {
                 InputStream inputStream = null;
@@ -25,10 +28,11 @@ public class ConcurrentReader {
                     }
                     emitter.onComplete();
                 } catch (IOException | URISyntaxException e) {
-                    throw new RuntimeException(e);
+                    emitter.onError(e);
                 } finally {
                     InputStream finalInputStream = inputStream;
                     emitter.setCancellable(() -> {
+                        assert finalInputStream != null;
                         finalInputStream.close();
                     });
                 }
@@ -36,29 +40,41 @@ public class ConcurrentReader {
         });
     }
 
-    public Observable<String> getAllLinks(String url){
-        return Observable.create(emitter -> {
-            new Thread(() -> {
-                InputStream inputStream = null;
-                try {
-                    inputStream = new URI(url).toURL().openStream();
-                    Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
-                    while (scanner.hasNextLine()) {
-                        String nextElement = Jsoup.parse(scanner.nextLine()).select("a").attr("href");
-                        if(nextElement.startsWith("https")){
-                            emitter.onNext(nextElement);
-                        }
-                    }
-                    emitter.onComplete();
-                } catch (IOException | URISyntaxException e) {
-                    throw new RuntimeException(e);
-                } finally {
-                    InputStream finalInputStream = inputStream;
-                    emitter.setCancellable(() -> {
-                        finalInputStream.close();
-                    });
-                }
-            }).start();
-        });
+    private Observable<String> getAllLinks(String url){
+        return this.getAllLines(url)
+                   .map(e -> Jsoup.parse(e).select("a").attr("href"))
+                   .observeOn(Schedulers.computation())
+                   .filter(e -> e.startsWith("https"));
     }
+
+    public Future<Long> getWordCount(String url, String word){
+        return this.getAllLines(url)
+                .map(e -> Jsoup.parse(e).body().text())
+                .filter(e -> e.contains(word))
+                .observeOn(Schedulers.computation())
+                .count()
+                .toFuture();
+    }
+
+    public Future<Set<String>> getAllPageLinks(String url){
+        return this.getAllLinks(url).collect(Collectors.toSet()).toFuture();
+    }
+
+
+    public void counter(String url, String word, int depth) throws InterruptedException, ExecutionException {
+        var count = this.getWordCount(url, word).get();
+        var links = this.getAllPageLinks(url).get().stream().limit(depth).toList();
+        System.out.println(url + "\n[Count]: " + count + "\n[Links]: " + links);
+        if(depth >= 0){
+            links.forEach(link -> {
+                try {
+                    int currentDepth = depth - 1;
+                    counter(link, word, currentDepth);
+                } catch (ExecutionException | InterruptedException e) {
+                    System.out.println("[Error]: " + e.getMessage());
+                }
+            });
+        }
+    }
+
 }
