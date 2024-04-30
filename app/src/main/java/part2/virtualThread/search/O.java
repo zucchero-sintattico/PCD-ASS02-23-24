@@ -11,7 +11,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class SearchState {
+public class O {
 
     //TODO synchronized not needed, only getters are present
     //TODO for real sync update listener should be in the counter
@@ -24,14 +24,18 @@ public class SearchState {
     private final Lock listenerLock = new ReentrantLock();
     private final StringBuilder newLog = new StringBuilder();
     private final Lock logLock = new ReentrantLock();
-    private final BlockingQueue<SearchInfo> queue = new ArrayBlockingQueue<SearchInfo>(20);
     //debug
     private final SafeSet threadAlive = new SafeSet();
-    private final SafeCounter updateCounter = new SafeCounter();
+    private final BlockingQueue<SearchInfo> searchInfoQueue = new ArrayBlockingQueue<>(1);
+    private final SafeCounter opCounter = new SafeCounter();
+    private final ReentrantLock lock = new ReentrantLock();
 
-    public SearchState(String url) {
+
+    public O(String url) {
         linkFound = new SafeSet(url);
     }
+
+
 
     public SafeSet getLinkFound() {
         return this.linkFound;
@@ -45,6 +49,8 @@ public class SearchState {
         return this.linkDown;
     }
 
+
+
     public SafeCounter getWordOccurrences() {
         return this.wordOccurrences;
     }
@@ -55,8 +61,13 @@ public class SearchState {
 
     //debug
     public SafeSet getThreadAlive() {
-        this.addState();
-        return this.threadAlive;
+        try{
+            lock.lock();
+            updateState();
+            return this.threadAlive;
+        } finally {
+            lock.unlock();
+        }
     }
 
 
@@ -81,8 +92,9 @@ public class SearchState {
     public void log(String log){
         try{
             logLock.lock();
-            this.addState();
             newLog.append(log);
+            updateState();
+            opCounter.inc();
         } finally {
             logLock.unlock();
         }
@@ -97,25 +109,27 @@ public class SearchState {
             logLock.unlock();
         }
     }
+    private final ReentrantLock lock2 = new ReentrantLock();
+    private void updateState(){
 
-    public Optional<SearchInfo> getState(){
-        try {
-            return !this.queue.isEmpty() ? Optional.of(this.queue.take()) : Optional.empty();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//            try {
+//                lock2.lock();
+                opCounter.inc();
+                if (opCounter.getValue() >= threadAlive.size() / 1000) {
+                    opCounter.reset();
+                    SearchInfo info = new SearchInfo(linkExplored.size(), wordOccurrences.getValue(), threadAlive.size(), getNewLog());
+                    searchInfoQueue.offer(info);
+                }
+//            }
 
     }
 
-    private void addState(){
+    public Optional<SearchInfo> getSearchInfo(){
         try {
-            this.updateCounter.inc();
-            if(this.updateCounter.getValue() > 10 && this.queue.remainingCapacity() > 0){
-                this.updateCounter.reset();
-                this.queue.put(SearchInfo.from(this));
-            }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            return Optional.ofNullable(searchInfoQueue.poll());
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
+
 }

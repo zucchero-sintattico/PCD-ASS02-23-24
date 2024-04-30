@@ -1,6 +1,6 @@
 package part2.virtualThread.search;
 
-import part2.virtualThread.utils.connection.RequestHandlerApache;
+import part2.virtualThread.monitor.SearchState;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 import part2.virtualThread.view.SearchInfo;
 
@@ -40,7 +40,7 @@ public class SearchController {
 
     public void stop() {
         if(this.virtualSearchThread != null && !this.searchEnded){
-            this.searchState.getSearchEnded().stopSimulation();
+            this.searchState.stopSimulation();
         }
     }
 
@@ -48,7 +48,7 @@ public class SearchController {
         if(this.virtualSearchThread != null && !this.searchEnded){
             this.searchState.setListener(null);
             this.notifySearchEnded(this.listener);
-            this.searchState.getSearchEnded().stopSimulation();
+            this.searchState.stopSimulation();
         }
     }
 
@@ -56,11 +56,10 @@ public class SearchController {
         listener.searchEnded(searchState.getLinkFound(), searchState.getLinkExplored(), searchState.getLinkDown(), searchState.getWordOccurrences());
     }
 
-    public SearchInfo getSearchInfo() {
-        return SearchInfo.from(searchState);
+
+    public Optional<SearchInfo> getSearchInfo() {
+            return searchState.getSearchInfo();
     }
 
-    public Optional<SearchInfo> getSearchInfoWhenRun() {
-        return searchState.getState();
-    }
+
 }

@@ -1,13 +1,11 @@
 package part2.virtualThread.search;
 
-import org.apache.hc.client5.http.cookie.CookieRestrictionViolationException;
 import part2.virtualThread.monitor.SafeCounter;
+import part2.virtualThread.monitor.SearchState;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.Body;
 import part2.virtualThread.utils.parser.HtmlParser;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +29,9 @@ public class PageHandler extends Thread{
     @Override
     public void run() {
             try {
-                this.searchState.getThreadAlive().add(urlString);
+                this.searchState.addThreadAlive(urlString);
 //                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
-                if (this.searchState.getSearchEnded().isSimulationRunning()) {
+                if (this.searchState.isSimulationRunning()) {
                     this.searchState.getLinkExplored().add(urlString);
 //                    this.searchState.getListener().ifPresent(l -> l.pageRequested(urlString, this.searchState.getLinkExplored()));
                     this.searchState.log("Page requested: " + urlString + "\n");
@@ -41,9 +39,9 @@ public class PageHandler extends Thread{
                 }
             } catch (Exception e) {
                 this.searchState.log("Page down: " + urlString + " Reason: " + e + "\n");
-                searchState.getLinkDown().add(urlString);
+                searchState.addLinkDown(urlString);
             } finally {
-                searchState.getThreadAlive().remove(urlString);
+                searchState.removeThreadAlive(urlString);
 //                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
             }
     }
@@ -51,6 +49,7 @@ public class PageHandler extends Thread{
     private void read(Body<?> html) {
 
         try{
+            System.out.println("read");
             List<String> toVisit = new ArrayList<>();
             SafeCounter wordFound = new SafeCounter();
 
@@ -87,7 +86,7 @@ public class PageHandler extends Thread{
     private void updateWordCount(SafeCounter wordFound) {
         int count = wordFound.getValue();
         if (count > 0) {
-            this.searchState.getWordOccurrences().update(count);
+            this.searchState.updateWordOccurrences(count);
             this.searchState.log("Word found: " + wordFound.getValue() + " times in " + urlString + "\n");
 //            this.searchState.getListener().ifPresent(l -> l.countUpdated(wordFound.getValue(), this.urlString, this.searchState.getWordOccurrences()));
         }

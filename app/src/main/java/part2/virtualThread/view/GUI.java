@@ -8,6 +8,7 @@ import part2.virtualThread.search.SearchListener;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Optional;
+import java.util.Set;
 
 public class GUI extends JFrame implements SearchListener {
     private final static int DEFAULT_SIZE = 700;
@@ -35,9 +36,11 @@ public class GUI extends JFrame implements SearchListener {
     private final SearchController searchController = new SearchController(this);
     private boolean bruteStopped;
     private final Timer updater = new Timer(32, e -> {
-        Optional<SearchInfo> info = this.searchController.getSearchInfoWhenRun();
+        System.out.println("Updating");
+        Optional<SearchInfo> info = this.searchController.getSearchInfo();
+        info.ifPresent(i -> System.out.println(i.treadAlive()));
         info.ifPresent(this::updateView);
-//        this.updateView(this.searchController.getSearchInfoWhenRun())
+        System.out.println("ENDUpdated");
     });
 
     public GUI(){
@@ -186,13 +189,15 @@ public class GUI extends JFrame implements SearchListener {
 //        this.setResizable(false);
     }
 
-    private void updateView(SearchInfo info){
+    public void updateView(SearchInfo info){
+        SwingUtilities.invokeLater(() -> {
+            this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
+            this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
+            this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
+            this.areaOutput.append(info.newLog());
+            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+        });
 
-        this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
-        this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
-        this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
-        this.areaOutput.append(info.newLog());
-        this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
 
     }
 
@@ -216,15 +221,14 @@ public class GUI extends JFrame implements SearchListener {
     }
 
     @Override
-    public void searchEnded(SafeSet linkFound, SafeSet linkExplored, SafeSet linkDown, SafeCounter wordFound) {
+    public void searchEnded(Set<String> linkFound, Set<String> linkExplored, Set<String> linkDown, int wordFound) {
         SwingUtilities.invokeLater(() -> {
             this.updater.stop();
-            this.updateView(this.searchController.getSearchInfo());
             this.areaOutput.append("Link Found: " + linkFound.size() + "\n");
             this.areaOutput.append("Link Explored: " + linkExplored.size() + "\n");
             this.areaOutput.append("Link Up: " + (linkExplored.size() - linkDown.size()) + "\n");
             this.areaOutput.append("Link Down: " + linkDown.size() + "\n");
-            this.areaOutput.append("Total Occurrences: " + wordFound.getValue() + "\n");
+            this.areaOutput.append("Total Occurrences: " + wordFound + "\n");
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
             this.buttonStart.setEnabled(true);
             this.buttonStop.setEnabled(false);
