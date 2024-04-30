@@ -32,7 +32,7 @@ public class PageHandler extends Thread{
                 this.searchState.addThreadAlive(urlString);
 //                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
                 if (this.searchState.isSimulationRunning()) {
-                    this.searchState.getLinkExplored().add(urlString);
+                    this.searchState.addLinkExplored(urlString);
 //                    this.searchState.getListener().ifPresent(l -> l.pageRequested(urlString, this.searchState.getLinkExplored()));
                     this.searchState.log("Page requested: " + urlString + "\n");
                     this.read(requestHandler.getBody(urlString));
@@ -100,7 +100,7 @@ public class PageHandler extends Thread{
 
     private void evaluateLink(String line, List<String> toVisit) {
             if (!this.searchState.getLinkFound().contains(line)) {
-                this.searchState.getLinkFound().add(line);
+                this.searchState.addLinkFound(line);
                 toVisit.add(line);
             }
     }

@@ -29,6 +29,7 @@ public class SearchState {
 
     private int opCounter = 0;
     private final ReentrantLock mutex = new ReentrantLock();
+    private final BlockingQueue<SearchInfo> searchInfoQueue = new ArrayBlockingQueue<>(1);
 
     public SearchState(String url) {
         this.linkFound.add(url);
@@ -104,6 +105,7 @@ public class SearchState {
         try {
             this.mutex.lock();
             this.threadAlive.add(urlString);
+            updateState();
         } finally {
             this.mutex.unlock();
         }
@@ -123,6 +125,7 @@ public class SearchState {
             this.mutex.lock();
             this.allLog.append(s);
             this.newLog.append(s);
+            updateState();
         } finally {
             this.mutex.unlock();
         }
@@ -132,6 +135,7 @@ public class SearchState {
         try {
             this.mutex.lock();
             this.wordOccurrences += count;
+            updateState();
         } finally {
             this.mutex.unlock();
         }
@@ -150,6 +154,7 @@ public class SearchState {
         try {
             this.mutex.lock();
             this.searchEnded = true;
+            updateState();
         } finally {
             this.mutex.unlock();
         }
@@ -157,10 +162,9 @@ public class SearchState {
 
     public Optional<SearchInfo> getSearchInfo() {
         try {
-            this.mutex.lock();
-            return Optional.of(new SearchInfo(this.linkExplored.size(), this.wordOccurrences, this.threadAlive.size(), this.getNewLog()));
-        } finally {
-            this.mutex.unlock();
+            return Optional.ofNullable(searchInfoQueue.poll());
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
 
@@ -168,6 +172,7 @@ public class SearchState {
         try {
             this.mutex.lock();
             this.linkDown.add(urlString);
+            updateState();
         } finally {
             this.mutex.unlock();
         }
@@ -177,8 +182,41 @@ public class SearchState {
         try {
             this.mutex.lock();
             this.threadAlive.remove(urlString);
+            updateState();
         } finally {
             this.mutex.unlock();
         }
+    }
+
+    public void addLinkExplored(String urlString) {
+        try {
+            this.mutex.lock();
+            this.linkExplored.add(urlString);
+            updateState();
+        } finally {
+            this.mutex.unlock();
+        }
+    }
+
+    public void addLinkFound(String line) {
+        try {
+            this.mutex.lock();
+            this.linkFound.add(line);
+            updateState();
+        } finally {
+            this.mutex.unlock();
+        }
+    }
+
+    private void updateState(){
+
+        opCounter++;
+        if (opCounter >= threadAlive.size() / 1000) {
+            opCounter = 0;
+            SearchInfo info = new SearchInfo(linkExplored.size(), wordOccurrences, threadAlive.size(), getNewLog());
+            searchInfoQueue.offer(info);
+        }
+
+
     }
 }
