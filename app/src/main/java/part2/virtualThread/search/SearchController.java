@@ -53,7 +53,7 @@ public class SearchController {
     }
 
     private void notifySearchEnded(SearchListener listener) {
-        listener.searchEnded(searchState.getLinkFound(), searchState.getLinkExplored(), searchState.getLinkDown(), searchState.getWordOccurrences());
+        listener.searchEnded(searchState.getLinkFound(), searchState.getLinkExplored(), searchState.getLinkDown(), searchState.getWordOccurrences(), SearchInfo.from(searchState));
     }
 
 

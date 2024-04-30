@@ -1,7 +1,5 @@
 package part2.virtualThread.view;
 
-import part2.virtualThread.monitor.SafeCounter;
-import part2.virtualThread.monitor.SafeSet;
 import part2.virtualThread.search.SearchController;
 import part2.virtualThread.search.SearchListener;
 
@@ -221,7 +219,7 @@ public class GUI extends JFrame implements SearchListener {
     }
 
     @Override
-    public void searchEnded(Set<String> linkFound, Set<String> linkExplored, Set<String> linkDown, int wordFound) {
+    public void searchEnded(Set<String> linkFound, Set<String> linkExplored, Set<String> linkDown, int wordFound, SearchInfo info) {
         SwingUtilities.invokeLater(() -> {
             this.updater.stop();
             this.areaOutput.append("Link Found: " + linkFound.size() + "\n");
@@ -233,6 +231,7 @@ public class GUI extends JFrame implements SearchListener {
             this.buttonStart.setEnabled(true);
             this.buttonStop.setEnabled(false);
             this.buttonBruteStop.setEnabled(false);
+            this.updateView(info);
             if(bruteStopped){
                 this.labelWordFoundCount.setText("-");
                 this.labelLinkRequestedCount.setText("-");
