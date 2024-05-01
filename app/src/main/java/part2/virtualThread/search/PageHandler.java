@@ -29,26 +29,22 @@ public class PageHandler extends Thread{
     public void run() {
             try {
                 this.searchState.addThreadAlive(urlString);
-//                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
                 if (this.searchState.isSimulationRunning()) {
                     this.searchState.addLinkExplored(urlString);
-//                    this.searchState.getListener().ifPresent(l -> l.pageRequested(urlString, this.searchState.getLinkExplored()));
                     this.searchState.log("Page requested: " + urlString + "\n");
                     this.read(requestHandler.getBody(urlString));
                 }
             } catch (Exception e) {
                 this.searchState.log("Page down: " + urlString + " Reason: " + e + "\n");
-                searchState.addLinkDown(urlString);
+                this.searchState.addLinkDown(urlString);
             } finally {
-                searchState.removeThreadAlive(urlString);
-//                this.searchState.getListener().ifPresent(l -> l.threadAliveUpdated(this.searchState.getThreadAlive()));
+                this.searchState.removeThreadAlive(urlString);
             }
     }
 
     private void read(Body<?> html) {
 
         try{
-            System.out.println("read");
             List<String> toVisit = new ArrayList<>();
             AtomicInteger wordFound = new AtomicInteger();
 
@@ -71,9 +67,7 @@ public class PageHandler extends Thread{
         if(this.depth > 0){
             StringBuilder sb = new StringBuilder();
             for (String link: toVisit) {
-//                this.searchState.getListener().ifPresent(l -> l.pageFound(link));
-                sb.append("Page found: " + link + "\n");
-
+                sb.append("Page found: ").append(link).append("\n");
                 Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,requestHandler));
                 handlers.add(vt);
             }
@@ -87,7 +81,6 @@ public class PageHandler extends Thread{
         if (count > 0) {
             this.searchState.updateWordOccurrences(count);
             this.searchState.log("Word found: " + count + " times in " + urlString + "\n");
-//            this.searchState.getListener().ifPresent(l -> l.countUpdated(wordFound.getValue(), this.urlString, this.searchState.getWordOccurrences()));
         }
     }
 
@@ -98,10 +91,10 @@ public class PageHandler extends Thread{
     }
 
     private void evaluateLink(String line, List<String> toVisit) {
-            if (!this.searchState.getLinkFound().contains(line)) {
-                this.searchState.addLinkFound(line);
-                toVisit.add(line);
-            }
+       if (!this.searchState.getLinkFound().contains(line)) {
+           this.searchState.addLinkFound(line);
+           toVisit.add(line);
+       }
     }
 
 }
