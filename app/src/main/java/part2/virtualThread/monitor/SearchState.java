@@ -26,7 +26,6 @@ public class SearchState {
     private SearchListener listener;
     private AtomicBoolean updateState = new AtomicBoolean(true);
 
-    private int opCounter = 0;
     private final ReentrantLock mutex = new ReentrantLock();
     private final BlockingQueue<SearchInfo> searchInfoQueue = new ArrayBlockingQueue<>(1);
 
@@ -218,13 +217,10 @@ public class SearchState {
 
     private void updateState(){
 
-//        opCounter++;
         if (updateState.compareAndSet(true, false)){
-//            opCounter = 0;
             SearchInfo info = new SearchInfo(linkExplored.size(), wordOccurrences, threadAlive.size(), getNewLog());
             searchInfoQueue.offer(info);
         }
-
 
     }
 }
