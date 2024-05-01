@@ -41,14 +41,15 @@ class WordCounter {
         const words = content.split(" ");
         const count = words.filter(w => w.toLowerCase() === word.toLowerCase()).length;
         this.globalWordsCounter += count;
-        logger(url, count, this.globalWordsCounter, this.justVisited.length);
+        if (!this.stop){
+            logger(url, count, this.globalWordsCounter, this.justVisited.length);
+        }
         return count;
     }
 
     getAllLinksInAPage(content) {
         let listOfLinks = [];
       
-
         let links = content.match(/href="https*:\/\/[^"]+"/g);
         
         if (links) {
@@ -70,7 +71,6 @@ class WordCounter {
     }
 
     async countWords(word, url, deep, logger) {
-        if (this.stop) return ;
         const content = await this.getTextFromUrl(url);
         const count = this.countWordsInOnePage(word, url, content, logger);
         const counts = [count];

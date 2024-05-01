@@ -72,6 +72,8 @@
         // Construct the URL with the specified parameters
         const requestUrl = `http://localhost:3000/stop-process`;
 
+        document.getElementById('count').append(`------- PROCESS STOPPED -------\n`);
+
         // Send the request
         fetch(requestUrl)
             .then(response => response.json())
