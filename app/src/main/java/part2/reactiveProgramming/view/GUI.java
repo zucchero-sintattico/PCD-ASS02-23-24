@@ -1,15 +1,16 @@
 package part2.reactiveProgramming.view;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 import part2.reactiveProgramming.controller.Controller;
 import part2.reactiveProgramming.controller.ControllerImpl;
-import part2.reactiveProgramming.model.ReportListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-public class GUI extends JFrame implements ReportListener {
+public class GUI extends JFrame{
     private final static int DEFAULT_SIZE = 600;
     private JLabel labelAddress;
     private JLabel labelWord;
@@ -24,7 +25,7 @@ public class GUI extends JFrame implements ReportListener {
     private JButton buttonStop;
     private JPanel container;
     private JPanel buttonContainer;
-    private Controller controller = new ControllerImpl(this);
+    private Controller controller = new ControllerImpl();
 
     public GUI(){
         super();
@@ -127,7 +128,29 @@ public class GUI extends JFrame implements ReportListener {
     public void attachListeners(){
         this.buttonStart.addActionListener(e -> {
                 try {
+                    this.controller.subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(@NonNull Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(@NonNull String s) {
+                            System.out.println(s);
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
                     this.controller.startSearch("https://en.wikipedia.org", "wikipedia", 5);
+                    this.areaOutput.setText("");
                 } catch (ExecutionException | InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -138,10 +161,5 @@ public class GUI extends JFrame implements ReportListener {
             this.areaOutput.append(message);
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
         });
-    }
-
-    @Override
-    public void wordFounded(String currentUrl, Set<String> link, Long word) {
-        this.updateGUI(currentUrl + "\n [Link: ] " + link + " \n[Count]: " + word);
     }
 }

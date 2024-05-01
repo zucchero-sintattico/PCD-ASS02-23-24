@@ -1,7 +1,10 @@
 package part2.reactiveProgramming.model;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
@@ -9,6 +12,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -17,10 +21,10 @@ import java.util.stream.Collectors;
 
 public class ConcurrentReader implements Reader{
 
-    private ReportListener listener;
+    private final Subject<String> report;
 
-    public ConcurrentReader(ReportListener listener){
-        this.listener = listener;
+    public ConcurrentReader(){
+        this.report = PublishSubject.create();
     }
 
     private Observable<String> getAllLines(String url){
@@ -70,9 +74,9 @@ public class ConcurrentReader implements Reader{
 
     public void counter(String url, String word, int depth) throws InterruptedException, ExecutionException {
         var count = this.getWordCount(url, word).get();
-        var links = this.getAllPageLinks(url).get().stream().limit(depth).collect(Collectors.toSet());
-        this.listener.wordFounded(url, links, count);
-        System.out.println(url + "\n[Count]: " + count + "\n[Links]: " + links);
+        var links = new HashSet<>(this.getAllPageLinks(url).get());
+        this.report.onNext(url + "\n[Count]: " + count + "\n[Links]: " + links);
+        /*
         if(depth >= 0){
             links.forEach(link -> {
                 try {
@@ -82,7 +86,15 @@ public class ConcurrentReader implements Reader{
                     System.out.println("[Error]: " + e.getMessage());
                 }
             });
+        }else{
+            System.out.println("FINISH");
+            this.report.onComplete();
         }
+         */
+    }
+
+    public void subscribe(Observer<String> observer){
+        this.report.subscribe(observer);
     }
 
 }
