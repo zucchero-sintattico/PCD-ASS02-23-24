@@ -44,7 +44,6 @@ class WordCounter {
         if (!this.stop){
             logger(url, count, this.globalWordsCounter, this.justVisited.length);
         }
-        return count;
     }
 
     getAllLinksInAPage(content) {
