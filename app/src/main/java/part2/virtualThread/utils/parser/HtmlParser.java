@@ -11,7 +11,7 @@ public class HtmlParser<T> {
     public static List<String> extensionToFilter = Collections.unmodifiableList(new ArrayList<>());
 
     public static final String linkToMatch = "https://.*";
-//    public static final String linkToMatch = "https*://.*";
+    public static final String linkToMatchUnsafe = "http*://.*";
 
     public static void addExtensionToFilter(String... extension){
         extensionToFilter = Collections.unmodifiableList(Arrays.asList(extension));

@@ -6,11 +6,10 @@ import part2.virtualThread.view.SearchInfo;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class SearchState {
+
+    private final Monitor monitor = new StatefulMonitor(this::onUpdate);
 
     private final Set<String> linkFound = new HashSet<>();
     private final Set<String> linkExplored = new HashSet<>();
@@ -24,150 +23,80 @@ public class SearchState {
 
     private boolean searchEnded = false;
     private SearchListener listener;
-    private AtomicBoolean updateState = new AtomicBoolean(true);
 
-    private final ReentrantLock mutex = new ReentrantLock();
     private final BlockingQueue<SearchInfo> searchInfoQueue = new ArrayBlockingQueue<>(1);
 
     public SearchState(String url) {
         this.linkFound.add(url);
-        Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                updateState.set(true);
-            }
-        }, 0, 8);
+    }
+
+
+    protected void onUpdate() {
+       SearchInfo info = new SearchInfo(linkExplored.size(), wordOccurrences, threadAlive.size(), getNewLog());
+       searchInfoQueue.offer(info);
     }
 
     public Set<String> getLinkFound() {
-        try {
-            this.mutex.lock();
-            return Collections.unmodifiableSet(this.linkFound);
-        } finally {
-            this.mutex.unlock();
-        }
-
-
-    }
-
-    public Set<String> getLinkExplored() {
-        try {
-            this.mutex.lock();
-            return Collections.unmodifiableSet(this.linkExplored);
-        } finally {
-            this.mutex.unlock();
-        }
-    }
-
-    public Set<String> getLinkDown() {
-        try {
-            this.mutex.lock();
-            return Collections.unmodifiableSet(this.linkDown);
-        } finally {
-            this.mutex.unlock();
-        }
-    }
-
-    public int getWordOccurrences() {
-        try {
-            this.mutex.lock();
-            return this.wordOccurrences;
-        } finally {
-            this.mutex.unlock();
-        }
-    }
-
-    public Set<String> getThreadAlive() {
-        try {
-            this.mutex.lock();
-            return Collections.unmodifiableSet(this.threadAlive);
-        } finally {
-            this.mutex.unlock();
-        }
+        return monitor.lock(() -> Collections.unmodifiableSet(this.linkFound));
     }
 
     public String getNewLog() {
-        try{
-            mutex.lock();
+        return monitor.lock(() -> {
             String log = newLog.toString();
             newLog.setLength(0);
             return log;
-        } finally {
-            mutex.unlock();
-        }
+        });
     }
 
+    public Set<String> getLinkExplored() {
+        return monitor.lock(() -> Collections.unmodifiableSet(this.linkExplored));
+    }
+
+    public Set<String> getLinkDown() {
+        return monitor.lock(() -> Collections.unmodifiableSet(this.linkDown));
+    }
+
+    public int getWordOccurrences() {
+        return monitor.lock(() -> this.wordOccurrences);
+    }
+
+    public Set<String> getThreadAlive() {
+        return monitor.lock(() -> Collections.unmodifiableSet(this.threadAlive));
+    }
 
     public void setListener(SearchListener listener) {
-        try {
-            this.mutex.lock();
-            this.listener = listener;
-        } finally {
-            this.mutex.unlock();
-        }
+        monitor.lock(() -> this.listener = listener);
     }
 
     public void addThreadAlive(String urlString) {
-        try {
-            this.mutex.lock();
-            this.threadAlive.add(urlString);
-            updateState();
-        } finally {
-            this.mutex.unlock();
-        }
+        monitor.lock(() -> this.threadAlive.add(urlString));
     }
 
     public boolean isSimulationRunning() {
-        try {
-            this.mutex.lock();
-            return !this.searchEnded;
-        } finally {
-            this.mutex.unlock();
-        }
+        return monitor.lock(() -> !this.searchEnded);
     }
 
     public void log(String s) {
-        try {
-            this.mutex.lock();
+        monitor.lock(() -> {
             this.allLog.append(s);
             this.newLog.append(s);
-            updateState();
-        } finally {
-            this.mutex.unlock();
-        }
+        });
     }
 
     public void updateWordOccurrences(int count) {
-        try {
-            this.mutex.lock();
-            this.wordOccurrences += count;
-            updateState();
-        } finally {
-            this.mutex.unlock();
-        }
+        monitor.lock(() -> this.wordOccurrences += count);
     }
 
     public Optional<SearchListener> getListener() {
-        try {
-            this.mutex.lock();
-            return this.listener != null ? Optional.of(this.listener) : Optional.empty();
-        } finally {
-            this.mutex.unlock();
-        }
+        return monitor.lock(() -> this.listener != null ? Optional.of(this.listener) : Optional.empty());
     }
 
     public void stopSimulation() {
-        try {
-            this.mutex.lock();
-            this.searchEnded = true;
-            updateState();
-        } finally {
-            this.mutex.unlock();
-        }
+        monitor.lock(() -> this.searchEnded = true);
     }
 
     public Optional<SearchInfo> getSearchInfo() {
+        //TODO not monitored
         try {
             return Optional.ofNullable(searchInfoQueue.poll());
         } catch (Exception e) {
@@ -176,51 +105,22 @@ public class SearchState {
     }
 
     public void addLinkDown(String urlString) {
-        try {
-            this.mutex.lock();
-            this.linkDown.add(urlString);
-            updateState();
-        } finally {
-            this.mutex.unlock();
-        }
+        monitor.lock(() -> this.linkDown.add(urlString));
     }
 
     public void removeThreadAlive(String urlString) {
-        try {
-            this.mutex.lock();
-            this.threadAlive.remove(urlString);
-            updateState();
-        } finally {
-            this.mutex.unlock();
-        }
+        monitor.lock(() -> this.threadAlive.remove(urlString));
     }
 
     public void addLinkExplored(String urlString) {
-        try {
-            this.mutex.lock();
-            this.linkExplored.add(urlString);
-            updateState();
-        } finally {
-            this.mutex.unlock();
-        }
+        monitor.lock(() -> this.linkExplored.add(urlString));
     }
 
     public void addLinkFound(String line) {
-        try {
-            this.mutex.lock();
-            this.linkFound.add(line);
-            updateState();
-        } finally {
-            this.mutex.unlock();
-        }
+        monitor.lock(() -> this.linkFound.add(line));
     }
 
-    private void updateState(){
 
-        if (updateState.compareAndSet(true, false)){
-            SearchInfo info = new SearchInfo(linkExplored.size(), wordOccurrences, threadAlive.size(), getNewLog());
-            searchInfoQueue.offer(info);
-        }
 
-    }
+
 }
