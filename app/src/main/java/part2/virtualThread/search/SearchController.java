@@ -1,5 +1,6 @@
 package part2.virtualThread.search;
 
+import part2.virtualThread.state.SearchState;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 import part2.virtualThread.view.SearchInfo;
 
@@ -53,7 +54,7 @@ public class SearchController {
     }
 
     private void notifySearchEnded(SearchListener listener) {
-        listener.searchEnded(searchState.getLinkFound(), searchState.getLinkExplored(), searchState.getLinkDown(), searchState.getWordOccurrences(), SearchInfo.from(searchState));
+        listener.searchEnded(searchState.getLinkState().getLinkFound(), searchState.getLinkState().getLinkExplored(), searchState.getLinkState().getLinkDown(), searchState.getWordOccurrences(), SearchInfo.from(searchState));
     }
 
 

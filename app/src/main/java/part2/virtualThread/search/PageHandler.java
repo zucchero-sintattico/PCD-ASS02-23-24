@@ -1,5 +1,6 @@
 package part2.virtualThread.search;
 
+import part2.virtualThread.state.SearchState;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.Body;
 import part2.virtualThread.utils.parser.HtmlParser;
@@ -30,13 +31,13 @@ public class PageHandler extends Thread{
             try {
                 this.searchState.addThreadAlive(urlString);
                 if (this.searchState.isSimulationRunning()) {
-                    this.searchState.addLinkExplored(urlString);
+                    this.searchState.getLinkState().addLinkExplored(urlString);
                     this.searchState.log("Page requested: " + urlString + "\n");
                     this.read(requestHandler.getBody(urlString));
                 }
             } catch (Exception e) {
                 this.searchState.log("Page down: " + urlString + " Reason: " + e + "\n");
-                this.searchState.addLinkDown(urlString);
+                this.searchState.getLinkState().addLinkDown(urlString);
             } finally {
                 this.searchState.removeThreadAlive(urlString);
             }
@@ -91,8 +92,8 @@ public class PageHandler extends Thread{
     }
 
     private void evaluateLink(String line, List<String> toVisit) {
-       if (!this.searchState.getLinkFound().contains(line)) {
-           this.searchState.addLinkFound(line);
+       if (!this.searchState.getLinkState().getLinkFound().contains(line)) {
+           this.searchState.getLinkState().addLinkFound(line);
            toVisit.add(line);
        }
     }

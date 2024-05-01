@@ -1,7 +1,7 @@
 package part2;
 
 import org.junit.jupiter.api.Test;
-import part2.virtualThread.search.SearchState;
+import part2.virtualThread.state.SearchState;
 import part2.virtualThread.search.PageHandler;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 

@@ -1,7 +1,8 @@
-package part2.virtualThread.search;
+package part2.virtualThread.state;
 
 import part2.virtualThread.monitor.Monitor;
 import part2.virtualThread.monitor.StatefulMonitor;
+import part2.virtualThread.search.SearchListener;
 import part2.virtualThread.view.SearchInfo;
 
 import java.util.*;
@@ -12,9 +13,7 @@ public class SearchState {
 
     private final Monitor monitor = new StatefulMonitor(this::onUpdate);
 
-    private final Set<String> linkFound = new HashSet<>();
-    private final Set<String> linkExplored = new HashSet<>();
-    private final Set<String> linkDown = new HashSet<>();
+    private final LinkState linkState;
     private final Set<String> threadAlive = new HashSet<>();
     private int wordOccurrences = 0;
 
@@ -28,17 +27,13 @@ public class SearchState {
     private final BlockingQueue<SearchInfo> searchInfoQueue = new ArrayBlockingQueue<>(1);
 
     public SearchState(String url) {
-        this.linkFound.add(url);
+        this.linkState = new LinkState(url, monitor);
     }
 
 
     protected void onUpdate() {
-       SearchInfo info = new SearchInfo(linkExplored.size(), wordOccurrences, threadAlive.size(), getNewLog());
+       SearchInfo info = new SearchInfo(linkState.getLinkExplored().size(), wordOccurrences, threadAlive.size(), getNewLog());
        searchInfoQueue.offer(info);
-    }
-
-    public Set<String> getLinkFound() {
-        return monitor.lock(() -> Collections.unmodifiableSet(this.linkFound));
     }
 
     public String getNewLog() {
@@ -47,14 +42,6 @@ public class SearchState {
             newLog.setLength(0);
             return log;
         });
-    }
-
-    public Set<String> getLinkExplored() {
-        return monitor.lock(() -> Collections.unmodifiableSet(this.linkExplored));
-    }
-
-    public Set<String> getLinkDown() {
-        return monitor.lock(() -> Collections.unmodifiableSet(this.linkDown));
     }
 
     public int getWordOccurrences() {
@@ -105,21 +92,15 @@ public class SearchState {
         }
     }
 
-    public void addLinkDown(String urlString) {
-        monitor.lock(() -> this.linkDown.add(urlString));
+    public LinkState getLinkState() {
+        return this.linkState;
     }
 
     public void removeThreadAlive(String urlString) {
         monitor.lock(() -> this.threadAlive.remove(urlString));
     }
 
-    public void addLinkExplored(String urlString) {
-        monitor.lock(() -> this.linkExplored.add(urlString));
-    }
 
-    public void addLinkFound(String line) {
-        monitor.lock(() -> this.linkFound.add(line));
-    }
 
 
 
