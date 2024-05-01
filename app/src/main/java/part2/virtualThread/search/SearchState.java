@@ -1,6 +1,7 @@
-package part2.virtualThread.monitor;
+package part2.virtualThread.search;
 
-import part2.virtualThread.search.SearchListener;
+import part2.virtualThread.monitor.Monitor;
+import part2.virtualThread.monitor.StatefulMonitor;
 import part2.virtualThread.view.SearchInfo;
 
 import java.util.*;

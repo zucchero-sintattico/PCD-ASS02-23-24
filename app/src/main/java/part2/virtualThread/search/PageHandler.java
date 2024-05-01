@@ -1,13 +1,12 @@
 package part2.virtualThread.search;
 
-import part2.virtualThread.monitor.SafeCounter;
-import part2.virtualThread.monitor.SearchState;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.Body;
 import part2.virtualThread.utils.parser.HtmlParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PageHandler extends Thread{
 
@@ -51,7 +50,7 @@ public class PageHandler extends Thread{
         try{
             System.out.println("read");
             List<String> toVisit = new ArrayList<>();
-            SafeCounter wordFound = new SafeCounter();
+            AtomicInteger wordFound = new AtomicInteger();
 
             HtmlParser.parse(html)
                     .foreachLink(link -> evaluateLink(link, toVisit))
@@ -83,18 +82,18 @@ public class PageHandler extends Thread{
         }
     }
 
-    private void updateWordCount(SafeCounter wordFound) {
-        int count = wordFound.getValue();
+    private void updateWordCount(AtomicInteger wordFound) {
+        int count = wordFound.get();
         if (count > 0) {
             this.searchState.updateWordOccurrences(count);
-            this.searchState.log("Word found: " + wordFound.getValue() + " times in " + urlString + "\n");
+            this.searchState.log("Word found: " + count + " times in " + urlString + "\n");
 //            this.searchState.getListener().ifPresent(l -> l.countUpdated(wordFound.getValue(), this.urlString, this.searchState.getWordOccurrences()));
         }
     }
 
-    private void matchWord(String word, SafeCounter wordFound) {
+    private void matchWord(String word, AtomicInteger wordFound) {
         if(word.equals(this.word)){
-            wordFound.inc();
+            wordFound.incrementAndGet();
         }
     }
 
