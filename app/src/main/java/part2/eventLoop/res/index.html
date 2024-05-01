@@ -16,7 +16,7 @@
 
     <input type="text" id="wordInput" placeholder="Enter word" value="test">
     <input type="text" id="urlInput" placeholder="Enter URL" value="http://localhost:4000/?word=test&numberOfWords=2&numberOfLinks=2&path=0">
-    <input type="text" id="deepInput" placeholder="Enter deep" value="2">
+    <input type="text" id="deepInput" placeholder="Enter depth" value="2">
     <button id="sendButton">Send Request</button>
     <button id="stopButton">Stop Request</button>
     <p id="finalData">No data</p>
@@ -72,7 +72,7 @@
         // Construct the URL with the specified parameters
         const requestUrl = `http://localhost:3000/stop-process`;
 
-        document.getElementById('count').append(`------- PROCESS STOPPED -------\n`);
+        document.getElementById('count').append(`------- PROCESS STOPPING -------\n`);
 
         // Send the request
         fetch(requestUrl)

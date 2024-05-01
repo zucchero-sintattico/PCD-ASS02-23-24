@@ -24,7 +24,7 @@ class WordCounter {
     }
 
 
-    async getTextFromUrl(url) {
+    getTextFromUrl(url) {
         return new Promise((resolve) => {
             fetch(url)
                 .then(response => response.text())
@@ -70,23 +70,22 @@ class WordCounter {
   
     }
 
-    async countWords(word, url, deep, logger) {
+    async countWords(word, url, depth, logger) {
         const content = await this.getTextFromUrl(url);
-        const count = this.countWordsInOnePage(word, url, content, logger);
-        const counts = [count];
+        this.countWordsInOnePage(word, url, content, logger);
 
-        if (deep > 0) {
+
+        if (depth > 0) {
             const links = this.getAllLinksInAPage(content);
-            const linkCounts = await Promise.all(links.map(link => this.countWords(word, link, deep - 1, logger)));
-            counts.push(...linkCounts);
+            await Promise.all(links.map(link => this.countWords(word, link, depth - 1, logger)));
         }
 
-        return counts;
+
     }
 
-    async startCounting(word, url, deep, runInTheEnd, logger) {
+    async startCounting(word, url, depth, runInTheEnd, logger) {
         this.justVisited.push(url);
-        await this.countWords(word, url, deep, logger);
+        await this.countWords(word, url, depth, logger);
         runInTheEnd(this.globalWordsCounter);
 
 
