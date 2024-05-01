@@ -5,6 +5,7 @@ import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 import part2.virtualThread.view.SearchInfo;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SearchController {
 
@@ -12,6 +13,7 @@ public class SearchController {
     private Thread virtualSearchThread;
     private boolean searchEnded = false;
     private SearchState searchState;
+
 
     public SearchController(SearchListener listener) {
         this.listener = listener;

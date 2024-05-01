@@ -3,20 +3,18 @@ package part2.virtualThread.monitor;
 import part2.virtualThread.search.SearchListener;
 import part2.virtualThread.view.SearchInfo;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SearchState {
 
-    private final Set<String> linkFound = new HashSet();
-    private final Set<String> linkExplored = new HashSet();
-    private final Set<String> linkDown = new HashSet();
+    private final Set<String> linkFound = new HashSet<>();
+    private final Set<String> linkExplored = new HashSet<>();
+    private final Set<String> linkDown = new HashSet<>();
     private final Set<String> threadAlive = new HashSet<>();
     private int wordOccurrences = 0;
 
@@ -26,6 +24,7 @@ public class SearchState {
 
     private boolean searchEnded = false;
     private SearchListener listener;
+    private AtomicBoolean updateState = new AtomicBoolean(true);
 
     private int opCounter = 0;
     private final ReentrantLock mutex = new ReentrantLock();
@@ -33,6 +32,13 @@ public class SearchState {
 
     public SearchState(String url) {
         this.linkFound.add(url);
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                updateState.set(true);
+            }
+        }, 0, 8);
     }
 
     public Set<String> getLinkFound() {
@@ -42,6 +48,8 @@ public class SearchState {
         } finally {
             this.mutex.unlock();
         }
+
+
     }
 
     public Set<String> getLinkExplored() {
@@ -210,9 +218,9 @@ public class SearchState {
 
     private void updateState(){
 
-        opCounter++;
-        if (opCounter >= threadAlive.size() / 1000) {
-            opCounter = 0;
+//        opCounter++;
+        if (updateState.compareAndSet(true, false)){
+//            opCounter = 0;
             SearchInfo info = new SearchInfo(linkExplored.size(), wordOccurrences, threadAlive.size(), getNewLog());
             searchInfoQueue.offer(info);
         }
