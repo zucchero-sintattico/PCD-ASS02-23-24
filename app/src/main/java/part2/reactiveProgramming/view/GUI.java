@@ -1,16 +1,17 @@
 package part2.reactiveProgramming.view;
 
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
-import part2.reactiveProgramming.controller.Controller;
+import org.jetbrains.annotations.NotNull;
 import part2.reactiveProgramming.controller.ControllerImpl;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.ExecutionException;
 
-public class GUI extends JFrame{
+public class GUI extends JFrame implements Observer<Flowable<String>>{
     private final static int DEFAULT_SIZE = 600;
     private JLabel labelAddress;
     private JLabel labelWord;
@@ -25,7 +26,8 @@ public class GUI extends JFrame{
     private JButton buttonStop;
     private JPanel container;
     private JPanel buttonContainer;
-    private Controller controller = new ControllerImpl();
+    private ControllerImpl controller = new ControllerImpl();
+    private boolean started = false;
 
     public GUI(){
         super();
@@ -39,6 +41,8 @@ public class GUI extends JFrame{
         editAllComponentsProperties();
 
         attachListeners();
+
+        this.controller.attachSubscriberForNewLinks(this);
     }
 
     private void editAllComponentsProperties() {
@@ -127,39 +131,45 @@ public class GUI extends JFrame{
 
     public void attachListeners(){
         this.buttonStart.addActionListener(e -> {
-                try {
-                    this.controller.subscribe(new Observer<String>() {
-                        @Override
-                        public void onSubscribe(@NonNull Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(@NonNull String s) {
-                            System.out.println(s);
-                        }
-
-                        @Override
-                        public void onError(@NonNull Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-                    this.controller.startSearch("https://en.wikipedia.org", "wikipedia", 5);
-                    this.areaOutput.setText("");
-                } catch (ExecutionException | InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
+            this.areaOutput.setText("");
+            this.controller.start("https://en.wikipedia.org", "wikipedia", 1);
         });
     }
+
     public void updateGUI(String message){
         SwingUtilities.invokeLater(() -> {
-            this.areaOutput.append(message);
+            this.areaOutput.append(message + "\n");
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
+            this.started = true;
+            this.toogleButton();
         });
+    }
+
+    private void toogleButton() {
+        if(started){
+            this.buttonStart.setEnabled(false);
+        }else {
+            this.buttonStart.setEnabled(true);
+        }
+    }
+
+    @Override
+    public void onSubscribe(@NonNull Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(@NonNull Flowable<String> stringFlowable) {
+        stringFlowable.subscribe(element -> this.updateGUI("[New Link]" + element));
+    }
+
+    @Override
+    public void onError(@NonNull Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
     }
 }

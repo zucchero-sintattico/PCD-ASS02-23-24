@@ -3,9 +3,9 @@ package part2.reactiveProgramming.model.concurrent;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import kotlin.Pair;
-import part2.reactiveProgramming.model.Connection;
-import part2.reactiveProgramming.model.HtmlElement;
-import part2.reactiveProgramming.model.HttpsConnection;
+import part2.reactiveProgramming.model.connection.Connection;
+import part2.reactiveProgramming.model.connection.HtmlElement;
+import part2.reactiveProgramming.model.connection.HttpsConnection;
 
 import java.util.Optional;
 import java.util.Scanner;

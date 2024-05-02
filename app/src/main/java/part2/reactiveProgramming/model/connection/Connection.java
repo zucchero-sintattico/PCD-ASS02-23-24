@@ -1,4 +1,4 @@
-package part2.reactiveProgramming.model;
+package part2.reactiveProgramming.model.connection;
 
 import java.io.InputStream;
 import java.util.Optional;

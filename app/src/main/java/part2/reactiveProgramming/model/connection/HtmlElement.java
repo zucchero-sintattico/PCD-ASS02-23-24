@@ -1,4 +1,4 @@
-package part2.reactiveProgramming.model;
+package part2.reactiveProgramming.model.connection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

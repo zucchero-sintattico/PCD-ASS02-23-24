@@ -1,30 +1,28 @@
 package part2.reactiveProgramming.controller;
 
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observer;
-import part2.reactiveProgramming.model.ConcurrentReader;
-import part2.reactiveProgramming.model.Reader;
+import kotlin.Pair;
+import part2.reactiveProgramming.model.concurrent.ConcurrentHtmlReader;
+import part2.reactiveProgramming.model.concurrent.ConcurrentHtmlReaderImpl;
 
-import java.util.concurrent.ExecutionException;
+public class ControllerImpl {
 
-public class ControllerImpl implements Controller{
-    private Reader reader;
+    private ConcurrentHtmlReader reader;
 
-    public ControllerImpl(){
-        this.reader = new ConcurrentReader();
+    public ControllerImpl() {
+        this.reader = new ConcurrentHtmlReaderImpl();
     }
 
-    @Override
-    public void startSearch(String url, String word, int depth) throws ExecutionException, InterruptedException {
-        this.reader.counter(url, word, depth);
+    public void start(String url, String word, int depth){
+        this.reader.getWordCount(url, word, depth);
     }
 
-    @Override
-    public void subscribe(Observer<String> observer) {
-        this.reader.subscribe(observer);
+    public void attachSubscriberForNewLinks(Observer<Flowable<String>> observer){
+        this.reader.handlerNewLinkFound(observer);
     }
 
-    @Override
-    public void stopSearch() {
-
+    public void attachSubscriberForNewLineProcess(Observer<Flowable<Pair<String, Integer>>> observer){
+        this.reader.handlerNewLineProcessed(observer);
     }
 }
