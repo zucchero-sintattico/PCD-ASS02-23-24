@@ -170,6 +170,6 @@ public class GUI extends JFrame implements Observer<Flowable<String>>{
 
     @Override
     public void onComplete() {
-
+        System.out.println("Complete");
     }
 }

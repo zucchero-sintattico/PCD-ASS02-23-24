@@ -13,8 +13,8 @@ public class ConcurrentHtmlReaderImpl implements ConcurrentHtmlReader{
     private final FlowableWorker flowableWorker;
     private final Subject<SearchState> state;
     private final Subject<Flowable<Pair<String , Integer>>> lines;
-    private final SafeSet linksAlredyProcessed;
-    private final SafeCounter wordCounter;
+    private SafeSet linksAlredyProcessed;
+    private SafeCounter wordCounter;
 
     public ConcurrentHtmlReaderImpl() {
         this.flowableWorker = new FlowableWorkerImpl();
@@ -32,8 +32,6 @@ public class ConcurrentHtmlReaderImpl implements ConcurrentHtmlReader{
             var linksInPage = this.flowableWorker.getPageLinks(url);
             this.state.onNext(new SearchState(linksInPage, word, depth - 1));
             this.lines.onNext(this.flowableWorker.getLinesWordCount(url, word));
-        }else{
-            System.out.println("Basta");
         }
     }
 
@@ -61,6 +59,7 @@ public class ConcurrentHtmlReaderImpl implements ConcurrentHtmlReader{
             element.url().subscribe(link -> {
                 getWordCount(link, word, depth);
                 this.linksAlredyProcessed.add(link);
+                System.out.println("Processed link: " + link);
             });
         });
     }
@@ -71,8 +70,16 @@ public class ConcurrentHtmlReaderImpl implements ConcurrentHtmlReader{
                     .filter(e -> e > 0)
                     .doOnComplete(() -> {}).subscribe(e -> {
                         this.wordCounter.update(e);
+                        System.out.println("[Counter]: " + this.wordCounter.getValue());
                     });
         });
+    }
+
+    private void stopExecution(){
+        this.state.onComplete();
+        this.lines.onComplete();
+        this.linksAlredyProcessed = new SafeSet();
+        this.wordCounter = new SafeCounter();
     }
 
 }
