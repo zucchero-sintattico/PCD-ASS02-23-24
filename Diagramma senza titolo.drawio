@@ -1,6 +1,36 @@
-<mxfile host="app.diagrams.net" modified="2024-05-02T10:16:17.984Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15" version="24.2.7" etag="OUoM_LC0IJUog_lwiIdH" type="github">
-  <diagram name="Pagina-1" id="4QVMp1KCc7UBKDnKGSh5">
-    <mxGraphModel>
+<mxfile host="app.diagrams.net" modified="2024-05-02T10:20:11.762Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15" etag="o_9KY1HTsCnNhNbACJVU" version="24.2.7" type="github" pages="2">
+  <diagram name="EventLoopClientServer" id="4QVMp1KCc7UBKDnKGSh5">
+    <mxGraphModel dx="562" dy="381" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="b__UqmQYrL6kpeEzx6Qd-5" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="b__UqmQYrL6kpeEzx6Qd-1" target="b__UqmQYrL6kpeEzx6Qd-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b__UqmQYrL6kpeEzx6Qd-6" value="Socket.io response" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="b__UqmQYrL6kpeEzx6Qd-5">
+          <mxGeometry x="0.08" y="-1" relative="1" as="geometry">
+            <mxPoint x="-21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b__UqmQYrL6kpeEzx6Qd-1" value="Server" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="290" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b__UqmQYrL6kpeEzx6Qd-3" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="b__UqmQYrL6kpeEzx6Qd-2" target="b__UqmQYrL6kpeEzx6Qd-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b__UqmQYrL6kpeEzx6Qd-4" value="GET request [start/stop]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="b__UqmQYrL6kpeEzx6Qd-3">
+          <mxGeometry x="0.136" relative="1" as="geometry">
+            <mxPoint x="3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b__UqmQYrL6kpeEzx6Qd-2" value="Client" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="290" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="f-IM-e3YhVYMeLRoVAma" name="EventLoopStateChart">
+    <mxGraphModel dx="984" dy="666" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
