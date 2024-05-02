@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-05-02T12:21:54.396Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15" etag="Yniu9lix8sx-2lJ6xuhc" version="24.2.7" type="github" pages="2">
+<mxfile host="app.diagrams.net" modified="2024-05-02T12:22:54.260Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15" etag="g9HTIF1kCLIXphASq5TK" version="24.2.7" type="github" pages="2">
   <diagram name="EventLoopClientServer" id="4QVMp1KCc7UBKDnKGSh5">
     <mxGraphModel dx="562" dy="381" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -9,7 +9,7 @@
         </mxCell>
         <mxCell id="b__UqmQYrL6kpeEzx6Qd-6" value="Socket.io response" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="b__UqmQYrL6kpeEzx6Qd-5">
           <mxGeometry x="0.08" y="-1" relative="1" as="geometry">
-            <mxPoint x="-21" as="offset" />
+            <mxPoint x="-13" y="-1" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="b__UqmQYrL6kpeEzx6Qd-1" value="Server" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -20,7 +20,7 @@
         </mxCell>
         <mxCell id="b__UqmQYrL6kpeEzx6Qd-4" value="GET request [start/stop]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="b__UqmQYrL6kpeEzx6Qd-3">
           <mxGeometry x="0.136" relative="1" as="geometry">
-            <mxPoint x="3" as="offset" />
+            <mxPoint x="9" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="b__UqmQYrL6kpeEzx6Qd-2" value="Client" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
