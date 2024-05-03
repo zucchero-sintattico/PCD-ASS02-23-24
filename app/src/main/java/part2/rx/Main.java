@@ -31,13 +31,14 @@ public class Main {
         Body<Element> body = requestHandlerJSoup.getBody("https://www.google.com");
 
         HtmlParser.parse(body).foreachWord(word -> {
-            if (word.equals("Google")) {
+
+            if (word.equals("google")) {
                 count++;
                 System.out.println(count);
             }
         });
     }
-    
+
 
 
 
