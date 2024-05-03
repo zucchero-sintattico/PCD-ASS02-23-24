@@ -24,6 +24,7 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
 
 }
 
