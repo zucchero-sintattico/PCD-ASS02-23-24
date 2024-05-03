@@ -1,15 +1,12 @@
 package part2.virtualThread;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import part2.virtualThread.utils.Configuration;
+import part2.virtualThread.view.GUI;
 
 public class Main {
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        new Test();
+    public static void main(String[] args) {
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
+        Configuration.setup();
+        new GUI().display();
     }
-
 }
