@@ -3,6 +3,8 @@ package part2.rx;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
+
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 //import RequestHandlerJSoup
@@ -25,6 +27,7 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception {
+        /*
         //use RequestHandlerJSoup to get html links
         RequestHandlerJSoup requestHandlerJSoup = new RequestHandlerJSoup();
         //get the body of the uri
@@ -37,6 +40,7 @@ public class Main {
                 System.out.println(count);
             }
         });
+         */
     }
 
 
