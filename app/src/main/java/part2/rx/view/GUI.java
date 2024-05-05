@@ -190,12 +190,4 @@ public class GUI extends JFrame {
     public void display(){
         SwingUtilities.invokeLater(() -> this.setVisible(true));
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new GUI().setVisible(true);
-        });
-    }
-
-
 }
