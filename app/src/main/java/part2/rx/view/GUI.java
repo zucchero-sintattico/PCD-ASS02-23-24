@@ -6,7 +6,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import part2.rx.controller.SearchController;
 import part2.rx.model.ErrorReport;
 import part2.rx.model.SearchReport;
-import part2.virtualThread.view.SearchInfo;
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,7 +15,6 @@ public class GUI extends JFrame {
     private JLabel labelWord;
     private JLabel labelDepth;
     private JLabel labelOutput;
-    private JLabel labelLinkRequestedCount;
     private JLabel labelWordFoundCount;
     private JTextField fieldAddress;
     private JTextField fieldWord;
@@ -28,7 +26,7 @@ public class GUI extends JFrame {
     private JPanel container;
     private JPanel logContainer;
     private JPanel buttonContainer;
-    private SearchController controller = new SearchController();
+    private final SearchController controller = new SearchController();
 
     public GUI(){
         super();
@@ -89,8 +87,7 @@ public class GUI extends JFrame {
         this.fieldAddress.setFont(new Font(getName(), Font.PLAIN, 16));
         this.fieldWord.setFont(new Font(getName(), Font.PLAIN, 16));
         this.fieldDepth.setFont(new Font(getName(), Font.PLAIN, 16));
-        this.labelLinkRequestedCount.setFont(new Font(getName(), Font.PLAIN, 16));
-        this.labelWordFoundCount.setFont(new Font(getName(), Font.PLAIN, 16));
+        this.labelWordFoundCount.setFont(new Font(getName(), Font.BOLD, 16));
     }
 
     private void addAllComponentsIntoFrame() {
@@ -139,8 +136,7 @@ public class GUI extends JFrame {
         this.fieldAddress = new JTextField();
         this.fieldWord = new JTextField();
         this.fieldDepth = new JTextField();
-        this.labelLinkRequestedCount = new JLabel("...");
-        this.labelWordFoundCount = new JLabel("...");
+        this.labelWordFoundCount = new JLabel("Total Word Count: 0");
         this.areaOutput = new JTextArea("Output");
         this.scroll = new JScrollPane(this.areaOutput);
         this.buttonStart = new JButton("Start");
@@ -154,7 +150,6 @@ public class GUI extends JFrame {
         this.container.add(this.fieldAddress);
         this.container.add(this.fieldWord);
         this.container.add(this.fieldDepth);
-        this.logContainer.add(this.labelLinkRequestedCount);
         this.logContainer.add(this.labelWordFoundCount);
         this.buttonContainer.add(this.buttonStart);
         this.buttonContainer.add(this.buttonStop);
@@ -185,6 +180,9 @@ public class GUI extends JFrame {
                         "\n--->[Word count]: " +
                         r.wordFind() + "\n--->[Depth]: " +
                         r.depth() + "\n");
+                SwingUtilities.invokeLater(() -> {
+                    labelWordFoundCount.setText("Total Word Count: " + r.totalWordCount());
+                });
             }
 
             @Override

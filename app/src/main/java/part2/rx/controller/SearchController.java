@@ -1,5 +1,5 @@
 package part2.rx.controller;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -11,20 +11,21 @@ import java.util.stream.Stream;
 
 public class SearchController {
 
-    private Observable<String> searchObservable;
+    private Flowable<String> searchObservable;
     private Subject<SearchReport> searchReportSubject;
     private Subject<ErrorReport> errorReportSubject;
     private final RequestHandlerJSoup requestHandler;
+    private int count = 0;
 
     public SearchController() {
         this.requestHandler = new RequestHandlerJSoup();
-        this.searchObservable = Observable.empty();
+        this.searchObservable = Flowable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
     }
 
     public void wordCount(String url, String word, int depth){
-        this.searchObservable = Observable.just(url);
+        this.searchObservable = Flowable.just(url);
         for (int i = 0; i < depth; i++) {
             int index = i;
             this.searchObservable = this.searchObservable.map(link -> {
@@ -33,12 +34,12 @@ public class SearchController {
                     this.searchReportSubject.onNext(report);
                     return report.links().toList();
                 }catch (Exception e){
-                    //TODO: Manage Error
                     this.errorReportSubject.onNext(new ErrorReport(link, e.getMessage()));
-                    System.out.println(e.getMessage());
                     return Stream.of(e.getMessage()).toList();
                 }
-            }).flatMap(Observable::fromIterable).subscribeOn(Schedulers.computation());
+            })
+                    .flatMap(Flowable::fromIterable)
+                    .subscribeOn(Schedulers.computation());
         }
         this.searchObservable.doOnComplete(this::reset).subscribe();
     }
@@ -47,15 +48,17 @@ public class SearchController {
         var body = this.requestHandler.getBody(url);
         var links = body.getLinks();
         var wordCounter = Long.valueOf(body.getWords().filter(w -> w.contains(word)).count()).intValue();
-        return new SearchReport(url, wordCounter, depth, links);
+        this.count += wordCounter;
+        return new SearchReport(url, wordCounter, depth, links, count);
     }
 
     public void reset(){
         this.searchReportSubject.onComplete();
         this.errorReportSubject.onComplete();
-        this.searchObservable = Observable.empty();
+        this.searchObservable = Flowable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
+        this.count = 0;
     }
 
     public void attachObserver(Observer<SearchReport> observer){
