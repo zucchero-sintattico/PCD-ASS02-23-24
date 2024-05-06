@@ -7,8 +7,6 @@ import io.reactivex.rxjava3.subjects.Subject;
 import part2.rx.model.ErrorReport;
 import part2.rx.model.SearchReport;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
-import rx.observables.MathObservable;
-
 import java.util.stream.Stream;
 
 public class SearchController {
@@ -16,7 +14,6 @@ public class SearchController {
     private Observable<String> searchObservable;
     private Subject<SearchReport> searchReportSubject;
     private Subject<ErrorReport> errorReportSubject;
-    private Subject<Integer> totalCountSubject;
     private final RequestHandlerJSoup requestHandler;
 
     public SearchController() {
@@ -24,7 +21,6 @@ public class SearchController {
         this.searchObservable = Observable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
-        this.totalCountSubject = PublishSubject.create();
     }
 
     public void wordCount(String url, String word, int depth){
@@ -35,7 +31,6 @@ public class SearchController {
                 try{
                     SearchReport report = this.getReport(link, word, index);
                     this.searchReportSubject.onNext(report);
-                    this.totalCountSubject.onNext();
                     return report.links().toList();
                 }catch (Exception e){
                     //TODO: Manage Error
@@ -58,11 +53,9 @@ public class SearchController {
     public void reset(){
         this.searchReportSubject.onComplete();
         this.errorReportSubject.onComplete();
-        this.totalCountSubject.onComplete();
         this.searchObservable = Observable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
-        this.totalCountSubject = PublishSubject.create();
     }
 
     public void attachObserver(Observer<SearchReport> observer){
@@ -73,11 +66,4 @@ public class SearchController {
         this.errorReportSubject.subscribeOn(Schedulers.io()).subscribe(observer);
     }
 
-    public void attachTotalCountObserver(Observer<Integer> observer){
-        this.totalCountSubject.subscribeOn(Schedulers.io()).subscribe(observer);
-    }
-
-    private void updateCounter(SearchReport report){
-        //MathObservable.sumInteger(this.searchReportSubject.map());
-    }
 }

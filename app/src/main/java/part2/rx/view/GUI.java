@@ -18,7 +18,6 @@ public class GUI extends JFrame {
     private JLabel labelOutput;
     private JLabel labelLinkRequestedCount;
     private JLabel labelWordFoundCount;
-    private JLabel labelThreadAliveCount;
     private JTextField fieldAddress;
     private JTextField fieldWord;
     private JTextField fieldDepth;
@@ -92,7 +91,6 @@ public class GUI extends JFrame {
         this.fieldDepth.setFont(new Font(getName(), Font.PLAIN, 16));
         this.labelLinkRequestedCount.setFont(new Font(getName(), Font.PLAIN, 16));
         this.labelWordFoundCount.setFont(new Font(getName(), Font.PLAIN, 16));
-        this.labelThreadAliveCount.setFont(new Font(getName(), Font.PLAIN, 16));
     }
 
     private void addAllComponentsIntoFrame() {
@@ -143,7 +141,6 @@ public class GUI extends JFrame {
         this.fieldDepth = new JTextField();
         this.labelLinkRequestedCount = new JLabel("...");
         this.labelWordFoundCount = new JLabel("...");
-        this.labelThreadAliveCount = new JLabel("...");
         this.areaOutput = new JTextArea("Output");
         this.scroll = new JScrollPane(this.areaOutput);
         this.buttonStart = new JButton("Start");
@@ -159,7 +156,6 @@ public class GUI extends JFrame {
         this.container.add(this.fieldDepth);
         this.logContainer.add(this.labelLinkRequestedCount);
         this.logContainer.add(this.labelWordFoundCount);
-        this.logContainer.add(this.labelThreadAliveCount);
         this.buttonContainer.add(this.buttonStart);
         this.buttonContainer.add(this.buttonStop);
     }
