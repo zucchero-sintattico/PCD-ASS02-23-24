@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import part2.rx.controller.SearchController;
+import part2.rx.model.ErrorReport;
 import part2.rx.model.SearchReport;
 import part2.virtualThread.view.SearchInfo;
 import javax.swing.*;
@@ -54,32 +55,8 @@ public class GUI extends JFrame {
             String address = this.fieldAddress.getText();
             String word = this.fieldWord.getText();
             int depth = Integer.parseInt(this.fieldDepth.getText());
-            this.controller.attachObserver(new Observer<SearchReport>() {
-                @Override
-                public void onSubscribe(@NonNull Disposable d) {
-                    updateGUI("\n********** PROCESS STARTED **********\n\n");
-                }
-
-                @Override
-                public void onNext(@NonNull SearchReport r) {
-                    updateGUI("[Link]: " + r.url() +
-                            "\n--->[Word count]: " +
-                            r.wordFind() + "\n--->[Depth]: " +
-                            r.depth() + "\n");
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                    updateGUI("[Error]: " + e.getMessage());
-                }
-
-                @Override
-                public void onComplete() {
-                    updateGUI("\n********** PROCESS ENDED **********\n");
-                    buttonStart.setEnabled(true);
-                    buttonStop.setEnabled(false);
-                }
-            });
+            this.controller.attachObserver(this.resultObserver());
+            this.controller.attachErrorObserver(this.errorObserver());
             this.areaOutput.setText("");
             this.buttonStart.setEnabled(false);
             this.buttonStop.setEnabled(true);
@@ -197,5 +174,58 @@ public class GUI extends JFrame {
 
     public void display(){
         SwingUtilities.invokeLater(() -> this.setVisible(true));
+    }
+
+    private Observer<SearchReport> resultObserver(){
+        return new Observer<SearchReport>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                updateGUI("\n********** PROCESS STARTED **********\n\n");
+            }
+
+            @Override
+            public void onNext(@NonNull SearchReport r) {
+                updateGUI("[Link]: " + r.url() +
+                        "\n--->[Word count]: " +
+                        r.wordFind() + "\n--->[Depth]: " +
+                        r.depth() + "\n");
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                updateGUI("[Error]: " + e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                updateGUI("\n********** PROCESS ENDED **********\n");
+                buttonStart.setEnabled(true);
+                buttonStop.setEnabled(false);
+            }
+        };
+    }
+
+    private Observer<ErrorReport> errorObserver(){
+        return new Observer<ErrorReport>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull ErrorReport errorReport) {
+                updateGUI("[Error]: " + errorReport.url() + "\n ---> " + errorReport.message() + "\n");
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
     }
 }

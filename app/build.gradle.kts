@@ -31,7 +31,7 @@ dependencies {
     implementation("log4j:log4j:1.2.17")
     implementation("io.socket:socket.io-client:2.1.0")
     implementation("io.reactivex.rxjava3:rxjava:3.1.8")
-
+    implementation("io.reactivex:rxjava-math:1.0.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
