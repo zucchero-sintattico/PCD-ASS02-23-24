@@ -46,7 +46,7 @@ public class GUI extends JFrame {
         //temp setting
         this.fieldAddress.setText("https://www.google.com/");
         this.fieldWord.setText("google");
-        this.fieldDepth.setText("3");
+        this.fieldDepth.setText("2");
     }
 
     private void addListeners() {
@@ -57,12 +57,15 @@ public class GUI extends JFrame {
             this.controller.attachObserver(new Observer<SearchReport>() {
                 @Override
                 public void onSubscribe(@NonNull Disposable d) {
-
+                    updateGUI("\n********** PROCESS STARTED **********\n\n");
                 }
 
                 @Override
                 public void onNext(@NonNull SearchReport r) {
-                    updateGUI("[Link]: " + r.url() + "\n--->[Word count]: " + r.wordFind() + "\n--->[Depth]: " + r.depth());
+                    updateGUI("[Link]: " + r.url() +
+                            "\n--->[Word count]: " +
+                            r.wordFind() + "\n--->[Depth]: " +
+                            r.depth() + "\n");
                 }
 
                 @Override
@@ -72,22 +75,27 @@ public class GUI extends JFrame {
 
                 @Override
                 public void onComplete() {
+                    updateGUI("\n********** PROCESS ENDED **********\n");
                     buttonStart.setEnabled(true);
                     buttonStop.setEnabled(false);
                 }
             });
+            this.areaOutput.setText("");
             this.buttonStart.setEnabled(false);
+            this.buttonStop.setEnabled(true);
             this.controller.wordCount(address, word, depth);
         });
 
         this.buttonStop.addActionListener(e -> {
             this.buttonStop.setEnabled(false);
+            this.buttonStart.setEnabled(true);
+            this.controller.reset();
         });
     }
 
     private void updateGUI(String message){
         SwingUtilities.invokeLater(() -> {
-            this.areaOutput.setText(message);
+            this.areaOutput.append(message);
         });
     }
 
