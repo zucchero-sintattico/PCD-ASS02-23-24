@@ -7,6 +7,8 @@ import io.reactivex.rxjava3.subjects.Subject;
 import part2.rx.model.SearchReport;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 
+import java.util.stream.Stream;
+
 public class SearchController {
 
     private Observable<String> searchObservable;
@@ -25,16 +27,21 @@ public class SearchController {
             for (int i = 0; i < depth; i++) {
                 int index = i;
                 this.searchObservable = this.searchObservable.map(link -> {
-                    SearchReport report = this.getReport(link, word, index);
-                    this.searchReportSubject.onNext(report);
-                    return report.links().toList();
+                    try{
+                        SearchReport report = this.getReport(link, word, index);
+                        this.searchReportSubject.onNext(report);
+                        return report.links().toList();
+                    }catch (Exception e){
+                        //TODO: Manage Error
+                        System.out.println(e.getMessage());
+                        return Stream.of(e.getMessage()).toList();
+                    }
                 }).flatMap(Observable::fromIterable).subscribeOn(Schedulers.computation());
             }
             this.searchObservable.blockingSubscribe();
             this.reset();
 
         }).start();
-
     }
 
     private SearchReport getReport(String url, String word, int depth) throws Exception {
