@@ -11,12 +11,17 @@ import java.util.Map;
 public class Configuration {
 
     public static final Boolean VISIT_SAME_LINK = true;
+
     public static final Boolean USE_DEFAULTS = true;
+
     public static final int GUI_UPDATE_MS = 32;
+
     public static final int STATE_UPDATE_MS = 8;
 
     private static final String DEFAULT_ROOT = "https://www.google.com/";
+
     private static final int DEFAULT_DEPTH = 2;
+
     private static final String DEFAULT_WORD = "google";
 
     private static final String excludedExtensionPath = "app/src/main/java/part2/resources/file/ExtensionToExclude.txt";
@@ -49,4 +54,5 @@ public class Configuration {
     public static String defaultWord() {
         return DEFAULT_WORD;
     }
+
 }

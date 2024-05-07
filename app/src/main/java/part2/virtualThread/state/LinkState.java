@@ -1,7 +1,6 @@
 package part2.virtualThread.state;
 
 import part2.virtualThread.monitor.Monitor;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +8,9 @@ import java.util.Set;
 public class LinkState {
 
     private final Set<String> linkFound = new HashSet<>();
+
     private final Set<String> linkExplored = new HashSet<>();
+
     private final Set<String> linkDown = new HashSet<>();
 
     private final Monitor monitor;

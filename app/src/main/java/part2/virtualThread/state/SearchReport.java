@@ -3,7 +3,6 @@ package part2.virtualThread.state;
 import part2.virtualThread.monitor.Monitor;
 import part2.virtualThread.monitor.StatefulMonitor;
 import part2.virtualThread.search.SearchListener;
-
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

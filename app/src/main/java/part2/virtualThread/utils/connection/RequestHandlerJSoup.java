@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import static part2.virtualThread.utils.parser.HtmlParser.*;
 
-public class RequestHandlerJSoup implements RequestHandler<Element>{
+public class RequestHandlerJSoup implements RequestHandler<Element> {
 
     private final boolean safe;
 

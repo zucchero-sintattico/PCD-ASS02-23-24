@@ -9,13 +9,18 @@ import part2.virtualThread.utils.parser.HtmlParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageHandler extends Thread{
+public class PageHandler extends Thread {
 
     private final String urlString;
+
     private final String word;
+
     private final int depth;
+
     private final SearchReport searchState;
+
     private final List<Thread> handlers = new ArrayList<>();
+
     private final RequestHandler<?> requestHandler;
 
     public PageHandler(String urlString, String word, int depth, SearchReport searchState, RequestHandler<?> requestHandler){
@@ -46,12 +51,10 @@ public class PageHandler extends Thread{
     private void read(Body<?> html) {
         try{
             List<String> toVisit = new ArrayList<>();
-
             int wordFound = HtmlParser.parse(html)
                     .foreachLink(link -> evaluateLink(link, toVisit))
                     .doAction(() -> visitLinks(toVisit, handlers))
                     .countWords(word);
-
             this.updateWordCount(wordFound);
             for (Thread t : handlers) {
                 t.join();

@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.Optional;
 
 public class GUI extends JFrame implements SearchListener {
+
     private final static int DEFAULT_SIZE = 700;
     private JLabel labelAddress;
     private JLabel labelWord;
@@ -32,8 +33,11 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel container;
     private JPanel logContainer;
     private JPanel buttonContainer;
+
     private final SearchController searchController = new SearchController(this);
+
     private boolean bruteStopped;
+
     private final Timer updater = new Timer(Configuration.GUI_UPDATE_MS, e -> {
         Optional<SearchInfo> info = this.searchController.getSearchInfo();
         info.ifPresent(this::updateView);
