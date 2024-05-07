@@ -192,7 +192,7 @@ public class GUI extends JFrame implements SearchListener {
             this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
             this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
             this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
-            this.areaOutput.append(info.newLog());
+            this.areaOutput.append(info.newLog().getNewLogAndReset());
             this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
         });
 

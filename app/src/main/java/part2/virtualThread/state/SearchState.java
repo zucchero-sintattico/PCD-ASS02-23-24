@@ -8,6 +8,7 @@ import part2.virtualThread.view.SearchInfo;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SearchState {
 
@@ -18,8 +19,8 @@ public class SearchState {
     private int wordOccurrences = 0;
 
 
-    private final StringBuilder allLog = new StringBuilder();
-    private final StringBuilder newLog = new StringBuilder();
+    private final LogBuffer logs = new LogBuffer(monitor);
+
 
     private boolean searchEnded = false;
     private SearchListener listener;
@@ -32,17 +33,21 @@ public class SearchState {
 
 
     protected void onUpdate() {
-       SearchInfo info = new SearchInfo(linkState.getLinkExplored().size(), wordOccurrences, threadAlive.size(), getNewLog());
+       SearchInfo info = new SearchInfo(linkState.getLinkExplored().size(), wordOccurrences, threadAlive.size(), getLogs());
        searchInfoQueue.offer(info);
     }
 
-    public String getNewLog() {
-        return monitor.lock(() -> {
-            String log = newLog.toString();
-            newLog.setLength(0);
-            return log;
-        });
+    public LogBuffer getLogs() {
+        return monitor.lock(() -> logs);
     }
+
+//    public String getNewLog() {
+//        return monitor.lock(() -> {
+//            String log = newLog.toString();
+//            newLog.setLength(0);
+//            return log;
+//        });
+//    }
 
     public int getWordOccurrences() {
         return monitor.lock(() -> this.wordOccurrences);
@@ -65,10 +70,7 @@ public class SearchState {
     }
 
     public void log(String s) {
-        monitor.lock(() -> {
-            this.allLog.append(s);
-            this.newLog.append(s);
-        });
+        monitor.lock(() -> this.logs.append(s));
     }
 
     public void updateWordOccurrences(int count) {
@@ -99,9 +101,6 @@ public class SearchState {
     public void removeThreadAlive(String urlString) {
         monitor.lock(() -> this.threadAlive.remove(urlString));
     }
-
-
-
 
 
 

@@ -14,6 +14,7 @@ public class StatefulMonitor implements Monitor {
     private final Lock lock = new ReentrantLock();
     protected final AtomicBoolean updateState = new AtomicBoolean(true);
     private final Runnable onUpdate;
+    private boolean updating = false;
 
     public StatefulMonitor(Runnable onUpdate) {
         Timer timer = new Timer();
@@ -30,7 +31,7 @@ public class StatefulMonitor implements Monitor {
         try {
             this.lock.lock();
             T result = function.call();
-            this.update();
+            if (!updating){this.update();}
             return result;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -43,7 +44,7 @@ public class StatefulMonitor implements Monitor {
         try {
             this.lock.lock();
             function.run();
-            this.update();
+            if (!updating){this.update();}
         } finally {
             lock.unlock();
         }
@@ -51,7 +52,9 @@ public class StatefulMonitor implements Monitor {
 
     private void update() {
         if (updateState.compareAndSet(true, false)){
+            updating = true;
             onUpdate.run();
+            updating = false;
         }
     }
 
