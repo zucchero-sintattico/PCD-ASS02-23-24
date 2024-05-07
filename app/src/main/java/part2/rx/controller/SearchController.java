@@ -18,7 +18,15 @@ public class SearchController {
     private int count = 0;
 
     public SearchController() {
-        this.requestHandler = new RequestHandlerJSoup(false);
+        this.requestHandler = new RequestHandlerJSoup();
+        this.searchObservable = Flowable.empty();
+        this.searchReportSubject = PublishSubject.create();
+        this.errorReportSubject = PublishSubject.create();
+    }
+
+    //Only for test
+    public SearchController(boolean test){
+        this.requestHandler = new RequestHandlerJSoup(test);
         this.searchObservable = Flowable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
@@ -26,7 +34,7 @@ public class SearchController {
 
     public void wordCount(String url, String word, int depth){
         this.searchObservable = Flowable.just(url).subscribeOn(Schedulers.io());
-        for (int i = 0; i < depth; i++) {
+        for (int i = 0; i <= depth; i++) {
             int index = i;
             this.searchObservable = this.searchObservable.map(link -> {
                 try{
