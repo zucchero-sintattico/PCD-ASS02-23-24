@@ -84,6 +84,10 @@ public class SearchReport {
     }
 
     public Optional<SearchListener> removeListener() {
-        return monitor.lock(() -> Optional.ofNullable(listener));
+        return monitor.lock(() -> {
+            SearchListener listener = this.listener;
+            this.listener = null;
+            return Optional.ofNullable(listener);
+        });
     }
 }
