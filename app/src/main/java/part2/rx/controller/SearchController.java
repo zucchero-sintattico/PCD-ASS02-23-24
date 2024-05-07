@@ -9,7 +9,7 @@ import part2.rx.model.SearchReport;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 import java.util.stream.Stream;
 
-public class SearchController {
+public class SearchController{
 
     private Flowable<String> searchObservable;
     private Subject<SearchReport> searchReportSubject;
@@ -75,5 +75,4 @@ public class SearchController {
     public void attachErrorObserver(Observer<ErrorReport> observer){
         this.errorReportSubject.subscribeOn(Schedulers.io()).subscribe(observer);
     }
-
 }

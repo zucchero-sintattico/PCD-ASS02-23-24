@@ -1,10 +1,10 @@
 package part2.rx.view;
 
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import part2.rx.controller.SearchController;
-import part2.rx.model.ErrorReport;
+import org.jetbrains.annotations.NotNull;
+import part2.rx.controller.Controller;
+import part2.rx.controller.ControllerImpl;
+import part2.rx.controller.ErrorObserver;
+import part2.rx.controller.ResultObserver;
 import part2.rx.model.SearchReport;
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,7 @@ public class GUI extends JFrame {
     private JPanel container;
     private JPanel logContainer;
     private JPanel buttonContainer;
-    private final SearchController controller = new SearchController();
+    private final Controller controller = new ControllerImpl();
 
     public GUI(){
         super();
@@ -52,19 +52,41 @@ public class GUI extends JFrame {
             String address = this.fieldAddress.getText();
             String word = this.fieldWord.getText();
             int depth = Integer.parseInt(this.fieldDepth.getText());
-            this.controller.attachObserver(this.resultObserver());
-            this.controller.attachErrorObserver(this.errorObserver());
+            this.attachNextElementObserver();
+            this.attachErrorObserver();
             this.areaOutput.setText("");
             this.buttonStart.setEnabled(false);
             this.buttonStop.setEnabled(true);
-            this.controller.wordCount(address, word, depth);
+            this.controller.startSearch(address, word, depth);
         });
 
         this.buttonStop.addActionListener(e -> {
             this.buttonStop.setEnabled(false);
             this.buttonStart.setEnabled(true);
-            this.controller.reset();
+            this.controller.stopSearch();
         });
+    }
+
+    private void attachErrorObserver() {
+        ErrorObserver errorObserver = new ErrorObserver(errorReport -> {
+            updateGUI("[Error]: " + errorReport.url() + "\n ---> " + errorReport.message() + "\n");
+        });
+        this.controller.subscribeNewError(errorObserver);
+    }
+
+    private void attachNextElementObserver() {
+        ResultObserver resultObserver = new ResultObserver(report -> {
+            updateGUI("[Link]: " + report.url() +
+                    "\n--->[Word count]: " +
+                    report.wordFind() + "\n--->[Depth]: " +
+                    report.depth() + "\n");
+            updateTotalWordCount(report);
+        }, () -> {
+            updateGUI("\n********** PROCESS ENDED **********\n");
+            buttonStart.setEnabled(true);
+            buttonStop.setEnabled(false);
+        });
+        this.controller.subscribeNewResult(resultObserver);
     }
 
     private void updateGUI(String message){
@@ -167,59 +189,7 @@ public class GUI extends JFrame {
         SwingUtilities.invokeLater(() -> this.setVisible(true));
     }
 
-    private Observer<SearchReport> resultObserver(){
-        return new Observer<SearchReport>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                updateGUI("\n********** PROCESS STARTED **********\n\n");
-            }
-
-            @Override
-            public void onNext(@NonNull SearchReport r) {
-                updateGUI("[Link]: " + r.url() +
-                        "\n--->[Word count]: " +
-                        r.wordFind() + "\n--->[Depth]: " +
-                        r.depth() + "\n");
-                SwingUtilities.invokeLater(() -> {
-                    labelWordFoundCount.setText("Total Word Count: " + r.totalWordCount());
-                });
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                updateGUI("[Error]: " + e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-                updateGUI("\n********** PROCESS ENDED **********\n");
-                buttonStart.setEnabled(true);
-                buttonStop.setEnabled(false);
-            }
-        };
-    }
-
-    private Observer<ErrorReport> errorObserver(){
-        return new Observer<ErrorReport>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(@NonNull ErrorReport errorReport) {
-                updateGUI("[Error]: " + errorReport.url() + "\n ---> " + errorReport.message() + "\n");
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
+    private void updateTotalWordCount(@NotNull SearchReport r) {
+        SwingUtilities.invokeLater(() -> labelWordFoundCount.setText("Total Word Count: " + r.totalWordCount()));
     }
 }
