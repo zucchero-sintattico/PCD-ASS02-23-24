@@ -16,7 +16,7 @@
 
     <input type="text" id="wordInput" placeholder="Enter word" value="test">
     <input type="text" id="urlInput" placeholder="Enter URL" value="http://localhost:4000/?word=test&numberOfWords=2&numberOfLinks=2&path=0">
-    <input type="text" id="deepInput" placeholder="Enter depth" value="2">
+    <input type="text" id="depthInput" placeholder="Enter depth" value="2">
     <button id="sendButton">Send Request</button>
     <button id="stopButton">Stop Request</button>
     <p id="finalData">No data</p>
@@ -52,8 +52,8 @@
         // Construct the URL with the specified parameters
         const word = document.getElementById('wordInput').value;
         const url = document.getElementById('urlInput').value;
-        const deep = document.getElementById('deepInput').value;
-        const requestUrl = `http://localhost:3000/count-words?word=${word}&url=${encodeURIComponent(url)}&deep=${deep}`;
+        const depth = document.getElementById('depthInput').value;
+        const requestUrl = `http://localhost:3000/count-words?word=${word}&url=${encodeURIComponent(url)}&depth=${depth}`;
 
         // Send the request
         fetch(requestUrl)
