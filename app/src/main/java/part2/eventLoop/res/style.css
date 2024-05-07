@@ -52,7 +52,13 @@
     #finalData {
         font-weight: bold;
     }
-    #count {
-        font-weight: bold;
-        color: blue;
+
+    #count{
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+        height: 200px;
+        border: 1px solid #ccc;
+        padding: 5px;
     }
+
