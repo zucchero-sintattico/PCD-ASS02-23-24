@@ -6,10 +6,8 @@ import part2.virtualThread.utils.Configuration;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.Body;
 import part2.virtualThread.utils.parser.HtmlParser;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PageHandler extends Thread{
 
@@ -49,18 +47,16 @@ public class PageHandler extends Thread{
 
         try{
             List<String> toVisit = new ArrayList<>();
-            AtomicInteger wordFound = new AtomicInteger();
 
-            HtmlParser.parse(html)
+            int wordFound = HtmlParser.parse(html)
                     .foreachLink(link -> evaluateLink(link, toVisit))
                     .doAction(() -> visitLinks(toVisit, handlers))
-                    .foreachWord(word -> matchWord(word, wordFound));
+                    .countWords(word);
 
             this.updateWordCount(wordFound);
             for (Thread t : handlers) {
                 t.join();
             }
-
         } catch (InterruptedException e) {
             System.out.println("Thread interrupted");
         }
@@ -71,25 +67,17 @@ public class PageHandler extends Thread{
             StringBuilder sb = new StringBuilder();
             for (String link: toVisit) {
                 sb.append("Page found: ").append(link).append("\n");
-                Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,requestHandler));
+                Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth - 1, searchState,requestHandler));
                 handlers.add(vt);
             }
             this.searchState.getLogs().append((sb.toString()), LogType.INFO);
-
         }
     }
 
-    private void updateWordCount(AtomicInteger wordFound) {
-        int count = wordFound.get();
-        if (count > 0) {
-            this.searchState.updateWordOccurrences(count);
-            this.searchState.getLogs().append("Word found: " + count + " times in " + urlString + "\n", LogType.UPDATE);
-        }
-    }
-
-    private void matchWord(String word, AtomicInteger wordFound) {
-        if(word.equals(this.word)){
-            wordFound.incrementAndGet();
+    private void updateWordCount(int wordFound) {
+        if (wordFound > 0) {
+            this.searchState.updateWordOccurrences(wordFound);
+            this.searchState.getLogs().append("Word found: " + wordFound + " times in " + urlString + "\n", LogType.UPDATE);
         }
     }
 
