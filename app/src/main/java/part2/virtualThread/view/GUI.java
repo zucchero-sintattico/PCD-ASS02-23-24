@@ -2,6 +2,7 @@ package part2.virtualThread.view;
 
 import part2.virtualThread.search.SearchController;
 import part2.virtualThread.search.SearchListener;
+import part2.virtualThread.utils.Configuration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,9 +55,9 @@ public class GUI extends JFrame implements SearchListener {
 
         this.addListeners();
         //temp setting
-        this.fieldAddress.setText("https://www.google.com/");
-        this.fieldWord.setText("google");
-        this.fieldDepth.setText("3");
+        this.fieldAddress.setText(Configuration.defaultRoot());
+        this.fieldWord.setText(Configuration.defaultWord());
+        this.fieldDepth.setText(Configuration.defaultDepth());
     }
 
     private void addListeners() {

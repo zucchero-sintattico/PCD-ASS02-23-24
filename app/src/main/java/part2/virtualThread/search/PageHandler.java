@@ -2,6 +2,7 @@ package part2.virtualThread.search;
 
 import part2.virtualThread.state.LogType;
 import part2.virtualThread.state.SearchState;
+import part2.virtualThread.utils.Configuration;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.Body;
 import part2.virtualThread.utils.parser.HtmlParser;
@@ -93,7 +94,7 @@ public class PageHandler extends Thread{
     }
 
     private void evaluateLink(String line, List<String> toVisit) {
-       if (!this.searchState.getLinkState().getLinkFound().contains(line)) {
+       if (Configuration.VISIT_SAME_LINK || !this.searchState.getLinkState().getLinkFound().contains(line)) {
            this.searchState.getLinkState().addLinkFound(line);
            toVisit.add(line);
        }
