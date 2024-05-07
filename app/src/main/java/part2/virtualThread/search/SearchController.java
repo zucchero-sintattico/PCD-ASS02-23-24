@@ -1,8 +1,8 @@
 package part2.virtualThread.search;
 
-import part2.virtualThread.state.SearchState;
+import part2.virtualThread.state.SearchReport;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
-import part2.virtualThread.view.SearchInfo;
+import part2.virtualThread.state.SearchInfo;
 
 import java.util.Optional;
 
@@ -11,7 +11,7 @@ public class SearchController {
     private final SearchListener listener;
     private Thread virtualSearchThread;
     private boolean searchEnded = false;
-    private SearchState searchState;
+    private SearchReport searchState;
 
 
     public SearchController(SearchListener listener) {
@@ -20,22 +20,19 @@ public class SearchController {
 
     public void start(String address, String word, int depth) {
         this.searchEnded = false;
-        Thread.ofVirtual().start(() -> {
+        this.searchState = new SearchReport(address);
+        this.searchState.setListener(this.listener);
 
-            this.searchState = new SearchState(address);
-            this.searchState.setListener(this.listener);
+        Thread.ofVirtual().start(() -> {
             this.virtualSearchThread = Thread.ofVirtual().start(new PageHandler(address, word, depth, searchState, new RequestHandlerJSoup()));
             this.listener.searchStarted();
-
             try {
                 this.virtualSearchThread.join();
             } catch (InterruptedException e) {
                 System.out.println("Main Thread interrupted");
             }
             this.searchEnded = true;
-            //controlled checkandact, bruteStop can't be executed now
-
-            this.searchState.getListener().ifPresent(this::notifySearchEnded);
+            this.searchState.removeListener().ifPresent(this::notifySearchEnded);
         });
     }
 
@@ -47,8 +44,7 @@ public class SearchController {
 
     public void bruteStop() {
         if(this.virtualSearchThread != null && !this.searchEnded){
-            this.searchState.setListener(null);
-            this.notifySearchEnded(this.listener);
+            this.searchState.removeListener().ifPresent(this::notifySearchEnded);
             this.searchState.stopSimulation();
         }
     }

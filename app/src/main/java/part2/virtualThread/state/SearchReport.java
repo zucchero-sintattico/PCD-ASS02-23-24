@@ -3,14 +3,12 @@ package part2.virtualThread.state;
 import part2.virtualThread.monitor.Monitor;
 import part2.virtualThread.monitor.StatefulMonitor;
 import part2.virtualThread.search.SearchListener;
-import part2.virtualThread.view.SearchInfo;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class SearchState {
+public class SearchReport {
 
     private final Monitor monitor = new StatefulMonitor(this::onUpdate);
 
@@ -28,7 +26,7 @@ public class SearchState {
 
     private final BlockingQueue<SearchInfo> searchInfoQueue = new ArrayBlockingQueue<>(1);
 
-    public SearchState(String url) {
+    public SearchReport(String url) {
         this.linkState = new LinkState(url, monitor);
     }
 
@@ -57,16 +55,8 @@ public class SearchState {
         return monitor.lock(() -> !this.searchEnded);
     }
 
-//    public void log(String s) {
-//        monitor.lock(() -> this.logs.append(s));
-//    }
-
     public void updateWordOccurrences(int count) {
         monitor.lock(() -> this.wordOccurrences += count);
-    }
-
-    public Optional<SearchListener> getListener() {
-        return monitor.lock(() -> this.listener != null ? Optional.of(this.listener) : Optional.empty());
     }
 
     public void stopSimulation() {
@@ -93,4 +83,7 @@ public class SearchState {
         return logs;
     }
 
+    public Optional<SearchListener> removeListener() {
+        return monitor.lock(() -> Optional.ofNullable(listener));
+    }
 }

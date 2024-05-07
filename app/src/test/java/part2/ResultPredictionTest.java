@@ -1,7 +1,7 @@
 package part2;
 
 import org.junit.jupiter.api.Test;
-import part2.virtualThread.state.SearchState;
+import part2.virtualThread.state.SearchReport;
 import part2.virtualThread.search.PageHandler;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 
@@ -22,7 +22,7 @@ public class ResultPredictionTest {
         int numberOfWords = 1, depth = 5, numberOfLinks = 3;
         String word = "a";
         String url = "http://localhost:4000/?word="+word+"&numberOfWords="+numberOfWords+"&numberOfLinks="+numberOfLinks+"&path=0";
-        SearchState state = new SearchState(url);
+        SearchReport state = new SearchReport(url);
         Thread t = new PageHandler(url, word, depth, state, new RequestHandlerJSoup(false));
         t.start();
         try {

@@ -2,12 +2,12 @@ package part2.virtualThread.view;
 
 import part2.virtualThread.search.SearchController;
 import part2.virtualThread.search.SearchListener;
+import part2.virtualThread.state.SearchInfo;
 import part2.virtualThread.utils.Configuration;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Optional;
-import java.util.Set;
 
 public class GUI extends JFrame implements SearchListener {
     private final static int DEFAULT_SIZE = 700;
@@ -34,12 +34,9 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel buttonContainer;
     private final SearchController searchController = new SearchController(this);
     private boolean bruteStopped;
-    private final Timer updater = new Timer(32, e -> {
-        System.out.println("Updating");
+    private final Timer updater = new Timer(Configuration.GUI_UPDATE_MS, e -> {
         Optional<SearchInfo> info = this.searchController.getSearchInfo();
-        info.ifPresent(i -> System.out.println(i.treadAlive()));
         info.ifPresent(this::updateView);
-        System.out.println("ENDUpdated");
     });
 
     public GUI(){
@@ -54,10 +51,12 @@ public class GUI extends JFrame implements SearchListener {
         this.editAllComponentsProperties();
 
         this.addListeners();
-        //temp setting
-        this.fieldAddress.setText(Configuration.defaultRoot());
-        this.fieldWord.setText(Configuration.defaultWord());
-        this.fieldDepth.setText(Configuration.defaultDepth());
+
+        if(Configuration.USE_DEFAULTS){//temp setting
+            this.fieldAddress.setText(Configuration.defaultRoot());
+            this.fieldWord.setText(Configuration.defaultWord());
+            this.fieldDepth.setText(Configuration.defaultDepth());
+        }
     }
 
     private void addListeners() {
@@ -185,19 +184,15 @@ public class GUI extends JFrame implements SearchListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         this.setLocationRelativeTo(null);
-//        this.setResizable(false);
+        this.setResizable(false);
     }
 
-    public void updateView(SearchInfo info){
-        SwingUtilities.invokeLater(() -> {
-            this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
-            this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
-            this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
-            this.areaOutput.append(info.newLog().getNewLogAndReset());
-            this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
-        });
-
-
+    private void updateView(SearchInfo info){
+        this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
+        this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
+        this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
+        this.areaOutput.append(info.newLog().getNewLogAndReset());
+        this.areaOutput.setCaretPosition(this.areaOutput.getDocument().getLength());
     }
 
     public void display(){
@@ -233,11 +228,11 @@ public class GUI extends JFrame implements SearchListener {
             this.buttonStart.setEnabled(true);
             this.buttonStop.setEnabled(false);
             this.buttonBruteStop.setEnabled(false);
-            if(bruteStopped){
+            if(this.bruteStopped){
                 this.labelWordFoundCount.setText("-");
                 this.labelLinkRequestedCount.setText("-");
                 this.labelThreadAliveCount.setText("-");
-                bruteStopped = false;
+                this.bruteStopped = false;
             }
         });
     }

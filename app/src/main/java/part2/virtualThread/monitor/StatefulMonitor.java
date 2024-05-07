@@ -1,5 +1,7 @@
 package part2.virtualThread.monitor;
 
+import part2.virtualThread.utils.Configuration;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
@@ -24,7 +26,7 @@ public class StatefulMonitor implements Monitor {
             public void run() {
                 updateState.set(true);
             }
-        }, 0, 8);
+        }, 0, Configuration.STATE_UPDATE_MS);
         this.onUpdate = onUpdate;
     }
 
