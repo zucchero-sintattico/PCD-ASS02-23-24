@@ -222,6 +222,7 @@ public class GUI extends JFrame implements SearchListener {
     public void searchEnded(int linkFound, int linkDown, SearchInfo info) {
         SwingUtilities.invokeLater(() -> {
             this.updater.stop();
+            this.updateView(info);
             this.areaOutput.append("Link Found: " + linkFound + "\n");
             this.areaOutput.append("Link Explored: " + info.totalPageRequested() + "\n");
             this.areaOutput.append("Link Up: " + (info.totalPageRequested() - linkDown) + "\n");
@@ -231,7 +232,6 @@ public class GUI extends JFrame implements SearchListener {
             this.buttonStart.setEnabled(true);
             this.buttonStop.setEnabled(false);
             this.buttonBruteStop.setEnabled(false);
-            this.updateView(info);
             if(bruteStopped){
                 this.labelWordFoundCount.setText("-");
                 this.labelLinkRequestedCount.setText("-");

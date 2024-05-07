@@ -1,10 +1,12 @@
 package part2.virtualThread.utils;
 
+import part2.virtualThread.state.LogType;
 import part2.virtualThread.utils.parser.HtmlParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 public class Configuration {
 
@@ -17,4 +19,11 @@ public class Configuration {
         }
     }
 
+    public static Map<LogType, Boolean> getLogPolicy() {
+        return Map.of(
+                LogType.UPDATE, true,
+                LogType.INFO, false,
+                LogType.ERROR, false
+        );
+    }
 }

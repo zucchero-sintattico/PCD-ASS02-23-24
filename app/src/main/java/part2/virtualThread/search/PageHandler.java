@@ -1,5 +1,6 @@
 package part2.virtualThread.search;
 
+import part2.virtualThread.state.LogType;
 import part2.virtualThread.state.SearchState;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.Body;
@@ -32,11 +33,11 @@ public class PageHandler extends Thread{
                 this.searchState.addThreadAlive(urlString);
                 if (this.searchState.isSimulationRunning()) {
                     this.searchState.getLinkState().addLinkExplored(urlString);
-                    this.searchState.log("Page requested: " + urlString + "\n");
+                    this.searchState.getLogs().append("Page requested: " + urlString + "\n", LogType.INFO);
                     this.read(requestHandler.getBody(urlString));
                 }
             } catch (Exception e) {
-                this.searchState.log("Page down: " + urlString + " Reason: " + e + "\n");
+                this.searchState.getLogs().append("Page down: " + urlString + " Reason: " + e + "\n", LogType.ERROR);
                 this.searchState.getLinkState().addLinkDown(urlString);
             } finally {
                 this.searchState.removeThreadAlive(urlString);
@@ -72,7 +73,7 @@ public class PageHandler extends Thread{
                 Thread vt = Thread.ofVirtual().start(new PageHandler(link, word, depth-1, searchState,requestHandler));
                 handlers.add(vt);
             }
-            this.searchState.log(sb.toString());
+            this.searchState.getLogs().append((sb.toString()), LogType.INFO);
 
         }
     }
@@ -81,7 +82,7 @@ public class PageHandler extends Thread{
         int count = wordFound.get();
         if (count > 0) {
             this.searchState.updateWordOccurrences(count);
-            this.searchState.log("Word found: " + count + " times in " + urlString + "\n");
+            this.searchState.getLogs().append("Word found: " + count + " times in " + urlString + "\n", LogType.UPDATE);
         }
     }
 

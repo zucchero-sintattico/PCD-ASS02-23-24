@@ -15,14 +15,15 @@ public class SearchState {
     private final Monitor monitor = new StatefulMonitor(this::onUpdate);
 
     private final LinkState linkState;
-    private final Set<String> threadAlive = new HashSet<>();
-    private int wordOccurrences = 0;
 
+    private final Set<String> threadAlive = new HashSet<>();
+
+    private int wordOccurrences = 0;
 
     private final LogBuffer logs = new LogBuffer(monitor);
 
-
     private boolean searchEnded = false;
+
     private SearchListener listener;
 
     private final BlockingQueue<SearchInfo> searchInfoQueue = new ArrayBlockingQueue<>(1);
@@ -31,23 +32,10 @@ public class SearchState {
         this.linkState = new LinkState(url, monitor);
     }
 
-
     protected void onUpdate() {
-       SearchInfo info = new SearchInfo(linkState.getLinkExplored().size(), wordOccurrences, threadAlive.size(), getLogs());
+       SearchInfo info = new SearchInfo(linkState.getLinkExplored().size(), wordOccurrences, threadAlive.size(), logs);
        searchInfoQueue.offer(info);
     }
-
-    public LogBuffer getLogs() {
-        return monitor.lock(() -> logs);
-    }
-
-//    public String getNewLog() {
-//        return monitor.lock(() -> {
-//            String log = newLog.toString();
-//            newLog.setLength(0);
-//            return log;
-//        });
-//    }
 
     public int getWordOccurrences() {
         return monitor.lock(() -> this.wordOccurrences);
@@ -69,9 +57,9 @@ public class SearchState {
         return monitor.lock(() -> !this.searchEnded);
     }
 
-    public void log(String s) {
-        monitor.lock(() -> this.logs.append(s));
-    }
+//    public void log(String s) {
+//        monitor.lock(() -> this.logs.append(s));
+//    }
 
     public void updateWordOccurrences(int count) {
         monitor.lock(() -> this.wordOccurrences += count);
@@ -86,7 +74,6 @@ public class SearchState {
     }
 
     public Optional<SearchInfo> getSearchInfo() {
-        //TODO not monitored
         try {
             return Optional.ofNullable(searchInfoQueue.poll());
         } catch (Exception e) {
@@ -102,6 +89,8 @@ public class SearchState {
         monitor.lock(() -> this.threadAlive.remove(urlString));
     }
 
-
+    public LogBuffer getLogs() {
+        return logs;
+    }
 
 }

@@ -54,7 +54,7 @@ public class SearchController {
     }
 
     private void notifySearchEnded(SearchListener listener) {
-        listener.searchEnded(searchState.getLinkState().getLinkFound(), searchState.getLinkState().getLinkExplored(), searchState.getLinkState().getLinkDown(), searchState.getWordOccurrences(), SearchInfo.from(searchState));
+        listener.searchEnded(searchState.getLinkState().getLinkFound().size(), searchState.getLinkState().getLinkDown().size(), SearchInfo.from(searchState));
     }
 
 

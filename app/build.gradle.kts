@@ -26,7 +26,6 @@ dependencies {
     implementation(libs.guava)
     implementation("org.jsoup:jsoup:1.17.2")
 
-
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
