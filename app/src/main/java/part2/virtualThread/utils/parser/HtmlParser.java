@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class HtmlParser<T> {
@@ -11,6 +12,7 @@ public class HtmlParser<T> {
     public static List<String> extensionToFilter = Collections.unmodifiableList(new ArrayList<>());
 
     public static final String linkToMatch = "https://.*";
+
     public static final String linkToMatchUnsafe = "http*://.*";
 
     public static void addExtensionToFilter(String... extension){
@@ -42,5 +44,14 @@ public class HtmlParser<T> {
         return this;
     }
 
+    public int countWords(String word){
+        AtomicInteger count = new AtomicInteger(0);
+        this.foreachWord(s -> {
+            if (s.equals(word)){
+                count.getAndIncrement();
+            }
+        });
+        return count.get();
+    }
 
 }

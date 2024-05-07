@@ -1,14 +1,8 @@
 package part2.virtualThread.utils.connection;
 
-
-import org.apache.hc.client5.http.cookie.CookieRestrictionViolationException;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import part2.virtualThread.utils.parser.Body;
-
-import java.io.IOException;
-import java.nio.charset.CoderMalfunctionError;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -17,7 +11,9 @@ import static part2.virtualThread.utils.parser.HtmlParser.*;
 public class RequestHandlerJSoup implements RequestHandler<Element>{
 
     private final boolean safe;
+
     public RequestHandlerJSoup() {this.safe = true;}
+
     public RequestHandlerJSoup(boolean safe) {this.safe = safe;}
 
     public Body<Element> getBody(String url) throws Exception {

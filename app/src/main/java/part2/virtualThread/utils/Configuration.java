@@ -1,9 +1,6 @@
 package part2.virtualThread.utils;
 
-
-
 import part2.virtualThread.utils.parser.HtmlParser;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,4 +16,5 @@ public class Configuration {
             System.out.println("Failed to load extension to exclude file");
         }
     }
+
 }

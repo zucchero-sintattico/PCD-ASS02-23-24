@@ -6,10 +6,7 @@ import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
-import org.jsoup.nodes.Element;
 import part2.virtualThread.utils.parser.Body;
-
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,9 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
-
 import static part2.virtualThread.utils.parser.HtmlParser.extensionToFilter;
 import static part2.virtualThread.utils.parser.HtmlParser.linkToMatch;
 
@@ -46,6 +41,7 @@ public class RequestHandlerApache implements RequestHandler<String>{
     }
 
     private static class ApacheBody extends Body<String> {
+
         public ApacheBody(String body) {
             super(body);
         }

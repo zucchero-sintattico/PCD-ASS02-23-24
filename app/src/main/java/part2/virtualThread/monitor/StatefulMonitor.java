@@ -1,7 +1,5 @@
 package part2.virtualThread.monitor;
 
-import part2.virtualThread.view.SearchInfo;
-
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
@@ -12,8 +10,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class StatefulMonitor implements Monitor {
 
     private final Lock lock = new ReentrantLock();
+
     protected final AtomicBoolean updateState = new AtomicBoolean(true);
+
     private final Runnable onUpdate;
+
     private boolean updating = false;
 
     public StatefulMonitor(Runnable onUpdate) {
@@ -31,7 +32,7 @@ public class StatefulMonitor implements Monitor {
         try {
             this.lock.lock();
             T result = function.call();
-            if (!updating){this.update();}
+            this.update();
             return result;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -44,14 +45,14 @@ public class StatefulMonitor implements Monitor {
         try {
             this.lock.lock();
             function.run();
-            if (!updating){this.update();}
+            this.update();
         } finally {
             lock.unlock();
         }
     }
 
     private void update() {
-        if (updateState.compareAndSet(true, false)){
+        if (!updating && updateState.compareAndSet(true, false)){
             updating = true;
             onUpdate.run();
             updating = false;

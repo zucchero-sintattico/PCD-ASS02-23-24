@@ -5,6 +5,9 @@ import part2.virtualThread.view.SearchInfo;
 import java.util.Set;
 
 public interface SearchListener {
+
     void searchStarted();
-    void searchEnded(Set<String> linkFound, Set<String> linkExplored, Set<String> linkDown, int wordFound, SearchInfo info);
+
+    void searchEnded(int linkFound, int linkDown, SearchInfo info);
+
 }
