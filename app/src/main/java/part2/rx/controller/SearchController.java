@@ -18,14 +18,14 @@ public class SearchController {
     private int count = 0;
 
     public SearchController() {
-        this.requestHandler = new RequestHandlerJSoup();
+        this.requestHandler = new RequestHandlerJSoup(false);
         this.searchObservable = Flowable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
     }
 
     public void wordCount(String url, String word, int depth){
-        this.searchObservable = Flowable.just(url);
+        this.searchObservable = Flowable.just(url).subscribeOn(Schedulers.io());
         for (int i = 0; i < depth; i++) {
             int index = i;
             this.searchObservable = this.searchObservable.map(link -> {
@@ -38,8 +38,7 @@ public class SearchController {
                     return Stream.of(e.getMessage()).toList();
                 }
             })
-                    .flatMap(Flowable::fromIterable)
-                    .subscribeOn(Schedulers.computation());
+                    .flatMap(Flowable::fromIterable);
         }
         this.searchObservable.doOnComplete(this::reset).subscribe();
     }
