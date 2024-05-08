@@ -1,14 +1,13 @@
-package part2.rx.controller;
+package part2.rx.model;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
-import part2.rx.model.ErrorReport;
 
 public class ErrorObserver implements Observer<ErrorReport> {
 
-    Consumer<ErrorReport> errorReportAction;
+    private final Consumer<ErrorReport> errorReportAction;
 
     public ErrorObserver(Consumer<ErrorReport> errorReportAction) {
         this.errorReportAction = errorReportAction;

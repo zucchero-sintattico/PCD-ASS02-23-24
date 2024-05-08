@@ -1,19 +1,18 @@
-package part2.rx.controller;
+package part2.rx.model;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
-import part2.rx.model.SearchReport;
 
 public class ResultObserver implements Observer<SearchReport> {
 
-    Consumer<SearchReport> action;
-    Runnable doneAction;
+    private final Consumer<SearchReport> action;
+    private final Runnable onCompletedAction;
 
-    public ResultObserver(Consumer<SearchReport> nextElementAction, Runnable doneAction){
+    public ResultObserver(Consumer<SearchReport> nextElementAction, Runnable onCompletedAction){
         this.action = nextElementAction;
-        this.doneAction = doneAction;
+        this.onCompletedAction = onCompletedAction;
     }
     @Override
     public void onSubscribe(@NonNull Disposable d) {
@@ -36,6 +35,6 @@ public class ResultObserver implements Observer<SearchReport> {
 
     @Override
     public void onComplete() {
-        this.doneAction.run();
+        this.onCompletedAction.run();
     }
 }

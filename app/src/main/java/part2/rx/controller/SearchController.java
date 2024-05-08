@@ -69,10 +69,10 @@ public class SearchController{
     }
 
     public void attachObserver(Observer<SearchReport> observer){
-        this.searchReportSubject.subscribeOn(Schedulers.io()).subscribe(observer);
+        this.searchReportSubject.subscribe(observer);
     }
 
     public void attachErrorObserver(Observer<ErrorReport> observer){
-        this.errorReportSubject.subscribeOn(Schedulers.io()).subscribe(observer);
+        this.errorReportSubject.subscribe(observer);
     }
 }
