@@ -1,10 +1,10 @@
 package part2.virtualThread.view;
 
+import part2.virtualThread.search.SearchController;
 import part2.virtualThread.search.SearchControllerImpl;
 import part2.virtualThread.search.SearchListener;
 import part2.virtualThread.state.SearchReport;
 import part2.virtualThread.utils.Configuration;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Optional;
@@ -34,7 +34,7 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel logContainer;
     private JPanel buttonContainer;
 
-    private final SearchControllerImpl searchController = new SearchControllerImpl(this);
+    private final SearchController searchController = new SearchControllerImpl(this);
 
     private boolean bruteStopped;
 
