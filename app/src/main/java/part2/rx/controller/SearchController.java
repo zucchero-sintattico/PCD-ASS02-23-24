@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import part2.rx.model.ErrorReport;
+import part2.rx.model.Flag;
 import part2.rx.model.SearchReport;
 import part2.virtualThread.utils.connection.RequestHandlerJSoup;
 import java.util.stream.Stream;
@@ -16,20 +17,23 @@ public class SearchController{
     private Subject<ErrorReport> errorReportSubject;
     private final RequestHandlerJSoup requestHandler;
     private int count = 0;
+    private final Flag flag;
 
-    public SearchController() {
+    public SearchController(Flag flag) {
         this.requestHandler = new RequestHandlerJSoup();
         this.searchObservable = Flowable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
+        this.flag = flag;
     }
 
     //Only for test
-    public SearchController(boolean test){
-        this.requestHandler = new RequestHandlerJSoup(test);
+    public SearchController(boolean isSafe){
+        this.requestHandler = new RequestHandlerJSoup(isSafe);
         this.searchObservable = Flowable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
+        this.flag = new Flag();
     }
 
     public void wordCount(String url, String word, int depth){
@@ -37,18 +41,21 @@ public class SearchController{
         for (int i = 0; i <= depth; i++) {
             int index = i;
             this.searchObservable = this.searchObservable.map(link -> {
-                try{
-                    SearchReport report = this.getReport(link, word, index);
-                    this.searchReportSubject.onNext(report);
-                    return report.links().toList();
-                }catch (Exception e){
-                    this.errorReportSubject.onNext(new ErrorReport(link, e.getMessage()));
-                    return Stream.of(e.getMessage()).toList();
+                if(this.flag.getFlag()){
+                    try{
+                        SearchReport report = this.getReport(link, word, index);
+                        this.searchReportSubject.onNext(report);
+                        return report.links().toList();
+                    }catch (Exception e){
+                        this.errorReportSubject.onNext(new ErrorReport(link, e.getMessage()));
+                        return Stream.of(e.getMessage()).toList();
+                    }
                 }
+                return Stream.of(link).toList(); //To change
             })
                     .flatMap(Flowable::fromIterable);
         }
-        this.searchObservable.doOnComplete(this::reset).subscribe();
+        this.searchObservable.doOnComplete(this::reset).subscribe(e -> System.out.println("Finish: " + e));
     }
 
     private SearchReport getReport(String url, String word, int depth) throws Exception {
