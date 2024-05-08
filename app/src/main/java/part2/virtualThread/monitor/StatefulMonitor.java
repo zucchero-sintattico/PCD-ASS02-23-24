@@ -11,11 +11,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class StatefulMonitor implements Monitor {
 
     private final Lock lock = new ReentrantLock();
-
     protected final AtomicBoolean updateState = new AtomicBoolean(true);
-
     private final Runnable onUpdate;
-
     private boolean updating = false;
 
     public StatefulMonitor(Runnable onUpdate) {

@@ -7,11 +7,8 @@ import java.util.Map;
 public class LogBuffer {
 
     private final StringBuilder allLog = new StringBuilder();
-
     private final StringBuilder newLog = new StringBuilder();
-
     private final Monitor monitor;
-
     private final Map<LogType, Boolean> logPolicy;
 
     public LogBuffer(Monitor monitor){

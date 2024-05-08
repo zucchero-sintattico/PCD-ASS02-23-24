@@ -10,9 +10,7 @@ import java.util.function.Consumer;
 public class HtmlParser<T> {
 
     public static List<String> extensionToFilter = Collections.unmodifiableList(new ArrayList<>());
-
     public static final String linkToMatch = "https://.*";
-
     public static final String linkToMatchUnsafe = "https*://.*";
 
     public static void addExtensionToFilter(String... extension){

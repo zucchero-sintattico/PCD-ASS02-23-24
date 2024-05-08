@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class Configuration {
 
+    public static final Boolean SAFE_SEARCH = true;
+
     public static final Boolean VISIT_SAME_LINK = true;
 
     public static final Boolean USE_DEFAULTS = true;

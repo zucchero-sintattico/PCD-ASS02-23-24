@@ -8,11 +8,8 @@ import java.util.Set;
 public class LinkState {
 
     private final Set<String> linkFound = new HashSet<>();
-
     private final Set<String> linkExplored = new HashSet<>();
-
     private final Set<String> linkDown = new HashSet<>();
-
     private final Monitor monitor;
 
     public LinkState(String url, Monitor monitor) {

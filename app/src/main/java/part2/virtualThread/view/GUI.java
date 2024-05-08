@@ -1,8 +1,8 @@
 package part2.virtualThread.view;
 
-import part2.virtualThread.search.SearchController;
+import part2.virtualThread.search.SearchControllerImpl;
 import part2.virtualThread.search.SearchListener;
-import part2.virtualThread.state.SearchInfo;
+import part2.virtualThread.state.SearchReport;
 import part2.virtualThread.utils.Configuration;
 
 import javax.swing.*;
@@ -34,12 +34,12 @@ public class GUI extends JFrame implements SearchListener {
     private JPanel logContainer;
     private JPanel buttonContainer;
 
-    private final SearchController searchController = new SearchController(this);
+    private final SearchControllerImpl searchController = new SearchControllerImpl(this);
 
     private boolean bruteStopped;
 
     private final Timer updater = new Timer(Configuration.GUI_UPDATE_MS, e -> {
-        Optional<SearchInfo> info = this.searchController.getSearchInfo();
+        Optional<SearchReport> info = this.searchController.getSearchInfo();
         info.ifPresent(this::updateView);
     });
 
@@ -191,7 +191,7 @@ public class GUI extends JFrame implements SearchListener {
         this.setResizable(false);
     }
 
-    private void updateView(SearchInfo info){
+    private void updateView(SearchReport info){
         this.labelThreadAliveCount.setText(String.valueOf(info.treadAlive()));
         this.labelWordFoundCount.setText(String.valueOf(info.totalWordFound()));
         this.labelLinkRequestedCount.setText(String.valueOf(info.totalPageRequested()));
@@ -219,7 +219,7 @@ public class GUI extends JFrame implements SearchListener {
     }
 
     @Override
-    public void searchEnded(int linkFound, int linkDown, SearchInfo info) {
+    public void searchEnded(int linkFound, int linkDown, SearchReport info) {
         SwingUtilities.invokeLater(() -> {
             this.updater.stop();
             this.updateView(info);

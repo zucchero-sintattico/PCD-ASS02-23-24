@@ -1,7 +1,7 @@
 package part2.virtualThread.search;
 
 import part2.virtualThread.state.LogType;
-import part2.virtualThread.state.SearchReport;
+import part2.virtualThread.state.SearchState;
 import part2.virtualThread.utils.Configuration;
 import part2.virtualThread.utils.connection.RequestHandler;
 import part2.virtualThread.utils.parser.Body;
@@ -12,18 +12,13 @@ import java.util.List;
 public class PageHandler extends Thread {
 
     private final String urlString;
-
     private final String word;
-
     private final int depth;
-
-    private final SearchReport searchState;
-
+    private final SearchState searchState;
     private final List<Thread> handlers = new ArrayList<>();
-
     private final RequestHandler<?> requestHandler;
 
-    public PageHandler(String urlString, String word, int depth, SearchReport searchState, RequestHandler<?> requestHandler){
+    public PageHandler(String urlString, String word, int depth, SearchState searchState, RequestHandler<?> requestHandler){
         this.urlString = urlString;
         this.word = word;
         this.depth = depth;

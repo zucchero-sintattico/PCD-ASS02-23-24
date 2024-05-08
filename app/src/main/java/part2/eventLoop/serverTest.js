@@ -1,13 +1,7 @@
-//creete a server for testing with a semplo page wher is write the word "test" ten times
-
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-
-
-
- 
 
 app.get('/', (req, res) => {
     let word = req.query.word;
