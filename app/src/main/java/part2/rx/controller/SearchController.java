@@ -16,24 +16,28 @@ public class SearchController{
     private Subject<SearchReport> searchReportSubject;
     private Subject<ErrorReport> errorReportSubject;
     private final RequestHandlerJSoup requestHandler;
-    private int count = 0;
+    private int count;
     private final Flag flag;
 
-    public SearchController(Flag flag) {
-        this.requestHandler = new RequestHandlerJSoup();
-        this.searchObservable = Flowable.empty();
-        this.searchReportSubject = PublishSubject.create();
-        this.errorReportSubject = PublishSubject.create();
+    public SearchController(Flag flag, boolean test) {
+        this.requestHandler = new RequestHandlerJSoup(!test);
+        this.init();
         this.flag = flag;
     }
 
-    //Only for test
-    public SearchController(boolean isSafe){
-        this.requestHandler = new RequestHandlerJSoup(isSafe);
+    public SearchController(Flag flag) {
+        this(flag, false);
+    }
+
+    public SearchController(boolean test) {
+        this(new Flag(), test);
+    }
+
+    private void init() {
         this.searchObservable = Flowable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
-        this.flag = new Flag();
+        this.count = 0;
     }
 
     public void wordCount(String url, String word, int depth){
@@ -69,10 +73,7 @@ public class SearchController{
     public void reset(){
         this.searchReportSubject.onComplete();
         this.errorReportSubject.onComplete();
-        this.searchObservable = Flowable.empty();
-        this.searchReportSubject = PublishSubject.create();
-        this.errorReportSubject = PublishSubject.create();
-        this.count = 0;
+        this.init();
     }
 
     public void attachObserver(Observer<SearchReport> observer){
