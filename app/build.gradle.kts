@@ -25,7 +25,7 @@ dependencies {
     // This dependency is used by the application.
     implementation(libs.guava)
     implementation("org.jsoup:jsoup:1.17.2")
-
+    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
