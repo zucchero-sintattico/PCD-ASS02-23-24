@@ -1,10 +1,10 @@
-package part2.rx.view;
+package part2.reactiveProgramming.view;
 
-import part2.rx.controller.Controller;
-import part2.rx.controller.ControllerImpl;
-import part2.rx.model.ErrorObserver;
-import part2.rx.model.ResultObserver;
-import part2.rx.model.SearchReport;
+import part2.reactiveProgramming.controller.SearchController;
+import part2.reactiveProgramming.controller.SearchControllerImpl;
+import part2.reactiveProgramming.reactiveComponents.ErrorObserver;
+import part2.reactiveProgramming.reactiveComponents.ResultObserver;
+import part2.reactiveProgramming.report.SearchReport;
 import javax.swing.*;
 import java.awt.*;
 
@@ -25,7 +25,7 @@ public class GUI extends JFrame {
     private JPanel container;
     private JPanel logContainer;
     private JPanel buttonContainer;
-    private final Controller controller = new ControllerImpl();
+    private final SearchController controller = new SearchControllerImpl();
 
     public GUI(){
         super();

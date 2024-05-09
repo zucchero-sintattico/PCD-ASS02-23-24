@@ -4,8 +4,8 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.junit.jupiter.api.Test;
-import part2.rx.controller.SearchController;
-import part2.rx.model.SearchReport;
+import part2.reactiveProgramming.controller.SearchHandler;
+import part2.reactiveProgramming.report.SearchReport;
 import part2.virtualThread.state.SearchState;
 import part2.virtualThread.search.PageHandler;
 import part2.utils.connection.RequestHandlerJSoup;
@@ -45,7 +45,7 @@ public class ResultPredictionTest {
 
     @Test
     public void testResultRx() throws ExecutionException, InterruptedException {
-        SearchController controller = new SearchController(true);
+        SearchHandler controller = new SearchHandler(true);
         CompletableFuture<Void> future = new CompletableFuture<>();
         final AtomicInteger wordFind = new AtomicInteger(0);
         controller.attachObserver(new Observer<SearchReport>() {

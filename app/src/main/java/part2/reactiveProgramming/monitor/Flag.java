@@ -1,4 +1,4 @@
-package part2.rx.model;
+package part2.reactiveProgramming.monitor;
 
 public class Flag {
     private boolean flag = true;

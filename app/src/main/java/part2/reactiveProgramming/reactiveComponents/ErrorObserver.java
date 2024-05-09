@@ -1,9 +1,10 @@
-package part2.rx.model;
+package part2.reactiveProgramming.reactiveComponents;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
+import part2.reactiveProgramming.report.ErrorReport;
 
 public class ErrorObserver implements Observer<ErrorReport> {
 

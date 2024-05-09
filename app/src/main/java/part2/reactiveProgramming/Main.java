@@ -1,6 +1,6 @@
-package part2.rx;
+package part2.reactiveProgramming;
 
-import part2.rx.view.GUI;
+import part2.reactiveProgramming.view.GUI;
 import part2.utils.parser.HtmlParser;
 
 import javax.swing.*;

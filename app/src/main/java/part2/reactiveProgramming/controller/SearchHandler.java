@@ -1,21 +1,20 @@
-package part2.rx.controller;
+package part2.reactiveProgramming.controller;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
-import part2.rx.model.ErrorReport;
-import part2.rx.model.Flag;
-import part2.rx.model.SearchReport;
+import part2.reactiveProgramming.report.ErrorReport;
+import part2.reactiveProgramming.monitor.Flag;
+import part2.reactiveProgramming.report.SearchReport;
 import part2.utils.connection.RequestHandlerJSoup;
 import part2.utils.parser.Body;
 import part2.utils.parser.HtmlParser;
 
-import javax.swing.text.Element;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-public class SearchController{
+public class SearchHandler {
 
     private Flowable<String> searchObservable;
     private Subject<SearchReport> searchReportSubject;
@@ -24,17 +23,17 @@ public class SearchController{
     private AtomicInteger count;
     private final Flag flag;
 
-    public SearchController(Flag flag, boolean test) {
+    public SearchHandler(Flag flag, boolean test) {
         this.requestHandler = new RequestHandlerJSoup(!test);
         this.init();
         this.flag = flag;
     }
 
-    public SearchController(Flag flag) {
+    public SearchHandler(Flag flag) {
         this(flag, false);
     }
 
-    public SearchController(boolean test) {
+    public SearchHandler(boolean test) {
         this(new Flag(), test);
     }
 

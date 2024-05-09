@@ -1,18 +1,18 @@
-package part2.rx.controller;
+package part2.reactiveProgramming.controller;
 
 import io.reactivex.rxjava3.core.Observer;
-import part2.rx.model.ErrorReport;
-import part2.rx.model.SearchReport;
-import part2.rx.model.Flag;
+import part2.reactiveProgramming.report.ErrorReport;
+import part2.reactiveProgramming.report.SearchReport;
+import part2.reactiveProgramming.monitor.Flag;
 
-public class ControllerImpl implements Controller{
+public class SearchControllerImpl implements SearchController {
 
     private final Flag flag;
-    private final SearchController controller;
+    private final SearchHandler controller;
 
-    public ControllerImpl() {
+    public SearchControllerImpl() {
         this.flag = new Flag();
-        this.controller = new SearchController(this.flag);
+        this.controller = new SearchHandler(this.flag);
     }
 
     @Override
