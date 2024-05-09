@@ -8,6 +8,11 @@ import part2.rx.model.ErrorReport;
 import part2.rx.model.Flag;
 import part2.rx.model.SearchReport;
 import part2.utils.connection.RequestHandlerJSoup;
+import part2.utils.parser.Body;
+import part2.utils.parser.HtmlParser;
+
+import javax.swing.text.Element;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class SearchController{
@@ -16,7 +21,7 @@ public class SearchController{
     private Subject<SearchReport> searchReportSubject;
     private Subject<ErrorReport> errorReportSubject;
     private final RequestHandlerJSoup requestHandler;
-    private int count;
+    private AtomicInteger count;
     private final Flag flag;
 
     public SearchController(Flag flag, boolean test) {
@@ -37,7 +42,7 @@ public class SearchController{
         this.searchObservable = Flowable.empty();
         this.searchReportSubject = PublishSubject.create();
         this.errorReportSubject = PublishSubject.create();
-        this.count = 0;
+        this.count = new AtomicInteger(0);
     }
 
     public void wordCount(String url, String word, int depth){
@@ -59,15 +64,15 @@ public class SearchController{
             })
                     .flatMap(Flowable::fromIterable);
         }
-        this.searchObservable.doOnComplete(this::reset).subscribe(e -> System.out.println("Finish: " + e));
+        this.searchObservable.doOnComplete(this::reset).subscribe();
     }
 
     private SearchReport getReport(String url, String word, int depth) throws Exception {
-        var body = this.requestHandler.getBody(url);
-        var links = body.getLinks();
-        var wordCounter = Long.valueOf(body.getWords().filter(w -> w.contains(word)).count()).intValue();
-        this.count += wordCounter;
-        return new SearchReport(url, wordCounter, depth, links, count);
+        Body<?> body = this.requestHandler.getBody(url);
+        Stream<String> links = body.getLinks();
+        int wordCounter = HtmlParser.parse(body).countWords(word);
+        int totalCount = this.count.addAndGet(wordCounter);
+        return new SearchReport(url, wordCounter, depth, links, totalCount);
     }
 
     public void reset(){

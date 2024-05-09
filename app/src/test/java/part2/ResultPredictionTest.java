@@ -18,6 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResultPredictionTest {
 
+    private final int numberOfWords = 1, depth = 5, numberOfLinks = 3;
+    private final String word = "a";
+    private final String url = "http://localhost:4000/?word="+word+"&numberOfWords="+numberOfWords+"&numberOfLinks="+numberOfLinks+"&path=0";
+
     private int predictResult(int numberOfWords, int depth, int numberOfLinks){
         int sum = 0;
         for (int i = 0; i <= depth; i++) {
@@ -28,9 +32,6 @@ public class ResultPredictionTest {
 
     @Test
     public void testResult() {
-        int numberOfWords = 1, depth = 5, numberOfLinks = 3;
-        String word = "a";
-        String url = "http://localhost:4000/?word="+word+"&numberOfWords="+numberOfWords+"&numberOfLinks="+numberOfLinks+"&path=0";
         SearchState state = new SearchState(url);
         Thread t = new PageHandler(url, word, depth, state, new RequestHandlerJSoup(false));
         t.start();
@@ -44,21 +45,16 @@ public class ResultPredictionTest {
 
     @Test
     public void testResultRx() throws ExecutionException, InterruptedException {
-        int numberOfWords = 1, depth = 5, numberOfLinks = 3;
-        String word = "a";
-        String url = "http://localhost:4000/?word="+word+"&numberOfWords="+numberOfWords+"&numberOfLinks="+numberOfLinks+"&path=0";
         SearchController controller = new SearchController(true);
         CompletableFuture<Void> future = new CompletableFuture<>();
         final AtomicInteger wordFind = new AtomicInteger(0);
         controller.attachObserver(new Observer<SearchReport>() {
             @Override
-            public void onSubscribe(@NonNull Disposable d) {
-
-            }
+            public void onSubscribe(@NonNull Disposable d) {}
 
             @Override
             public void onNext(@NonNull SearchReport searchReport) {
-                wordFind.addAndGet(searchReport.wordFind());
+                wordFind.addAndGet(searchReport.wordFound());
             }
 
             @Override

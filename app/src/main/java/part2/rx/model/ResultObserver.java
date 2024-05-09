@@ -7,11 +7,11 @@ import io.reactivex.rxjava3.functions.Consumer;
 
 public class ResultObserver implements Observer<SearchReport> {
 
-    private final Consumer<SearchReport> action;
+    private final Consumer<SearchReport> onNextAction;
     private final Runnable onCompletedAction;
 
-    public ResultObserver(Consumer<SearchReport> nextElementAction, Runnable onCompletedAction){
-        this.action = nextElementAction;
+    public ResultObserver(Consumer<SearchReport> onNextAction, Runnable onCompletedAction){
+        this.onNextAction = onNextAction;
         this.onCompletedAction = onCompletedAction;
     }
     @Override
@@ -22,7 +22,7 @@ public class ResultObserver implements Observer<SearchReport> {
     @Override
     public void onNext(@NonNull SearchReport searchReport) {
         try {
-            action.accept(searchReport);
+            onNextAction.accept(searchReport);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

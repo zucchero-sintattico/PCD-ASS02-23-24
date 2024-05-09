@@ -77,7 +77,7 @@ public class GUI extends JFrame {
         ResultObserver resultObserver = new ResultObserver(report -> {
             updateGUI("[Link]: " + report.url() +
                     "\n--->[Word count]: " +
-                    report.wordFind() + "\n--->[Depth]: " +
+                    report.wordFound() + "\n--->[Depth]: " +
                     report.depth() + "\n");
             updateTotalWordCount(report);
         }, () -> {
