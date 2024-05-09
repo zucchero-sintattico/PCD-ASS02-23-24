@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.subjects.Subject;
 import part2.rx.model.ErrorReport;
 import part2.rx.model.Flag;
 import part2.rx.model.SearchReport;
-import part2.virtualThread.utils.connection.RequestHandlerJSoup;
+import part2.utils.connection.RequestHandlerJSoup;
 import java.util.stream.Stream;
 
 public class SearchController{

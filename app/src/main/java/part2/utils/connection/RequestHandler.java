@@ -1,6 +1,6 @@
-package part2.virtualThread.utils.connection;
+package part2.utils.connection;
 
-import part2.virtualThread.utils.parser.Body;
+import part2.utils.parser.Body;
 
 public interface RequestHandler<T> {
 

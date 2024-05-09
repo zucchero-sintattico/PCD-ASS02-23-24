@@ -1,7 +1,7 @@
-package part2.virtualThread.utils;
+package part2.virtualThread;
 
 import part2.virtualThread.state.LogType;
-import part2.virtualThread.utils.parser.HtmlParser;
+import part2.utils.parser.HtmlParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

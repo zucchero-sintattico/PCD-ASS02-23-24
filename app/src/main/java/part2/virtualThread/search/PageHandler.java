@@ -2,10 +2,10 @@ package part2.virtualThread.search;
 
 import part2.virtualThread.state.LogType;
 import part2.virtualThread.state.SearchState;
-import part2.virtualThread.utils.Configuration;
-import part2.virtualThread.utils.connection.RequestHandler;
-import part2.virtualThread.utils.parser.Body;
-import part2.virtualThread.utils.parser.HtmlParser;
+import part2.virtualThread.Configuration;
+import part2.utils.connection.RequestHandler;
+import part2.utils.parser.Body;
+import part2.utils.parser.HtmlParser;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package part2.virtualThread.state;
 
 import part2.virtualThread.monitor.Monitor;
-import part2.virtualThread.utils.Configuration;
+import part2.virtualThread.Configuration;
 import java.util.Map;
 
 public class LogBuffer {

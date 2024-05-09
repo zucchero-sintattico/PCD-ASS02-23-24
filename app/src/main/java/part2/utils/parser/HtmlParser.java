@@ -1,4 +1,4 @@
-package part2.virtualThread.utils.parser;
+package part2.utils.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;

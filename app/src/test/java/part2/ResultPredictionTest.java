@@ -8,11 +8,10 @@ import part2.rx.controller.SearchController;
 import part2.rx.model.SearchReport;
 import part2.virtualThread.state.SearchState;
 import part2.virtualThread.search.PageHandler;
-import part2.virtualThread.utils.connection.RequestHandlerJSoup;
+import part2.utils.connection.RequestHandlerJSoup;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

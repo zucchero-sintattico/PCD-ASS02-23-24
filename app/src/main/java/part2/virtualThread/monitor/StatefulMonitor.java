@@ -1,6 +1,6 @@
 package part2.virtualThread.monitor;
 
-import part2.virtualThread.utils.Configuration;
+import part2.virtualThread.Configuration;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;

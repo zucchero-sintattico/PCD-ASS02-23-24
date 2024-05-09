@@ -1,8 +1,8 @@
 package part2.virtualThread.search;
 
 import part2.virtualThread.state.SearchState;
-import part2.virtualThread.utils.Configuration;
-import part2.virtualThread.utils.connection.RequestHandlerJSoup;
+import part2.virtualThread.Configuration;
+import part2.utils.connection.RequestHandlerJSoup;
 import part2.virtualThread.state.SearchReport;
 import java.util.Optional;
 

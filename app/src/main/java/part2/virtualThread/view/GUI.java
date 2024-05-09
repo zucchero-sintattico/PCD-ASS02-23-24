@@ -4,7 +4,7 @@ import part2.virtualThread.search.SearchController;
 import part2.virtualThread.search.SearchControllerImpl;
 import part2.virtualThread.search.SearchListener;
 import part2.virtualThread.state.SearchReport;
-import part2.virtualThread.utils.Configuration;
+import part2.virtualThread.Configuration;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Optional;

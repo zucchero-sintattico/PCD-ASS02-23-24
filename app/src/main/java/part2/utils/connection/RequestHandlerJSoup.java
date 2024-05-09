@@ -1,12 +1,12 @@
-package part2.virtualThread.utils.connection;
+package part2.utils.connection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import part2.virtualThread.utils.parser.Body;
+import part2.utils.parser.Body;
+import part2.utils.parser.HtmlParser;
+
 import java.util.Arrays;
 import java.util.stream.Stream;
-
-import static part2.virtualThread.utils.parser.HtmlParser.*;
 
 public class RequestHandlerJSoup implements RequestHandler<Element> {
 
@@ -33,8 +33,8 @@ public class RequestHandlerJSoup implements RequestHandler<Element> {
         public Stream<String> getLinks() {
             return body.select("a").stream()
                     .map(e -> e.attr("href"))
-                    .filter(e -> extensionToFilter.stream().noneMatch(e::endsWith))
-                    .filter(e -> e.matches(safe ? linkToMatch : linkToMatchUnsafe));
+                    .filter(e -> HtmlParser.extensionToFilter.stream().noneMatch(e::endsWith))
+                    .filter(e -> e.matches(safe ? HtmlParser.linkToMatch : HtmlParser.linkToMatchUnsafe));
         }
 
         @Override
