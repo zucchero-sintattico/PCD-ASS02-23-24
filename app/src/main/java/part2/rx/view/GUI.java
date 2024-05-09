@@ -1,6 +1,5 @@
 package part2.rx.view;
 
-import org.jetbrains.annotations.NotNull;
 import part2.rx.controller.Controller;
 import part2.rx.controller.ControllerImpl;
 import part2.rx.model.ErrorObserver;
@@ -189,7 +188,7 @@ public class GUI extends JFrame {
         SwingUtilities.invokeLater(() -> this.setVisible(true));
     }
 
-    private void updateTotalWordCount(@NotNull SearchReport r) {
+    private void updateTotalWordCount(SearchReport r) {
         SwingUtilities.invokeLater(() -> labelWordFoundCount.setText("Total Word Count: " + r.totalWordCount()));
     }
 }

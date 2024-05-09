@@ -48,7 +48,7 @@ public class ResultPredictionTest {
         int numberOfWords = 1, depth = 5, numberOfLinks = 3;
         String word = "a";
         String url = "http://localhost:4000/?word="+word+"&numberOfWords="+numberOfWords+"&numberOfLinks="+numberOfLinks+"&path=0";
-        SearchController controller = new SearchController(false);
+        SearchController controller = new SearchController(true);
         CompletableFuture<Void> future = new CompletableFuture<>();
         final AtomicInteger wordFind = new AtomicInteger(0);
         controller.attachObserver(new Observer<SearchReport>() {
