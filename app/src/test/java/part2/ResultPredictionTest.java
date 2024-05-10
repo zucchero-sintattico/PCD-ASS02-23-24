@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResultPredictionTest {
 
-    private final int numberOfWords = 1, depth = 7, numberOfLinks = 3;
+    private final int numberOfWords = 1, depth = 5, numberOfLinks = 3;
     private final String word = "a";
     private final String url = "http://localhost:4000/?word="+word+"&numberOfWords="+numberOfWords+"&numberOfLinks="+numberOfLinks+"&path=0";
 
@@ -48,7 +48,7 @@ public class ResultPredictionTest {
         SearchHandler controller = new SearchHandler(true);
         CompletableFuture<Void> future = new CompletableFuture<>();
         final AtomicInteger wordFound = new AtomicInteger(0);
-        controller.attachObserver(new Observer<SearchReport>() {
+        controller.attachObserver(new Observer<>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {}
 

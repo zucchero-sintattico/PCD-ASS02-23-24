@@ -51,19 +51,20 @@ public class SearchHandler {
         this.searchObservable = Flowable.just(url);
         for (int i = 0; i <= depth; i++) {
             int currentDepth = i;
-            this.searchObservable = this.searchObservable.observeOn(Schedulers.io()).map(link -> {
-                if(this.flag.getFlag()){
-                    try{
-                        SearchReport report = this.getReport(link, word, currentDepth);
-                        this.searchReportSubject.onNext(report);
-                        return report.links().toList();
-                    }catch (Exception e){
-                        this.errorReportSubject.onNext(new ErrorReport(link, e.getMessage()));
-                    }
-                }
-                return new ArrayList<String>();
-            })
-                    .observeOn(Schedulers.computation()).flatMap(Flowable::fromIterable);
+            this.searchObservable = this.searchObservable.flatMap(
+                   element -> Flowable.just(element).observeOn(Schedulers.io()).map(link -> {
+                        if(this.flag.getFlag()){
+                            try{
+                                SearchReport report = this.getReport(link, word, currentDepth);
+                                this.searchReportSubject.onNext(report);
+                                return report.links().toList();
+                            }catch (Exception e){
+                                this.errorReportSubject.onNext(new ErrorReport(link, e.getMessage()));
+                            }
+                        }
+                        return new ArrayList<String>();
+                   })
+                    .observeOn(Schedulers.computation()).flatMap(Flowable::fromIterable));
         }
         this.searchObservable.doOnComplete(this::reset).subscribe();
     }
