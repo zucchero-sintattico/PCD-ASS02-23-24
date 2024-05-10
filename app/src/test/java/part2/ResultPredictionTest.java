@@ -47,14 +47,14 @@ public class ResultPredictionTest {
     public void testResultRx() throws ExecutionException, InterruptedException {
         SearchHandler controller = new SearchHandler(true);
         CompletableFuture<Void> future = new CompletableFuture<>();
-        final AtomicInteger wordFind = new AtomicInteger(0);
-        controller.attachObserver(new Observer<SearchReport>() {
+        final AtomicInteger wordFound = new AtomicInteger(0);
+        controller.attachObserver(new Observer<>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {}
 
             @Override
             public void onNext(@NonNull SearchReport searchReport) {
-                wordFind.addAndGet(searchReport.wordFound());
+                wordFound.addAndGet(searchReport.wordFound());
             }
 
             @Override
@@ -64,7 +64,7 @@ public class ResultPredictionTest {
 
             @Override
             public void onComplete() {
-                assertEquals(predictResult(numberOfWords, depth, numberOfLinks), wordFind.get());
+                assertEquals(predictResult(numberOfWords, depth, numberOfLinks), wordFound.get());
                 future.complete(null);
             }
         });
