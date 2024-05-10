@@ -11,6 +11,7 @@ import part2.utils.connection.RequestHandlerJSoup;
 import part2.utils.parser.Body;
 import part2.utils.parser.HtmlParser;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -22,6 +23,7 @@ public class SearchHandler {
     private final RequestHandlerJSoup requestHandler;
     private AtomicInteger count;
     private final Flag flag;
+    private long startTime;
 
     public SearchHandler(Flag flag, boolean test) {
         this.requestHandler = new RequestHandlerJSoup(!test);
@@ -45,23 +47,23 @@ public class SearchHandler {
     }
 
     public void wordCount(String url, String word, int depth){
-        this.searchObservable = Flowable.just(url).subscribeOn(Schedulers.io());
+        startTime = System.currentTimeMillis();
+        this.searchObservable = Flowable.just(url);
         for (int i = 0; i <= depth; i++) {
-            int index = i;
-            this.searchObservable = this.searchObservable.map(link -> {
+            int currentDepth = i;
+            this.searchObservable = this.searchObservable.observeOn(Schedulers.io()).map(link -> {
                 if(this.flag.getFlag()){
                     try{
-                        SearchReport report = this.getReport(link, word, index);
+                        SearchReport report = this.getReport(link, word, currentDepth);
                         this.searchReportSubject.onNext(report);
                         return report.links().toList();
                     }catch (Exception e){
                         this.errorReportSubject.onNext(new ErrorReport(link, e.getMessage()));
-                        return Stream.of(e.getMessage()).toList();
                     }
                 }
-                return Stream.of(link).toList(); //To change
+                return new ArrayList<String>();
             })
-                    .flatMap(Flowable::fromIterable);
+                    .observeOn(Schedulers.computation()).flatMap(Flowable::fromIterable);
         }
         this.searchObservable.doOnComplete(this::reset).subscribe();
     }
@@ -75,6 +77,7 @@ public class SearchHandler {
     }
 
     public void reset(){
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
         this.searchReportSubject.onComplete();
         this.errorReportSubject.onComplete();
         this.init();

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResultPredictionTest {
 
-    private final int numberOfWords = 1, depth = 5, numberOfLinks = 3;
+    private final int numberOfWords = 1, depth = 7, numberOfLinks = 3;
     private final String word = "a";
     private final String url = "http://localhost:4000/?word="+word+"&numberOfWords="+numberOfWords+"&numberOfLinks="+numberOfLinks+"&path=0";
 
@@ -47,14 +47,14 @@ public class ResultPredictionTest {
     public void testResultRx() throws ExecutionException, InterruptedException {
         SearchHandler controller = new SearchHandler(true);
         CompletableFuture<Void> future = new CompletableFuture<>();
-        final AtomicInteger wordFind = new AtomicInteger(0);
+        final AtomicInteger wordFound = new AtomicInteger(0);
         controller.attachObserver(new Observer<SearchReport>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {}
 
             @Override
             public void onNext(@NonNull SearchReport searchReport) {
-                wordFind.addAndGet(searchReport.wordFound());
+                wordFound.addAndGet(searchReport.wordFound());
             }
 
             @Override
@@ -64,7 +64,7 @@ public class ResultPredictionTest {
 
             @Override
             public void onComplete() {
-                assertEquals(predictResult(numberOfWords, depth, numberOfLinks), wordFind.get());
+                assertEquals(predictResult(numberOfWords, depth, numberOfLinks), wordFound.get());
                 future.complete(null);
             }
         });
