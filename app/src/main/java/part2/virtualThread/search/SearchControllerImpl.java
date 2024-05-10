@@ -23,6 +23,7 @@ public class SearchControllerImpl implements SearchController {
         this.searchState = new SearchState(address);
         this.searchState.setListener(this.listener);
         Thread.ofVirtual().start(() -> {
+            long startTime = System.currentTimeMillis();
             this.virtualSearchThread = Thread.ofVirtual().start(
                     new PageHandler(address, word, depth, searchState, new RequestHandlerJSoup(Configuration.SAFE_SEARCH))
             );
@@ -34,6 +35,7 @@ public class SearchControllerImpl implements SearchController {
             }
             this.searchEnded = true;
             this.searchState.removeListener().ifPresent(this::notifySearchEnded);
+            System.out.println("Search Time: " + (System.currentTimeMillis() - startTime) + "ms");
         });
     }
 

@@ -78,7 +78,7 @@ public class SearchHandler {
     }
 
     public void reset(){
-        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + "ms");
+        System.out.println("Search Time: " + (System.currentTimeMillis() - startTime) + "ms");
         this.searchReportSubject.onComplete();
         this.errorReportSubject.onComplete();
         this.init();

@@ -32,6 +32,7 @@ public class ResultPredictionTest {
 
     @Test
     public void testResult() {
+        long startTime = System.currentTimeMillis();
         SearchState state = new SearchState(url);
         Thread t = new PageHandler(url, word, depth, state, new RequestHandlerJSoup(false));
         t.start();
@@ -40,6 +41,7 @@ public class ResultPredictionTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("Search Time: " + (System.currentTimeMillis() - startTime) + "ms");
         assertEquals(predictResult(numberOfWords, depth, numberOfLinks), state.getWordOccurrences());
     }
 
