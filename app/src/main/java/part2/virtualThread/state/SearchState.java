@@ -11,7 +11,7 @@ public class SearchState {
 
     private final Monitor monitor = new StatefulMonitor(this::onUpdate);
     private final LinkState linkState;
-    private final Set<String> threadAlive = new HashSet<>();
+    private final List<String> threadAlive = new ArrayList<>();
     private int wordOccurrences = 0;
     private final LogBuffer logs = new LogBuffer(monitor);
     private boolean searchEnded = false;
@@ -39,8 +39,8 @@ public class SearchState {
         monitor.lock(() -> this.threadAlive.add(urlString));
     }
 
-    public Set<String> getThreadAlive() {
-        return monitor.lock(() -> Collections.unmodifiableSet(this.threadAlive));
+    public List<String> getThreadAlive() {
+        return monitor.lock(() -> Collections.unmodifiableList(this.threadAlive));
     }
 
     public void removeThreadAlive(String urlString) {
