@@ -6,6 +6,8 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import org.junit.jupiter.api.Test;
 import part2.reactiveProgramming.controller.SearchHandler;
 import part2.reactiveProgramming.report.SearchReport;
+import part2.virtualThread.search.SearchControllerImpl;
+import part2.virtualThread.search.SearchListener;
 import part2.virtualThread.state.SearchState;
 import part2.virtualThread.search.PageHandler;
 import part2.utils.connection.RequestHandlerJSoup;
@@ -31,18 +33,21 @@ public class ResultPredictionTest {
     }
 
     @Test
-    public void testResult() {
-        long startTime = System.currentTimeMillis();
-        SearchState state = new SearchState(url);
-        Thread t = new PageHandler(url, word, depth, state, new RequestHandlerJSoup(false));
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Search Time: " + (System.currentTimeMillis() - startTime) + "ms");
-        assertEquals(predictResult(numberOfWords, depth, numberOfLinks), state.getWordOccurrences());
+    public void testResult() throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+        new SearchControllerImpl(new SearchListener() {
+            @Override
+            public void searchStarted() {
+
+            }
+
+            @Override
+            public void searchEnded(int linkFound, int linkDown, part2.virtualThread.state.SearchReport info) {
+                future.complete(info.totalWordFound());
+            }
+        }, false).start(url, word, depth);
+
+        assertEquals(predictResult(numberOfWords, depth, numberOfLinks), future.get());
     }
 
     @Test

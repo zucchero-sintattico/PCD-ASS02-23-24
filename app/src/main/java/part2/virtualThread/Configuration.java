@@ -16,6 +16,8 @@ public class Configuration {
 
     public static final Boolean USE_DEFAULTS = true;
 
+    public static final Boolean ALL_UPDATE = true;
+
     public static final int GUI_UPDATE_MS = 32;
 
     public static final int STATE_UPDATE_MS = 8;

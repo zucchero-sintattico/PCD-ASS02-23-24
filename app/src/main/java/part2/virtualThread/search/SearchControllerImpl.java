@@ -12,9 +12,15 @@ public class SearchControllerImpl implements SearchController {
     private Thread virtualSearchThread;
     private boolean searchEnded = false;
     private SearchState searchState;
+    private final boolean safeSearch;
 
     public SearchControllerImpl(SearchListener listener) {
+        this(listener, Configuration.SAFE_SEARCH);
+    }
+
+    public SearchControllerImpl(SearchListener listener, boolean safeSearch) {
         this.listener = listener;
+        this.safeSearch = safeSearch;
     }
 
     @Override
@@ -25,7 +31,7 @@ public class SearchControllerImpl implements SearchController {
         Thread.ofVirtual().start(() -> {
             long startTime = System.currentTimeMillis();
             this.virtualSearchThread = Thread.ofVirtual().start(
-                    new PageHandler(address, word, depth, searchState, new RequestHandlerJSoup(Configuration.SAFE_SEARCH))
+                    new PageHandler(address, word, depth, searchState, new RequestHandlerJSoup(this.safeSearch))
             );
             this.listener.searchStarted();
             try {
@@ -34,8 +40,9 @@ public class SearchControllerImpl implements SearchController {
                 System.out.println("Main Thread interrupted");
             }
             this.searchEnded = true;
-            this.searchState.removeListener().ifPresent(this::notifySearchEnded);
             System.out.println("Search Time: " + (System.currentTimeMillis() - startTime) + "ms");
+            this.searchState.removeListener().ifPresent(this::notifySearchEnded);
+
         });
     }
 

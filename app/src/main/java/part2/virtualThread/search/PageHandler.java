@@ -72,7 +72,7 @@ public class PageHandler extends Thread {
     }
 
     private void updateWordCount(int wordFound) {
-        if (wordFound > 0) {
+        if (Configuration.ALL_UPDATE || wordFound > 0) {
             this.searchState.updateWordOccurrences(wordFound);
             this.searchState.getLogs().append("[Link]: " + urlString +
                     "\n--->[Word count]: " +
