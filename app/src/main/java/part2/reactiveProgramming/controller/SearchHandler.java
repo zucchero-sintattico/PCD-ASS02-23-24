@@ -66,7 +66,10 @@ public class SearchHandler {
                    })
                     .observeOn(Schedulers.computation()).flatMap(Flowable::fromIterable));
         }
-        this.searchObservable.doOnComplete(this::reset).subscribe();
+        this.searchObservable.doOnComplete(() -> {
+            System.out.println("Search Time: " + (System.currentTimeMillis() - startTime) + "ms");
+            this.reset();
+        }).subscribe();
     }
 
     private SearchReport getReport(String url, String word, int depth) throws Exception {
@@ -78,7 +81,6 @@ public class SearchHandler {
     }
 
     public void reset(){
-        System.out.println("Search Time: " + (System.currentTimeMillis() - startTime) + "ms");
         this.searchReportSubject.onComplete();
         this.errorReportSubject.onComplete();
         this.init();
