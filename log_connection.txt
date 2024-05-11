@@ -1,3 +1,0 @@
-3 startReading 13226 https://www.unipg.it/
-3 endReading 13226 https://www.unipg.it/
-3 endWaiting 13226 https://www.unipg.it/
