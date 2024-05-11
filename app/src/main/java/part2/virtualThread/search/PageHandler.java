@@ -36,7 +36,7 @@ public class PageHandler extends Thread {
                     this.read(requestHandler.getBody(urlString));
                 }
             } catch (Exception e) {
-                this.searchState.getLogs().append("Page down: " + urlString + " Reason: " + e + "\n", LogType.ERROR);
+                this.searchState.getLogs().append("[Error]: " + urlString + "\n ---> " + e.getMessage() + "\n", LogType.ERROR);
                 this.searchState.getLinkState().addLinkDown(urlString);
             } finally {
                 this.searchState.removeThreadAlive(urlString);
@@ -74,7 +74,10 @@ public class PageHandler extends Thread {
     private void updateWordCount(int wordFound) {
         if (wordFound > 0) {
             this.searchState.updateWordOccurrences(wordFound);
-            this.searchState.getLogs().append("Word found: " + wordFound + " times in " + urlString + "\n", LogType.UPDATE);
+            this.searchState.getLogs().append("[Link]: " + urlString +
+                    "\n--->[Word count]: " +
+                    wordFound + "\n--->[Depth]: " +
+                    this.depth + "\n", LogType.UPDATE);
         }
     }
 

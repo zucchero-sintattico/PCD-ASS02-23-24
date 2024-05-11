@@ -1,15 +1,14 @@
 package part2.virtualThread.state;
 
 import part2.virtualThread.monitor.Monitor;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
 
 public class LinkState {
 
-    private final Set<String> linkFound = new HashSet<>();
-    private final Set<String> linkExplored = new HashSet<>();
-    private final Set<String> linkDown = new HashSet<>();
+    private final List<String> linkFound = new ArrayList<>();
+    private final List<String> linkExplored = new ArrayList<>();
+    private final List<String> linkDown = new ArrayList<>();
     private final Monitor monitor;
 
     public LinkState(String url, Monitor monitor) {
@@ -17,16 +16,16 @@ public class LinkState {
         this.monitor = monitor;
     }
 
-    public Set<String> getLinkFound() {
-        return monitor.lock(() -> Collections.unmodifiableSet(this.linkFound));
+    public List<String> getLinkFound() {
+        return monitor.lock(() -> Collections.unmodifiableList(this.linkFound));
     }
 
-    public Set<String> getLinkExplored() {
-        return monitor.lock(() -> Collections.unmodifiableSet(this.linkExplored));
+    public List<String> getLinkExplored() {
+        return monitor.lock(() -> Collections.unmodifiableList(this.linkExplored));
     }
 
-    public Set<String> getLinkDown() {
-        return monitor.lock(() -> Collections.unmodifiableSet(this.linkDown));
+    public List<String> getLinkDown() {
+        return monitor.lock(() -> Collections.unmodifiableList(this.linkDown));
     }
 
     public void addLinkDown(String urlString) {
