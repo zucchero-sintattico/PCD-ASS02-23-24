@@ -17,7 +17,7 @@ public class RequestHandlerJSoup implements RequestHandler<Element> {
     public RequestHandlerJSoup(boolean safe) {this.safe = safe;}
 
     public Body<Element> getBody(String url) throws Exception {
-        return new JsoupBody(Jsoup.connect(url).get().body(), safe);
+        return new JsoupBody(Jsoup.connect(url).get(), safe);
     }
 
     private static class JsoupBody extends Body<Element> {
