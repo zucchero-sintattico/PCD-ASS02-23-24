@@ -41,7 +41,7 @@ public class SearchControllerImpl implements SearchController {
             }
             this.searchEnded = true;
             System.out.println("Search Time: " + (System.currentTimeMillis() - startTime) + "ms");
-            this.searchState.removeListener().ifPresent(this::notifySearchEnded);
+            this.searchState.removeListener().forEach(this::notifySearchEnded);
 
         });
     }
@@ -56,7 +56,7 @@ public class SearchControllerImpl implements SearchController {
     @Override
     public void bruteStop() {
         if(this.virtualSearchThread != null && !this.searchEnded){
-            this.searchState.removeListener().ifPresent(this::notifySearchEnded);
+            this.searchState.removeListener().forEach(this::notifySearchEnded);
             this.searchState.stopSimulation();
         }
     }

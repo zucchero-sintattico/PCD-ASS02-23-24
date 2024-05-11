@@ -15,7 +15,7 @@ public class SearchState {
     private int wordOccurrences = 0;
     private final LogBuffer logs = new LogBuffer(monitor);
     private boolean searchEnded = false;
-    private SearchListener listener;
+    private List<SearchListener> listener = new ArrayList<>();
     private final BlockingQueue<SearchReport> searchInfoQueue = new ArrayBlockingQueue<>(1);
 
     public SearchState(String url) {
@@ -49,14 +49,14 @@ public class SearchState {
 
     public void setListener(SearchListener listener) throws IllegalArgumentException {
         if(listener == null) throw new IllegalArgumentException("Listener cannot be null");
-        monitor.lock(() -> this.listener = listener);
+        monitor.lock(() -> this.listener.add(listener));
     }
 
-    public Optional<SearchListener> removeListener() {
+    public List<SearchListener> removeListener() {
         return monitor.lock(() -> {
-            SearchListener listener = this.listener;
-            this.listener = null;
-            return Optional.ofNullable(listener);
+            List<SearchListener> listener = this.listener;
+            this.listener = new ArrayList<>();
+            return listener;
         });
     }
 
