@@ -1,7 +1,6 @@
 package part2.virtualThread.search;
 
 import part2.virtualThread.state.SearchReport;
-
 import java.util.Optional;
 
 public interface SearchController {

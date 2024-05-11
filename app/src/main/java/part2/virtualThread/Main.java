@@ -1,7 +1,6 @@
 package part2.virtualThread;
 
 import part2.virtualThread.view.GUI;
-
 import javax.swing.*;
 
 public class Main {

@@ -8,14 +8,9 @@ import part2.reactiveProgramming.controller.SearchHandler;
 import part2.reactiveProgramming.report.SearchReport;
 import part2.virtualThread.search.SearchControllerImpl;
 import part2.virtualThread.search.SearchListener;
-import part2.virtualThread.state.SearchState;
-import part2.virtualThread.search.PageHandler;
-import part2.utils.connection.RequestHandlerJSoup;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResultPredictionTest {

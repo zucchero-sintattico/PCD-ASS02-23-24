@@ -1,7 +1,6 @@
 package part2.virtualThread.state;
 
 import part2.virtualThread.monitor.Monitor;
-
 import java.util.*;
 
 public class LinkState {
