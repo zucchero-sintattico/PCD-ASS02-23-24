@@ -51,10 +51,10 @@ public abstract class AbstractSimulation implements Simulation {
 	}
 
 	private void setupComponents() {
-		environment = createEnvironment();
-		environment.setup(dt);
-		agents = createAgents();
-		for (var agent : agents) {
+		this.environment = createEnvironment();
+		this.environment.setup(dt);
+		this.agents = createAgents();
+		for (var agent : this.agents) {
 			agent.setup(dt);
 		}
 	}
@@ -111,7 +111,7 @@ public abstract class AbstractSimulation implements Simulation {
 					throw new RuntimeException(e);
 				}
 			}
-			sequentialTask();
+			this.sequentialTask();
 		}
 	}
 
