@@ -49,6 +49,7 @@
 
     // Attach click event listener to the button
     document.getElementById('sendButton').addEventListener('click', () => {
+        socket.connect(origin);
         // Construct the URL with the specified parameters
         const word = document.getElementById('wordInput').value;
         const url = document.getElementById('urlInput').value;
@@ -73,6 +74,9 @@
         const requestUrl = `http://localhost:3000/stop-process`;
 
         document.getElementById('count').append(`------- PROCESS STOPPING -------\n`);
+         //close socket connection
+        socket.disconnect();
+
 
         // Send the request
         fetch(requestUrl)

@@ -1,5 +1,6 @@
 class WordCounter {
   constructor() {
+    this.time = 0;
     this.justVisited = [];
     this.globalWordsCounter = 0;
     this.stop = false;
@@ -29,7 +30,6 @@ class WordCounter {
           resolve(content);
         })
         .catch((e) => {
-          console.log("Error in getTextFromUrl", url, e);
           resolve("");
         });
     });
@@ -79,9 +79,12 @@ class WordCounter {
   }
 
   async startCounting(word, url, depth, runInTheEnd, logger) {
+    this.time = new Date().getTime();
     this.justVisited.push(url);
     await this.countWords(word, url, depth, logger);
     runInTheEnd(this.globalWordsCounter);
+    this.time = new Date().getTime() - this.time;
+    console.log("Time: ", this.time);
 
     this.stop = false;
     this.globalWordsCounter = 0;
